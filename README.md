@@ -37,6 +37,8 @@ git commit -m "feat(api): add new endpoint for stock history"
 # Push zu origin
 git push -u origin feature/api-new
 
-## Bruno
+```
+
+## BRUNO 🐶
 
 # HTTP REQUESTS
