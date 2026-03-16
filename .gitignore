@@ -3,10 +3,15 @@ bot/node_modules/
 api/node_modules/
 
 # C++
-cpp-app/build/
-cpp-app/*.exe
-cpp-app/*.o
-cpp-app/*.obj
+c++/build/
+c++/*.exe
+c++/*.o
+c++/*.obj
+c++/.vs/c++.slnx
+c++/c++.slnx
+c++/c++.vcxproj
+c++/c++.vcxproj.filters
+c++/c++.vcxproj.user
 
 # Env files
 *.env
