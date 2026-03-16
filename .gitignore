@@ -1,0 +1,21 @@
+# Node
+bot/node_modules/
+api/node_modules/
+
+# C++
+cpp-app/build/
+cpp-app/*.exe
+cpp-app/*.o
+cpp-app/*.obj
+
+# Env files
+*.env
+
+# Logs
+*.log
+
+# Target
+target/
+
+# .idea
+.idea/

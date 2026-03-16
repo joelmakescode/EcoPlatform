@@ -1,0 +1,83 @@
+import { isValidSnowflake } from "../helper/isValidSnowflake.js";
+import { handleRegistration } from "./handleRegistration.js";
+import { verifyPassword } from "../helper/hashHelper.js";
+import { MessageFlags, ModalBuilder, TextInputStyle, TextInputBuilder } from "discord.js";
+import { translate } from "../helper/translator.js";
+import { showMainMenu } from "../user/personal_area/mainMenu.js";
+import { errorLog, infoLog, warnLog } from "../logs/logger.js";
+import { database } from "../databasequeries/database.js";
+
+export async function handleLogin(interaction) {
+    const userId = interaction.user.id;    
+    
+    try {
+        if (!isValidSnowflake(userId)) return;
+        const userData = checkForUserEntry(userId);
+
+        if (!userData.password_hash) {
+            handleRegistration(interaction);
+        } else if (userData.auto_fill === 1) { 
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+            await showMainMenu(interaction, translate(userId, 'login.isValid'));
+        } else {
+            const loginModal = new ModalBuilder()
+                .setCustomId('personal_area_login_modal')
+                .setTitle(translate(userId, 'login.modalTitle'));
+
+            const passwordInput= new TextInputBuilder()
+                .setCustomId('personal_area_login_password')
+                .setLabel(translate(userId, 'login.passwordModalInputLabel'))
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true)
+                .setMinLength(3)
+                .setMaxLength(55);
+
+            loginModal.addComponents(passwordInput);
+
+            await interaction.showModal(loginModal);
+        }
+    } catch (error) {
+        errorLog(error, interaction)
+    }
+}
+
+
+/**
+ * Validates the login.
+ * 
+ * @param {*} interaction 
+ */
+export async function validateLogin(interaction) {
+    const userId = interaction.user.id;
+
+    try {
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        
+        const userData = checkForUserEntry(userId);
+        const hashed_password = userData.password_hash;
+        const inputPassword = interaction.fields.getTextInputValue('personal_area_login_password');
+
+        var isValid = await verifyPassword(inputPassword, hashed_password);
+
+        if (isValid) {
+            infoLog("User successfully logged in.", interaction);
+            await showMainMenu(interaction, translate(userId, 'login.isValid'));
+        } else {
+            warnLog("User tried to login with wrong credentials.", interaction);
+            await interaction.editReply({ content: `${translate(userId, 'login.isNotValid')}` });
+        }
+    } catch (error) {
+        errorLog(error, interaction);
+    }
+}
+
+/**
+ * Checks if a user already exists in the database.
+ * 
+ * @param {number} userId 
+ * @returns {userData}
+ */
+function checkForUserEntry(userId){
+    const user = database.prepare(`SELECT password_hash, auto_fill FROM users WHERE id = ?`).get(userId);
+    return user ?? false;
+}
