@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../models/db');
+const pool = require('../db/db');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 require('dotenv').config();
