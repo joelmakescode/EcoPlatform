@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # 7. Startbefehl
-CMD ["node", "server.js"]
+CMD ["node", "src/server.js"]
