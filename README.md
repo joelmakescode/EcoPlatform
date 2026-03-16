@@ -1,22 +1,22 @@
-# My Project Monorepo
+# EcoPlatform
 
 Dieses Repository enthält drei Hauptkomponenten:
 
 - **Bot** – Discord-Bot
 - **API** – Node.js REST-API für die Bot-Kommunikation
-- **C++ App** – Standalone C++ Programm, z.B. für erweiterte Analysen
+- **C++ App** – Standalone C++ Programm
 
-Alle Komponenten liegen in separaten Unterordnern, aber teilen sich das gleiche Repository (Monorepo).
+Alle Komponenten liegen in separaten Unterordnern, aber teilen sich das gleiche Repository.
 
 ---
 
 ## 🗂️ Repository Struktur
 
 ```text
-my-project/
+ecoplatform/
 ├─ bot/          # Discord-Bot
 ├─ api/          # Node.js API
-├─ cpp-app/      # C++ Programm
+├─ c++/      # C++ Programm
 ├─ README.md
 ├─ .gitignore
 └─ docker-compose.yml  (optional)
@@ -36,3 +36,7 @@ git commit -m "feat(api): add new endpoint for stock history"
 
 # Push zu origin
 git push -u origin feature/api-new
+
+## Bruno
+
+# HTTP REQUESTS
