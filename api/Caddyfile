@@ -1,0 +1,3 @@
+api.eco-platform.app {
+    reverse_proxy api:3000
+}

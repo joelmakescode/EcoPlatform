@@ -3,35 +3,44 @@ version: '3.8'
 services:
   db:
     image: mysql:8.1
-    container_name: economy-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword      
-      MYSQL_DATABASE: economy               
+      MYSQL_ROOT_PASSWORD: supersecretpassword
+      MYSQL_DATABASE: economy
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
-    ports:
-      - "3307:3306"  
     volumes:
       - mysqldata:/var/lib/mysql
       - ./src/db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   api:
-    build: .  
-    container_name: economy-api
+    build: .
     restart: always
     environment:
       DB_USER: myuser
       DB_PASSWORD: mypassword
-      DB_HOST: db         
+      DB_HOST: db
       DB_NAME: economy
       DB_PORT: 3306
       JWT_SECRET: supersecretkey
       PORT: 3000
     depends_on:
       - db
+
+  caddy:
+    image: caddy:latest
+    restart: always
     ports:
-      - "3000:3000" 
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
 
 volumes:
   mysqldata:
+  caddy_data:
+  caddy_config:
