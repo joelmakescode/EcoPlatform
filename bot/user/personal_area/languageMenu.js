@@ -3,9 +3,7 @@ import { createMenu, determineMenu } from "../../helper/menuHelper.js";
 import { translate } from "../../helper/translator.js";
 import { errorLog } from "../../logs/logger.js";
 import { showSettingsMenu } from "./settingsMenu.js";
-import { database } from "../../databasequeries/database.js";
-
-
+import { getUserLanguage, setUserLanguage } from "../../api/apiClient.js";
 
 export async function showLanguageMenu(interaction) {
     const userId = interaction.user.id;
@@ -47,7 +45,7 @@ export async function handleLanguageMenu(interaction) {
                     await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${whatLanguage(userId)} - ${translate(userId, 'language_menu.responseFailedContent')}`, components: [row] });
                 } else {
                     const languageToChangeTo = shortLanguage(value);
-                    database.prepare(`UPDATE users SET language = ? WHERE id = ?`).run(languageToChangeTo, userId);
+                    await setUserLanguage(languageToChangeTo);
                     await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${whatLanguage(userId)} - ${translate(userId, 'language_menu.responseSuccessContent')}`, components: [row] });
                 }
 
@@ -76,8 +74,8 @@ function shortLanguage(value) {
     return 'en';
 }
 
-function whatLanguage(userId) {
-    const userData = database.prepare('SELECT language FROM users WHERE id = ?').get(userId);
+async function whatLanguage(userId) {
+    const userData = await getUserLanguage(userId);
     
     if (userData.language === 'en') return 'English';
     if (userData.language === 'de') return 'Deutsch';

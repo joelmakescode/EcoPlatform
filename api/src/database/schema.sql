@@ -1,0 +1,35 @@
+-- USERS
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    discord_id VARCHAR(255) UNIQUE,
+    username VARCHAR(255) UNIQUE,
+    balance DOUBLE DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS discord_user_config (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    discord_id VARCHAR(255) UNIQUE,
+    password_hash VARCHAR(255),
+    language VARCHAR(255) DEFAULT 'en',
+    autofill INT DEFAULT 0
+);
+
+-- REPORTS
+CREATE TABLE IF NOT EXISTS discord_reports (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message_id VARCHAR(255) NOT NULL,
+    reporter_id VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP
+);
+
+-- GUILD LOGS
+CREATE TABLE IF NOT EXISTS guild_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    guild_id VARCHAR(255) NOT NULL,
+    channel_id VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+

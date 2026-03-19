@@ -1,5 +1,4 @@
-import { database } from "../databasequeries/database.js";
-
+import { getGuildLogChannel } from "../api/apiClient.js";
 
 export function errorLog(error, interaction) {
     sendConsoleLogMessage(error, interaction, 'ERROR');
@@ -41,11 +40,11 @@ function sendConsoleLogMessage(message, interaction, level) {
 
 async function sendChannelLogMessage(data, interaction) {
     try {
-        const channelData = database.prepare('SELECT log_channel_id FROM guilds_log WHERE id = ?').get(interaction.guildId);
+        const channelData = await getGuildLogChannel(interaction.guildId);
         if (!channelData.log_channel_id) return;
 
         const channel = await interaction.client.channels.fetch(channelData.log_channel_id);
-        if (!channel) return; //MORE PRECISE FEEDBACK
+        if (!channel) return; 
 
         await channel.send({ content: JSON.stringify(data, null, 2)});
     } catch (error) {

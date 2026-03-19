@@ -3,8 +3,7 @@ import { translate } from "../../../helper/translator.js";
 import { errorLog } from "../../../logs/logger.js";
 import { hashPassword, verifyPassword } from "../../../helper/hashHelper.js";
 import { showSettingsMenu } from "../settingsMenu.js";
-import { database } from "../../../databasequeries/database.js";
-import { updateUserPasswordHash } from "../../../databasequeries/userDatabase.js";
+import { getUserFromAPI, updateUserPasswordInAPI } from "../../../api/apiClient.js";
 
 
 export async function showChangePasswordModal(interaction) {
@@ -62,14 +61,14 @@ export async function validateChangePassword(interaction) {
     const input = interaction.fields.getTextInputValue('change_password_input');
 
     try {
-        const userExists = checkForUserEntry(userId);
+        const userExists = await getUserFromAPI(userId);
         if (!userExists) return;
         // MORE PRECISE FEEDBACK
         
         if (await verifyPassword(input, userExists.password_hash)) {
             await showSettingsMenu(interaction, 'settings_menu.responseFailedPasswordChangeContent');
         } else {
-            updateUserPasswordHash(userId, input);
+            await updateUserPasswordInAPI(userId, await hashPassword(input));
             await showSettingsMenu(interaction, 'settings_menu.responseSuccessPasswordChangeContent');
         }
     } catch (error) {
@@ -83,7 +82,7 @@ export async function validateChangePasswordBeforeLogin(interaction) {
         const userId = interaction.user.id;
         const input = interaction.fields.getTextInputValue('change_password_input');
 
-        const userExists = checkForUserEntry(userId);
+        const userExists = await getUserFromAPI(userId);
         if (!userExists) await interaction.reply({ content: translate(userId, 'change_password_modal.responseFailedNoUserEntryExistsContent'), flags: MessageFlags.Ephemeral });
 
         if (await verifyPassword(input, userExists.password_hash)) {
@@ -95,9 +94,4 @@ export async function validateChangePasswordBeforeLogin(interaction) {
     } catch (error) {
         errorLog(error, interaction);
     }
-}
-
-function checkForUserEntry(userId) {
-    const userData = database.prepare(`SELECT password_hash FROM users WHERE id = ?`).get(userId);
-    return userData ?? false;
 }

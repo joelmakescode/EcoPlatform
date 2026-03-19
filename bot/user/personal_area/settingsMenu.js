@@ -5,7 +5,6 @@ import { createMenu, determineMenu } from "../../helper/menuHelper.js";
 import { showMainMenu } from "./mainMenu.js";
 import { showLanguageMenu } from "./languageMenu.js";
 import { showChangePasswordModal } from "./handler/changePasswordHandler.js";
-import { database } from "../../databasequeries/database.js";
 import version from '../../json/version.json' with { type: 'json' };
 
 export async function showSettingsMenu(interaction, addedContent) {

@@ -5,7 +5,7 @@ import { MessageFlags, ModalBuilder, TextInputStyle, TextInputBuilder } from "di
 import { translate } from "../helper/translator.js";
 import { showMainMenu } from "../user/personal_area/mainMenu.js";
 import { errorLog, infoLog, warnLog } from "../logs/logger.js";
-import { database } from "../databasequeries/database.js";
+import { getUserFromAPI } from "../api/apiClient.js";
 
 export async function handleLogin(interaction) {
     const userId = interaction.user.id;    
@@ -53,7 +53,7 @@ export async function validateLogin(interaction) {
     try {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         
-        const userData = checkForUserEntry(userId);
+        const userData = await getUserFromAPI(userId);
         const hashed_password = userData.password_hash;
         const inputPassword = interaction.fields.getTextInputValue('personal_area_login_password');
 
@@ -69,15 +69,4 @@ export async function validateLogin(interaction) {
     } catch (error) {
         errorLog(error, interaction);
     }
-}
-
-/**
- * Checks if a user already exists in the database.
- * 
- * @param {number} userId 
- * @returns {userData}
- */
-function checkForUserEntry(userId){
-    const user = database.prepare(`SELECT password_hash, auto_fill FROM users WHERE id = ?`).get(userId);
-    return user ?? false;
 }

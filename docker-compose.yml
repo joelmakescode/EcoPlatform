@@ -1,20 +1,28 @@
-version: '3.8'
+version: "3.9"
 
 services:
   db:
     image: mysql:8.1
+    container_name: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: supersecretpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: economy
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
+      MYSQL_INITDB_SKIP_TZINFO: 1
     volumes:
       - mysqldata:/var/lib/mysql
-      - ./src/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./api/src/database:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 10
+      timeout: 5s
 
   api:
-    build: .
+    build: ./api
+    container_name: api
     restart: always
     environment:
       DB_USER: myuser
@@ -25,10 +33,22 @@ services:
       JWT_SECRET: supersecretkey
       PORT: 3000
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000" # Optional: falls du lokal testen willst
+
+  bot:
+    build: ./bot
+    container_name: bot
+    restart: always
+    env_file: ./bot/.env
+    depends_on:
+      - api
 
   caddy:
     image: caddy:latest
+    container_name: caddy
     restart: always
     ports:
       - "80:80"

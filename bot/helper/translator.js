@@ -1,6 +1,6 @@
 import en from '../json/languages/en.json' with { type: "json" };
 import de from '../json/languages/de.json' with { type: "json" };
-import { database } from '../databasequeries/database.js';
+import { getUserLanguage } from '../api/apiClient.js';
 
 const languages = { en, de }
 
@@ -23,8 +23,8 @@ export function translate(userId, key) {
 }
 
 
-export function whatLanguage(userId) {
-    const userData = database.prepare('SELECT language FROM users WHERE id = ?').get(userId);
+export async function whatLanguage(userId) {
+    const userData = await getUserLanguage(userId);
     if (!userData) return 'en';
 
     return userData.language;

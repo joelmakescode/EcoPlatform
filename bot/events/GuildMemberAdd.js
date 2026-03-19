@@ -1,11 +1,11 @@
 import { Events } from "discord.js";
-import { insertUserIntoBankAccountTable } from "../databasequeries/userBankAccountDatabase.js";
+import { insertUserIntoBankAccountTable } from "../api/apiClient.js";
 
 
 export default {
     name: Events.GuildMemberAdd,
 
     async execute(member) {
-        insertUserIntoBankAccountTable(member.id)
+        await insertUserIntoBankAccountTable(member.id)
     }
 }

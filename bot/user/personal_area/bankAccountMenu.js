@@ -2,8 +2,8 @@ import { ActionRowBuilder } from "discord.js";
 import { createMenu, determineMenu } from "../../helper/menuHelper.js";
 import { errorLog } from "../../logs/logger.js";
 import { translate } from "../../helper/translator.js";
-import { selectUserBalanceAccountTable } from "../../databasequeries/userBankAccountDatabase.js";
 import { showMainMenu } from "./mainMenu.js";
+import { selectUserBalanceAccountTable } from "../../api/apiClient.js";
 
 
 export async function showBankAccountMenu(interaction, addedContent) {
@@ -37,7 +37,7 @@ export async function handleBankAccountMenu(interaction) {
 
         case 'account_balance':
             
-            await showBankAccountMenu(interaction, `${translate(userId, 'bank_account_menu.responseSuccessBalanceRequestContent')} ${selectUserBalanceAccountTable(userId)}$`);
+            await showBankAccountMenu(interaction, `${translate(userId, 'bank_account_menu.responseSuccessBalanceRequestContent')} ${await selectUserBalanceAccountTable(userId)}$`);
             break;
     
         default:
