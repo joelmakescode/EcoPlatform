@@ -14,10 +14,14 @@ function createNotFoundResponse(res, message) {
     res.status(404).json({ error: message });
 }
 
+function createConflictResponse(res, message) {
+    res.status(409).json({ error: message });
+}
+
 function createInternalServerResponse(res, error) {
     console.error(error);
 
     res.status(500).json({ error: error });
 }
 
-module.exports = { createOKResponse, createCreatedResponse, createBadRequestResponse, createNotFoundResponse, createInternalServerResponse };
+module.exports = { createOKResponse, createCreatedResponse, createBadRequestResponse, createNotFoundResponse, createConflictResponse, createInternalServerResponse };

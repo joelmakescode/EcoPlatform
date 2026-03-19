@@ -1,5 +1,5 @@
 const { selectUserByDiscordId, insertDiscordUser, updatePasswordHash, updateLanguage, updateAutofill } = require('../services/discordUser.service');
-const { createOKResponse, createNotFoundResponse, createBadRequestResponse, createInternalServerResponse, createCreatedResponse } = require('../services/handler/status.handler');
+const { createOKResponse, createNotFoundResponse, createBadRequestResponse, createInternalServerResponse, createCreatedResponse, createConflictResponse } = require('../services/handler/status.handler');
 
 const err = {
     ErrAutofillNotGiven:        "No Autofill Given",
@@ -8,16 +8,20 @@ const err = {
     ErrDiscordUserNotFound:     "Discord User Not Found",
     ErrLanguageAlreadyChosen:   "Language Already Chosen By User",
     ErrLanguageNotGiven:        "No Language Given",
-    ErrPasswordHashNotGiven:    "No Password Hash Given"
+    ErrPasswordHashNotGiven:    "No Password Hash Given",
+    ErrUserExists:              "User Already Exists"
 };
 
 async function createDiscordUser(req, res) {
     try {
         const { discordId, passwordHash } = req.body;
 
-        const newUser = await insertDiscordUser(discordId, passwordHash);
+        const userData = await selectUserByDiscordId(discordId);
+        if (userData) {
+            return createConflictResponse(res, err.ErrUserExists);
+        }
 
-        // Validation for already existing user
+        const newUser = await insertDiscordUser(discordId, passwordHash);
 
         createCreatedResponse(res, newUser);
     } catch (error) {
