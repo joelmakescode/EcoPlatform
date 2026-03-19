@@ -3,7 +3,7 @@ const { createOKResponse, createNotFoundResponse, createBadRequestResponse, crea
 
 const err = {
     ErrAutofillNotGiven:        "No Autofill Given",
-    ErrAutofillAlreadyChosen:    "Autofill Already Chosen By User",
+    ErrAutofillAlreadyChosen:   "Autofill Already Chosen By User",
     ErrDiscordIdNotGiven:       "No DiscordId Given",
     ErrDiscordUserNotFound:     "Discord User Not Found",
     ErrLanguageAlreadyChosen:   "Language Already Chosen By User",
