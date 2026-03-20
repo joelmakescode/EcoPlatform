@@ -41,3 +41,11 @@ CREATE TABLE IF NOT EXISTS discord_friends(
     UNIQUE(discord_id, friend_discord_id) 
 );
 
+-- DISCORD CODES
+CREATE TABLE IF NOT EXISTS discord_codes(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    discord_id VARCHAR(255) NOT NULL,
+    code INT NOT NULL,
+    expires_at TIMESTAMP NOT NULL
+);
+
