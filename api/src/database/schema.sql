@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS discord_user_config (
     autofill INT DEFAULT 0
 );
 
--- REPORTS
+-- DISCORD REPORTS
 CREATE TABLE IF NOT EXISTS discord_reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
     message_id VARCHAR(255) NOT NULL,
@@ -24,12 +24,20 @@ CREATE TABLE IF NOT EXISTS discord_reports (
     deleted_at TIMESTAMP
 );
 
--- GUILD LOGS
+-- DISCORD GUILD LOGS
 CREATE TABLE IF NOT EXISTS guild_logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     guild_id VARCHAR(255) NOT NULL,
     channel_id VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP
+);
+
+-- DISCORD FRIENDLISTS
+CREATE TABLE IF NOT EXISTS discord_friends(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    discord_id VARCHAR(255) NOT NULL,
+    friend_discord_id VARCHAR(255) NOT NULL,
+    UNIQUE(discord_id, friend_discord_id) 
 );
 

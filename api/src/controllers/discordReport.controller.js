@@ -1,5 +1,5 @@
 const { createBadRequestResponse, createOKResponse, createInternalServerResponse, createNotFoundResponse, createCreatedResponse } = require("../services/handler/status.handler");
-const { insertNewReport, updateReport } = require("../services/report.service");
+const { insertNewReport, updateReport } = require("../services/discordReport.service");
 
 
 const err = {

@@ -1,20 +1,24 @@
 const express = require("express");
 const router = express.Router();
 
-const discordUserRoutes = require("./discordUser.route");
-const discordGuildLogsRoutes = require('./discordGuildLogs.route');
-const reportRoutes = require("./report.route");
-const userRoutes = require("./user.route");
+const discordFriendlistsRoutes = require("./discordFriendlist.route");
+const discordGuildLogsRoutes   = require('./discordGuildLogs.route');
+const discordReportRoutes      = require("./discordReport.route");
+const discordUserRoutes        = require("./discordUser.route");
+const userRoutes               = require("./user.route");
 
+
+// Discord Friendlists
+router.use(discordFriendlistsRoutes)
+
+// Discord Guild Logs
+router.use(discordGuildLogsRoutes);
+
+// Discord Reports
+router.use(discordReportRoutes);
 
 // Discord Users
 router.use(discordUserRoutes);
-
-// Guild Logs
-router.use(discordGuildLogsRoutes);
-
-//Reports
-router.use(reportRoutes);
 
 // Users
 router.use(userRoutes);
