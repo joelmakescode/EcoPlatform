@@ -1,7 +1,7 @@
 const pool = require('../config/database');
 
 async function insertNewFriend(discordId, discordFriendId) {
-    const friendsAlready = selectFriendById(discordId, discordFriendId);
+    const friendsAlready = await selectFriendById(discordId, discordFriendId);
     if (friendsAlready) {
         return { info: 'Conflict' };
     }
@@ -39,7 +39,7 @@ async function selectFriendlistById(discordId) {
 }
 
 async function removeFriend(discordId, discordFriendId) {
-    const sql = `DELETE FROM discord_friends WHERE discordId = ? AND friend_discord_id = ?`;
+    const sql = `DELETE FROM discord_friends WHERE discord_id = ? AND friend_discord_id = ?`;
     const firstParams = [discordId, discordFriendId];
     const secondParams = [discordFriendId, discordId];
 

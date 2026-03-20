@@ -10,3 +10,5 @@ router.get('/friendlist', discordFriendlistController.getFriendlist);
 
 // Delete a Friend
 router.delete('/friendlist', discordFriendlistController.deleteFriend);
+
+module.exports = router;
