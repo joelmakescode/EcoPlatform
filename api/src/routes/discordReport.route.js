@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const reportController = require('../controllers/report.controller');
+const reportController = require('../controllers/discordReport.controller');
 
 // Create New Report
 router.post('/reports', reportController.createNewReport);
