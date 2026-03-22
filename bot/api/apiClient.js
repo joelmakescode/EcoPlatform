@@ -24,59 +24,6 @@ async function request(method, url, data = null) {
 }
 
 /* =========================
-   Admin Channels
-========================= */
-
-export const addOrUpdateAdminChannel = (id, name) =>
-    request('post', '/adminChannels', { id, name });
-
-export const getAdminChannelId = async (name) => {
-    const data = await request('get', `/adminChannels/${name}`);
-    return data.id;
-};
-
-/* =========================
-   Codes
-========================= */
-
-export const createCode = (userId, code) =>
-    request('post', '/codes', { userId, code });
-
-export const getCodeData = (code) =>
-    request('get', `/codes/${code}`);
-
-export const getUserIdByCode = async (code) => {
-    const data = await request('get', `/codes/user/${code}`);
-    return data.userId;
-};
-
-export const codeExistsForUser = async (userId) => {
-    const data = await request('get', `/codes/exists/${userId}`);
-    return data.exists;
-};
-
-export const removeCode = (code) =>
-    request('delete', `/codes/${code}`);
-
-/* =========================
-   Friendlist
-========================= */
-
-export const getFriendlist = async (userId) => {
-    const data = await request('get', `/friendlists/${userId}`);
-    return data.friends ?? [];
-};
-
-export const createFriend = (userId, friendId) =>
-    request('post', '/friendlists', { userId, friendId });
-
-export const addFriend = (userId, friendId) =>
-    request('put', '/friendlists/add', { userId, friendId });
-
-export const removeFriend = (userId, friendId) =>
-    request('put', '/friendlists/remove', { userId, friendId });
-
-/* =========================
    Guild Logs
 ========================= */
 

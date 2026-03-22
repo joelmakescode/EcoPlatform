@@ -37,7 +37,7 @@ async function createNewFriend(req, res) {
 
 async function getFriendlist(req, res) {
     try {
-        const { discordId } = req.body;
+        const { discordId } = req.params;
 
         if (!discordId) {
             return createBadRequestResponse(res, err.ErrNoDiscordIdGiven);

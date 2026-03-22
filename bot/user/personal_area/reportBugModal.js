@@ -2,7 +2,8 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, ModalBuilder, Tex
 import { errorLog } from "../../logs/logger.js";
 import { translate } from "../../helper/translator.js";
 import { createEmbed } from "../../helper/embedHelper.js";
-import { getAdminChannelId, insertNewReport, selectMessageData, setReportToFinished, updateUserInBankAccountTable } from "../../api/apiClient.js";
+import { insertNewReport, selectMessageData, setReportToFinished, updateUserInBankAccountTable } from "../../api/apiClient.js";
+import {getAdminChannelIdRequest} from "../../api/adminChannels.request.js";
 
 
 export async function showReportBugModal(interaction) {
@@ -53,7 +54,7 @@ export async function handleReportBugModal(interaction) {
 
         const row = new ActionRowBuilder().addComponents(finishedButton, removeButton);
 
-        const channelData = await getAdminChannelId('bug-reports');
+        const channelData = await getAdminChannelIdRequest('bug-reports');
         if (!channelData.id) return;
 
         const channel = await interaction.client.channels.fetch(channelData.id);

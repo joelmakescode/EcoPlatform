@@ -30,7 +30,7 @@ async function createNewCode(req, res) {
 
 async function getDiscordUserIdByCode(req, res) {
     try {
-        const { code } = req.body;
+        const { code } = req.params;
         if (!code) {
             return createBadRequestResponse(res, err.ErrNoCodeGiven);
         }

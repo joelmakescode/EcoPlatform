@@ -15,7 +15,7 @@ function generateFriendCode() {
 }
 
 async function selectDiscordIdByCode(code) {
-    const sql = `SELECT discord_id FROM discord_codes WHERE code = ?`;
+    const sql = `SELECT * FROM discord_codes WHERE code = ?`;
     const params = [code];
 
     const [result] = await pool.execute(sql, params);

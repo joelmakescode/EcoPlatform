@@ -5,8 +5,8 @@ const discordCodesController = require('../controllers/discordCodes.controller')
 // Create New Code
 router.post('/discord-codes', discordCodesController.createNewCode);
 
-// Select UserId By Code
-router.get('/discord-codes', discordCodesController.getDiscordUserIdByCode);
+// Select Data By Code
+router.get('/discord-codes/:code', discordCodesController.getDiscordUserIdByCode);
 
 // Remove Code
 router.delete('/discord-codes', discordCodesController.deleteCode);

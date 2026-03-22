@@ -6,7 +6,7 @@ const discordFriendlistController = require('../controllers/discordFriendlist.co
 router.post('/friendlist', discordFriendlistController.createNewFriend);
 
 // Get Friendlist
-router.get('/friendlist', discordFriendlistController.getFriendlist);
+router.get('/friendlist/:discordId', discordFriendlistController.getFriendlist);
 
 // Delete a Friend
 router.delete('/friendlist', discordFriendlistController.deleteFriend);

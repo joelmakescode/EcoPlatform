@@ -33,7 +33,7 @@ async function createAdminChannel(req, res) {
 
 async function getAdminChannelIdByName(req, res) {
     try {
-        const { channelName } = req.body;
+        const { channelName } = req.params;
         if (!channelName) {
             return createBadRequestResponse(res, err.ErrNoChannelNameGiven);
         }

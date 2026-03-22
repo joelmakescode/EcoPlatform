@@ -6,7 +6,7 @@ const discordAdminChannelsController = require('../controllers/discordAdminChann
 router.post('/discord-admin-channels', discordAdminChannelsController.createAdminChannel)
 
 // Get Admin Channel
-router.get('/discord-admin-channels', discordAdminChannelsController.getAdminChannelIdByName);
+router.get('/discord-admin-channels/:channelName', discordAdminChannelsController.getAdminChannelIdByName);
 
 // Update Admin Channel
 router.patch('/discord-admin-channels', discordAdminChannelsController.patchChannelIdByName)
