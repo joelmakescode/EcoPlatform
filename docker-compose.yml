@@ -36,7 +36,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "3000:3000" # Optional: falls du lokal testen willst
+      - "3000:3000"
 
   bot:
     build: ./bot
