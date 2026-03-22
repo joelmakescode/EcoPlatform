@@ -1,7 +1,7 @@
 const pool = require("../config/database");
 
 async function insertGuildLogChannel(guildId, channelId) {
-    const sql = `INSERT INTO guild_logs (guild_id, channel_id) VALUES (?, ?)`;
+    const sql = `INSERT INTO discord_guild_logs (guild_id, channel_id) VALUES (?, ?)`;
     const params = [guildId, channelId];
 
     const [result] = await pool.execute(sql, params);
@@ -10,7 +10,7 @@ async function insertGuildLogChannel(guildId, channelId) {
 }
 
 async function updateGuildLogChannel(guildId, channelId) {
-    const sql = `UPDATE guild_logs SET channel_id = ? WHERE guild_id = ?`;
+    const sql = `UPDATE discord_guild_logs SET channel_id = ? WHERE guild_id = ?`;
     const params = [channelId, guildId];
 
     const [result] = await pool.execute(sql, params);

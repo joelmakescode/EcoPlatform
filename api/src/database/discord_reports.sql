@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS discord_reports (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   message_id VARCHAR(255) NOT NULL,
+   reporter_id VARCHAR(255) NOT NULL,
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   deleted_at TIMESTAMP
+);
