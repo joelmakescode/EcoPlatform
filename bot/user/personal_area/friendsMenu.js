@@ -1,11 +1,11 @@
-import { ActionRowBuilder, Colors, ModalBuilder, TextInputBuilder, TextInputStyle, UserSelectMenuBuilder } from "discord.js";
+import { ActionRowBuilder, Colors, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { createMenu, determineMenu } from "../../helper/menuHelper.js";
 import { translate } from "../../helper/translator.js";
 import { errorLog } from "../../logs/logger.js";
 import { showMainMenu } from "./mainMenu.js";
-import { insertCode, removeCode, selectCodeByUserId, selectCodeData } from "../../databasequeries/codeDatabase.js";
-import { addFriendIntoFriendlist, getFriendlist, insertFriendIntoFriendlist, removeFriendFromFriendlist, selectFriendlist } from "../../databasequeries/friendlistDatabase.js";
 import { createEmbed } from "../../helper/embedHelper.js";
+import {createFriendRequest, deleteFriendRequest, getFriendlistRequest} from "../../api/friendlist.request.js";
+import {createNewCodeRequest, deleteCodeRequest, getCodeRequest} from "../../api/codes.request.js";
 
 
 export async function showFriendsMenu(interaction, extraContent, extraCode, newStringSelectMenu) {
@@ -75,61 +75,49 @@ export async function handleEnterCodeModal(interaction) {
     try {
         const userId = interaction.user.id;
         const code = interaction.fields.getTextInputValue('code_input');
-        const codeData = selectCodeData(code);
+        const codeData = await getCodeRequest(code);
 
         if (!codeData) {
-            removeCode(code);
+            await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedInvalidCodeContent'), null)
         }
 
-        if (userId === codeData.user_id) {
-            removeCode(code);
+        if (userId === codeData.data.discord_id) {
+            await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedCantAddYourselfContent'), null);
         }
 
-        if (Date.now() > codeData.expires_at) {
-            removeCode(code);
+        if (Date.now() > codeData.data.expires_at) {
+            await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedExpiredCodeEnteredContent'), null);
         }
 
-        const friendlistData = getFriendlist(userId);
-        if (friendlistData.includes(codeData.user_id)) {
-            removeCode(code);
+        const friendlistData = await getFriendlistRequest(userId);
+        if (friendlistData.data.includes(codeData.data.discord_id)) {
+            await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedAlreadyFriendContent'));
         }
 
-        if (friendlistData.length >= 24) {
-            removeCode(code);
+        if (friendlistData.data.length >= 24) {
+            await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedYouHaveTooManyFriendsContent'));
         }
 
-        const userFriendlistData = getFriendlist(codeData.user_id);
-        if (userFriendlistData.length >= 24) {
-            removeCode(code);
+        const userFriendlistData = await getFriendlistRequest(codeData.discord_id);
+        if (userFriendlistData.data.length >= 24) {
+            await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedUserHasTooManyFriendsContent'));
         }
 
-        const userData = selectFriendlist(userId);
-        const friendData = selectFriendlist(codeData.user_id);
+        await createFriendRequest(userId, codeData.data.discord_id);
+        await createFriendRequest(codeData.data.discord_id, userId);
 
-        if (userData) {
-            addFriendIntoFriendlist(userId, codeData.user_id);
-        } else {
-            insertFriendIntoFriendlist(userId, codeData.user_id);
-        }
+        await showFriendsMenu(interaction, `${translate(userId, 'friends_menu.responseSuccessFriendAddedContent')} - <@${codeData.data.discord_id}>`, null);
 
-        if (friendData) {
-            addFriendIntoFriendlist(codeData.user_id, userId);
-        } else {
-            insertFriendIntoFriendlist(codeData.user_id, userId);
-        }
-        
-        await showFriendsMenu(interaction, `${translate(userId, 'friends_menu.responseSuccessFriendAddedContent')} - <@${codeData.user_id}>`, null);
+        const messageUser = await interaction.client.users.fetch(codeData.data.discord_id);
+        await messageUser.send({ embeds: [createEmbed(interaction, codeData.data.discord_id, 'friend_added_dm.title', 'friend_added_dm.description', null, Colors.Green, null, `<@${userId}>`)] });
 
-        const messageUser = await interaction.client.users.fetch(codeData.user_id);
-        await messageUser.send({ embeds: [createEmbed(interaction, codeData.user_id, 'friend_added_dm.title', 'friend_added_dm.description', null, Colors.Green, null, `<@${userId}>`)] });
-
-        removeCode(code);
+        await deleteCodeRequest(code);
     } catch (error) {
         errorLog(error, interaction);
         await interaction.update({ content: translate(interaction.user.id, 'standard_menu_option.responseErrorContent') });
@@ -169,8 +157,8 @@ export async function handleRemoveFriendFriendlistStringSelect(interaction) {
 
                 const userId = interaction.user.id;
         
-                removeFriendFromFriendlist(userId, value);
-                removeFriendFromFriendlist(value, userId);
+                await deleteFriendRequest(userId, value);
+                await deleteFriendRequest(value, userId);
 
                 await showFriendsMenu(interaction, translate(userId, 'remove_friend_friendlist_menu.responseSuccessFriendRemovedContent'), null, null);
                 break;
@@ -184,18 +172,12 @@ export async function handleRemoveFriendFriendlistStringSelect(interaction) {
 async function handleAddFriend(interaction) {
     try {
         const userId = interaction.user.id;
-        const codeData = selectCodeByUserId(userId);
 
-        if (codeData) {
-            return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedCodeGeneratedBeforeContent'))
-        }
-
-        const code = Math.floor(100000 + Math.random() * 900000);
-        insertCode(userId, code)
-        await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseSuccessYourCodeContent'), `\`${code}\``);
+        const codeData = await createNewCodeRequest(userId);
+        await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseSuccessYourCodeContent'), `\`${codeData.data.code}\``);
     } catch (error) {
         errorLog(error, interaction);
-        await interaction.update({ content: translate(userId, 'standard_menu_option.responseErrorContent') });
+        await interaction.update({ content: translate(interaction.user.id, 'standard_menu_option.responseErrorContent') });
     }
 }
 
@@ -225,13 +207,13 @@ async function showEnterCodeModal(interaction) {
 async function showFriendlistStringSelect(interaction, value) {
     try {
         const userId = interaction.user.id;
-        const friendlistData = selectFriendlist(userId);
+        const friendlistData = await getFriendlistRequest(userId);
 
         let friends = [];
 
-        if (friendlistData?.friendlist) {
-            friends = JSON.parse(friendlistData.friendlist).map(f => String(f)).filter(f => f); 
-        }
+        //if (friendlistData?.friendlist) {
+          //  friends = JSON.parse(friendlistData.friendlist).map(f => String(f)).filter(f => f);
+        //}
 
         if (friends.length === 0 || !friendlistData) {
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedNoFriendsContent'), null, null);

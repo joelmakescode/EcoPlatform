@@ -1,10 +1,10 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { errorLog } from "../../logs/logger.js";
 import { translate } from "../../helper/translator.js";
-import { insertIntoAdminGuildChannelsTable, selectIdFromAdminGuildChannelsTable } from "../../databasequeries/adminGuildChannelsDatabase.js";
-import { insertNewReport, selectMessageData, setReportToFinished } from "../../databasequeries/reportsDatabase.js";
-import { updateUserInBankAccountTable } from "../../databasequeries/userBankAccountDatabase.js";
 import { createEmbed } from "../../helper/embedHelper.js";
+import {getAdminChannelIdRequest} from "../../api/adminChannels.request.js";
+import {createNewReportRequest, getReportDataRequest, patchReportRequest} from "../../api/reports.request.js";
+import {patchUserBalanceRequest} from "../../api/user.request.js";
 
 
 export async function showReportBugModal(interaction) {
@@ -55,13 +55,13 @@ export async function handleReportBugModal(interaction) {
 
         const row = new ActionRowBuilder().addComponents(finishedButton, removeButton);
 
-        const channelData = selectIdFromAdminGuildChannelsTable('bug-reports');
-        if (!channelData.id) return;
+        const channelData = await getAdminChannelIdRequest('bug-reports');
+        if (!channelData.data.channel_id) return;
 
-        const channel = await interaction.client.channels.fetch(channelData.id);
+        const channel = await interaction.client.channels.fetch(channelData.data.channel_id);
         const message = await channel.send({ content: `Affected Aspect: \`${whereInput}\` \nDescription: \`${descriptionInput}\``, components: [row] });
 
-        insertNewReport(message.id, userSubmitId);
+        await createNewReportRequest(message.id, userSubmitId);
     } catch (error) {
         errorLog(error, interaction);
     }
@@ -71,13 +71,13 @@ export async function handleBugReportButton(interaction) {
     try {
         await interaction.deferUpdate();
 
-        const messageData = selectMessageData(interaction.message.id);
+        const messageData = await getReportDataRequest(interaction.message.id);
         if (!messageData) return;
 
         if (interaction.customId === 'bug_report_finish') {
 
-            updateUserInBankAccountTable(messageData.reporter_id, 10);
-            const user = await interaction.client.users.fetch(messageData.reporter_id);
+            await patchUserBalanceRequest(messageData.data.reporter_id, 10);
+            const user = await interaction.client.users.fetch(messageData.data.reporter_id);
             const embed = createEmbed(interaction, interaction.user.id, 'report_a_bug_dm.finishedTitle', 'report_a_bug_dm.finishedDescription', null, Colors.Green, null)
             await user.send({
                 embeds: [embed]
@@ -85,7 +85,7 @@ export async function handleBugReportButton(interaction) {
         
         } else if (interaction.customId === 'bug_report_remove') {
 
-            const user = await interaction.client.users.fetch(messageData.reporter_id);
+            const user = await interaction.client.users.fetch(messageData.data.reporter_id);
             const embed = createEmbed(interaction, interaction.user.id, 'report_a_bug_dm.removedTitle', 'report_a_bug_dm.removedDescription', null, Colors.Red, null)
             await user.send({
                 embeds: [embed]
@@ -93,7 +93,7 @@ export async function handleBugReportButton(interaction) {
 
         }
 
-        setReportToFinished(interaction.message.id);
+        await patchReportRequest(interaction.message.id);
         await interaction.message.delete();
     } catch (error) {
         errorLog(error, interaction);

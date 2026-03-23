@@ -8,11 +8,14 @@ import { validateChangePassword, validateChangePasswordBeforeLogin } from "../us
 import { handleBankAccountMenu } from "../user/personal_area/bankAccountMenu.js";
 import { handleBugReportButton, handleReportBugModal } from "../user/personal_area/reportBugModal.js";
 import { handleEnterCodeModal, handleRemoveFriendFriendlistStringSelect, handleFriendsMenu, handleFriendlistMenu } from "../user/personal_area/friendsMenu.js";
+import {fetchAndCacheLanguage} from "../helper/translator.js";
 
 export default {
     name: Events.InteractionCreate,
 
     async execute(interaction) {
+        await fetchAndCacheLanguage(interaction.user.id);
+
         if (interaction.isChatInputCommand()) {   
             const command = interaction.client.commands.get(interaction.commandName);
             try { 

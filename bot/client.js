@@ -21,4 +21,4 @@ const client = new Client({
 
 export default client;
 
-client.login(config.token);
+client.login(process.env.DISCORD_TOKEN);

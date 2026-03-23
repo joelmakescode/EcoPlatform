@@ -1,12 +1,6 @@
 import { Events } from "discord.js";
-import { checkForUsersTable } from "../databasequeries/userDatabase.js";
-import { checkForUserRolesTable } from "../databasequeries/userRolesDatabase.js";
-import { checkForGuildsLogDatabase } from "../databasequeries/guildDatabase.js";
-import { checkForUserBankAccount, checkForUserBankAccountTable } from "../databasequeries/userBankAccountDatabase.js";
-import { checkForAdminGuildChannelsDatabase } from "../databasequeries/adminGuildChannelsDatabase.js";
-import { checkForReportsDatabase } from "../databasequeries/reportsDatabase.js";
-import { checkForFriendlistDatabase } from "../databasequeries/friendlistDatabase.js";
-import { checkForCodeDatabase } from "../databasequeries/codeDatabase.js";
+import client from "../client.js";
+import {createNewUserRequest} from "../api/user.request.js";
 
 export default {
     name: Events.ClientReady,
@@ -15,20 +9,19 @@ export default {
     async execute(client) {
         console.log('Ready!');
 
+        await insertEveryNonExistentUser();
         client.user?.setPresence({ activities: [{ name: '/personal_area', type: 3 }]});
+    }
+}
 
-        checkForAdminGuildChannelsDatabase();
-        checkForCodeDatabase();
-        checkForFriendlistDatabase();
-        checkForGuildsLogDatabase();
-        checkForReportsDatabase();
-        checkForUserBankAccountTable();
-        checkForUsersTable();
-        checkForUserRolesTable();
+async function insertEveryNonExistentUser() {
+    const guild = client.guilds.cache.get("1315665248258363462");
+    if (!guild) return;
 
-        for (const guild of client.guilds.cache.values()) {
-            const members = await guild.members.fetch();
-            checkForUserBankAccount(members);
-        }
+    const members = await guild.members.fetch();
+
+    for (const [, member] of members) {
+        const discordId = member.user.id;
+        await createNewUserRequest(discordId);
     }
 }

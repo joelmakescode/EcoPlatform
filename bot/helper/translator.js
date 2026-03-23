@@ -1,8 +1,10 @@
 import en from '../json/languages/en.json' with { type: "json" };
 import de from '../json/languages/de.json' with { type: "json" };
-import { database } from '../databasequeries/database.js';
+import {getDiscordUserRequest} from "../api/discordUser.request.js";
 
 const languages = { en, de }
+
+const userLanguageCache = new Map();
 
 /**
  * Translates a given key into a valid response string.
@@ -12,7 +14,7 @@ const languages = { en, de }
  * @returns {string}
  */
 export function translate(userId, key) {
-    const language = whatLanguage(userId);
+    const language = userLanguageCache.get(userId) ?? 'en';
     const langFile = languages[language] ?? languages.en;
 
     const value = key
@@ -22,10 +24,18 @@ export function translate(userId, key) {
     return value ?? key;
 }
 
+export async function fetchAndCacheLanguage(userId) {
+    const userData = await getDiscordUserRequest(userId);
 
-export function whatLanguage(userId) {
-    const userData = database.prepare('SELECT language FROM users WHERE id = ?').get(userId);
+    const language = userData?.data?.language ?? 'en';
+    userLanguageCache.set(userId, language);
+
+    return language;
+}
+
+export async function whatLanguage(userId) {
+    const userData = await getDiscordUserRequest(userId);
     if (!userData) return 'en';
 
-    return userData.language;
+    return userData.data.language;
 }

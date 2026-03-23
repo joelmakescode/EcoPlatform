@@ -1,7 +1,11 @@
-import { MessageFlags } from "discord.js";
-import { insertIntoAdminGuildChannelsTable, selectIdFromAdminGuildChannelsTable, updateAdminGuildChannelsTable } from "../databasequeries/adminGuildChannelsDatabase.js";
 import { errorLog } from "../logs/logger.js";
 import { translate } from "../helper/translator.js";
+import {
+    createAdminChannelRequest,
+    getAdminChannelIdRequest,
+    patchAdminChannelRequest
+} from "../api/adminChannels.request.js";
+import {MessageFlags} from "discord.js";
 
 
 export async function handleSetBugReportChannel(interaction) {
@@ -11,14 +15,14 @@ export async function handleSetBugReportChannel(interaction) {
         const channelId = interaction.channelId;
         const channelName = interaction.channel?.name;
 
-        const channelAlreadyInserted = selectFromAdminGuildChannelsTable(channelName, 'id', 'name');
+        const channelAlreadyInserted = await getAdminChannelIdRequest('bug-reports');
     
 
         if (!channelAlreadyInserted) {
-            insertIntoAdminGuildChannelsTable(channelId, channelName);
+            await createAdminChannelRequest(channelId, channelName);
             await interaction.reply({ content: translate(userId, 'admin_content.bugReportChannelSuccessfullySetContent'), flags:MessageFlags.Ephemeral })
         } else {
-            updateAdminGuildChannelsTable(channelId, channelName);
+            await patchAdminChannelRequest(channelName, channelId);
             await interaction.reply({ content: translate(userId, 'admin_content.bugReportChannelSuccessfullyUpdatedContent'), flags: MessageFlags.Ephemeral });
         }
 
@@ -31,14 +35,12 @@ export async function handleRemoveBugReportChannel(interaction) {
     const userId = interaction.user.id;
 
     try {
-        
-        const channelId = interaction.channelId;
         const channelName = interaction.channel?.name;
 
-        const channelExists = selectIdFromAdminGuildChannelsTable('bug-reports');
+        const channelExists = await getAdminChannelIdRequest(channelName);
 
         if (channelExists) {
-            updateAdminGuildChannelsTable(channelId, null, channelName);
+            await patchAdminChannelRequest(channelName, null);
             await interaction.reply({ content: translate(userId, 'admin_content.bugReportChannelSuccessfullyRemovedContent'), flags: MessageFlags.Ephemeral });
         } else {
             await interaction.reply({ content: translate(userId, 'admin_content.bugReportChannelNotSetContent'), flags: MessageFlags.Ephemeral });

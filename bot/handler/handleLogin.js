@@ -5,18 +5,18 @@ import { MessageFlags, ModalBuilder, TextInputStyle, TextInputBuilder } from "di
 import { translate } from "../helper/translator.js";
 import { showMainMenu } from "../user/personal_area/mainMenu.js";
 import { errorLog, infoLog, warnLog } from "../logs/logger.js";
-import { database } from "../databasequeries/database.js";
+import {getDiscordUserRequest} from "../api/discordUser.request.js";
 
 export async function handleLogin(interaction) {
     const userId = interaction.user.id;    
     
     try {
         if (!isValidSnowflake(userId)) return;
-        const userData = checkForUserEntry(userId);
+        const userData = await getDiscordUserRequest(userId);
 
-        if (!userData.password_hash) {
-            handleRegistration(interaction);
-        } else if (userData.auto_fill === 1) { 
+        if (!userData) {
+            await handleRegistration(interaction);
+        } else if (userData.data.autofill === 1) {
             await interaction.deferReply({ flags: MessageFlags.Ephemeral });
             await showMainMenu(interaction, translate(userId, 'login.isValid'));
         } else {
@@ -53,11 +53,11 @@ export async function validateLogin(interaction) {
     try {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         
-        const userData = checkForUserEntry(userId);
-        const hashed_password = userData.password_hash;
+        const userData = await getDiscordUserRequest(userId);
+        const hashed_password = userData.data.password_hash;
         const inputPassword = interaction.fields.getTextInputValue('personal_area_login_password');
 
-        var isValid = await verifyPassword(inputPassword, hashed_password);
+        const isValid = await verifyPassword(inputPassword, hashed_password);
 
         if (isValid) {
             infoLog("User successfully logged in.", interaction);
@@ -69,15 +69,4 @@ export async function validateLogin(interaction) {
     } catch (error) {
         errorLog(error, interaction);
     }
-}
-
-/**
- * Checks if a user already exists in the database.
- * 
- * @param {number} userId 
- * @returns {userData}
- */
-function checkForUserEntry(userId){
-    const user = database.prepare(`SELECT password_hash, auto_fill FROM users WHERE id = ?`).get(userId);
-    return user ?? false;
 }

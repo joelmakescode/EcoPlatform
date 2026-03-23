@@ -1,6 +1,5 @@
 import { ActionRowBuilder } from "discord.js";
 import { translate } from "../../helper/translator.js";
-import { validateRoles } from "../../handler/handleRoles.js"; 
 import { errorLog } from "../../logs/logger.js";
 import { createMenu, determineMenu } from "../../helper/menuHelper.js";
 import { showSettingsMenu } from "./settingsMenu.js";

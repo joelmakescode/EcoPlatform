@@ -3,9 +3,7 @@ import { createMenu, determineMenu } from "../../helper/menuHelper.js";
 import { translate } from "../../helper/translator.js";
 import { errorLog } from "../../logs/logger.js";
 import { showSettingsMenu } from "./settingsMenu.js";
-import { database } from "../../databasequeries/database.js";
-
-
+import {getDiscordUserRequest, patchDiscordUserLanguage} from "../../api/discordUser.request.js";
 
 export async function showLanguageMenu(interaction) {
     const userId = interaction.user.id;
@@ -17,7 +15,7 @@ export async function showLanguageMenu(interaction) {
 
         const row = new ActionRowBuilder().addComponents(stringSelectMenu);
 
-        await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${whatLanguage(userId)}`, components: [row] });
+        await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${await whatLanguage(userId)}`, components: [row] });
     } catch (error) {
         errorLog(error, interaction);
     }
@@ -41,20 +39,20 @@ export async function handleLanguageMenu(interaction) {
             const row = new ActionRowBuilder().addComponents(stringSelectMenu);
             
             try {
-                const isValid = validateLanguage(userId, value);    
+                const isValid = await validateLanguage(userId, value);
 
                 if (!isValid) {
-                    await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${whatLanguage(userId)} - ${translate(userId, 'language_menu.responseFailedContent')}`, components: [row] });
+                    await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${await whatLanguage(userId)} - ${translate(userId, 'language_menu.responseFailedContent')}`, components: [row] });
                 } else {
                     const languageToChangeTo = shortLanguage(value);
-                    database.prepare(`UPDATE users SET language = ? WHERE id = ?`).run(languageToChangeTo, userId);
-                    await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${whatLanguage(userId)} - ${translate(userId, 'language_menu.responseSuccessContent')}`, components: [row] });
+                    await patchDiscordUserLanguage(userId, languageToChangeTo);
+                    await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${await whatLanguage(userId)} - ${translate(userId, 'language_menu.responseSuccessContent')}`, components: [row] });
                 }
 
                 break;
             } catch (error) {
                 errorLog(error, interaction);
-                await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${whatLanguage(userId)} - ${translate(userId, 'standard_menu_option.responseErrorContent')}`, components: [row] });
+                await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${await whatLanguage(userId)} - ${translate(userId, 'standard_menu_option.responseErrorContent')}`, components: [row] });
             }
         
         default:
@@ -62,12 +60,15 @@ export async function handleLanguageMenu(interaction) {
     }
 }
 
-function validateLanguage(userId, value) {
-    if (whatLanguage(userId).toLowerCase() === value) {
+async function validateLanguage(userId, value) {
+    const current = await whatLanguage(userId);
+
+    if (typeof current !== "string") {
+        console.error("whatLanguage returned:", current);
         return false;
     }
 
-    return true;
+    return current.toLowerCase() !== value;
 }
 
 function shortLanguage(value) {
@@ -76,10 +77,13 @@ function shortLanguage(value) {
     return 'en';
 }
 
-function whatLanguage(userId) {
-    const userData = database.prepare('SELECT language FROM users WHERE id = ?').get(userId);
-    
-    if (userData.language === 'en') return 'English';
-    if (userData.language === 'de') return 'Deutsch';
+async function whatLanguage(userId) {
+    const userData = await getDiscordUserRequest(userId);
+
+    if (!userData || !userData.data.language) return 'English';
+
+    if (userData.data.language === 'en') return 'English';
+    if (userData.data.language === 'de') return 'Deutsch';
+
     return 'English';
 }
