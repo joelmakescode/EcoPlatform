@@ -31,7 +31,7 @@ async function createDiscordUser(req, res) {
 
 async function getUserByDiscordId(req, res) {
     try {
-        const { discordId } = req.body;
+        const { discordId } = req.params;
 
         if (!discordId) {
             return createBadRequestResponse(res, err.ErrDiscordIdNotGiven);

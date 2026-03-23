@@ -20,7 +20,7 @@ async function createUser(req, res) {
 
 async function getUserBalance(req, res) {
     try {
-        const { discordId, username } = req.body;
+        const { discordId, username } = req.query;
 
         if (!discordId && !username) {
             return createBadRequestResponse(res, err.ErrNoIdOrUsernameGiven);

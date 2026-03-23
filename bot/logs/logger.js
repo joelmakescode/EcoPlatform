@@ -1,4 +1,4 @@
-import { getGuildLogChannel } from "../api/apiClient.js";
+import {getGuildLogRequest} from "../api/guildLogs.request.js";
 
 export function errorLog(error, interaction) {
     sendConsoleLogMessage(error, interaction, 'ERROR');
@@ -33,18 +33,18 @@ function sendConsoleLogMessage(message, interaction, level) {
         console.log(JSON.stringify(data, null, 2));
     }
     
-    if (interaction != null) {
-        sendChannelLogMessage(data, interaction);
+    if (interaction) {
+        sendChannelLogMessage(data, interaction).then();
     }
 }
 
 async function sendChannelLogMessage(data, interaction) {
     try {
-        const channelData = await getGuildLogChannel(interaction.guildId);
-        if (!channelData.log_channel_id) return;
+        const channelData = await getGuildLogRequest(interaction.guild.id);
+        if (!channelData) return;
 
-        const channel = await interaction.client.channels.fetch(channelData.log_channel_id);
-        if (!channel) return; 
+        const channel = await interaction.client.channels.fetch(channelData.data.channel_id);
+        if (!channel) return;
 
         await channel.send({ content: JSON.stringify(data, null, 2)});
     } catch (error) {

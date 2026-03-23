@@ -1,8 +1,9 @@
 const { createBadRequestResponse, createOKResponse, createInternalServerResponse, createNotFoundResponse, createCreatedResponse } = require("../services/handler/status.handler");
-const { insertNewReport, updateReport } = require("../services/discordReport.service");
+const { insertNewReport, updateReport, selectReportData} = require("../services/discordReport.service");
 
 
 const err = {
+    ErrNoReportDataFound: "No Report Data Found",
     ErrNoMessageIdFound: "No MessageId Found",
     ErrNoMessageIdGiven: "No MessageId Given",
     ErrNoReporterIdGiven: "No ReporterId Given"
@@ -27,6 +28,24 @@ async function createNewReport(req, res) {
     }
 }
 
+async function getReportData(req, res) {
+    try {
+        const { messageId } = req.params;
+        if (!messageId) {
+            return createBadRequestResponse(res,err.ErrNoMessageIdGiven);
+        }
+
+        const messageData = await selectReportData(messageId);
+        if (!messageData) {
+            return createNotFoundResponse(res, err.ErrNoReportDataFound);
+        }
+
+        createOKResponse(res, messageData);
+    } catch(error) {
+        createInternalServerResponse(res, error);
+    }
+}
+
 async function finishReport(req, res) {
     try {
         const { messageId } = req.body;
@@ -45,4 +64,4 @@ async function finishReport(req, res) {
     }
 }
 
-module.exports = { createNewReport, finishReport };
+module.exports = { createNewReport, getReportData, finishReport };

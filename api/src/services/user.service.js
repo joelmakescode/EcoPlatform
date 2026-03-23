@@ -2,7 +2,7 @@ const pool = require("../config/database");
 
 async function insertUser(discordId, username) {
     if (discordId) {
-        const sql = `INSERT INTO users (discord_id) VALUES (?)`;
+        const sql = `INSERT IGNORE INTO users (discord_id) VALUES (?)`;
         const params = [discordId];
 
         const [result] = await pool.execute(sql, params);

@@ -1,7 +1,7 @@
 import { MessageFlags } from "discord.js";
 import { translate } from "../helper/translator.js";
 import { errorLog } from "../logs/logger.js";
-import { addOrUpdateGuildLogChannel, getGuildLogChannel, removeGuildLogChannel } from "../api/apiClient.js";
+import {createNewGuildLogRequest, getGuildLogRequest, patchGuildLogRequest} from "../api/guildLogs.request.js";
 
 
 export async function handleSetLogChannel(interaction) {
@@ -10,13 +10,13 @@ export async function handleSetLogChannel(interaction) {
     const channelId = interaction.channelId;
 
     try {
-        const channelAlreadyInserted = await getGuildLogChannel(guildId);
+        const channelAlreadyInserted = await getGuildLogRequest(guildId);
 
         if (!channelAlreadyInserted) {
-            await addOrUpdateGuildLogChannel(guildId, channelId);
+            await createNewGuildLogRequest(guildId, channelId);
             await interaction.reply({ content: translate(userId, 'admin_content.logChannelSuccessfullySetContent'), flags: MessageFlags.Ephemeral });
         } else {
-            await addOrUpdateGuildLogChannel(guildId, channelId);
+            await patchGuildLogRequest(guildId, channelId);
             await interaction.reply({ content: translate(userId, 'admin_content.logChannelSuccessfullyUpdatedContent'), flags: MessageFlags.Ephemeral });
         }
     } catch (error) {
@@ -31,12 +31,12 @@ export async function handleRemoveLogChannel(interaction) {
     const guildId = interaction.guildId;
 
     try {
-        const channelExists = await getGuildLogChannel(guildId);
+        const channelExists = await getGuildLogRequest(guildId);
 
         if (!channelExists) {
             await interaction.reply({ content: translate(userId, 'admin_content.logChannelNotSetContent'), flags: MessageFlags.Ephemeral });
         } else {
-            await removeGuildLogChannel(guildId);
+            await patchGuildLogRequest(guildId, null);
             await interaction.reply({ content: translate(userId, 'admin_content.logChannelSuccessfullyRemovedContent'), flags: MessageFlags.Ephemeral });
         }
     } catch (error) {

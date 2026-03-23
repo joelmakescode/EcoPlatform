@@ -1,6 +1,6 @@
 const pool = require('../config/database');
 
-async function insertAdminChannel(channelName, channelId) {
+async function insertAdminChannel(channelId, channelName) {
     const sql = `INSERT INTO discord_admin_channels (channel_name, channel_id) VALUES (?, ?)`;
     const params = [channelName, channelId];
 

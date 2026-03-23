@@ -3,8 +3,7 @@ import { createMenu, determineMenu } from "../../helper/menuHelper.js";
 import { errorLog } from "../../logs/logger.js";
 import { translate } from "../../helper/translator.js";
 import { showMainMenu } from "./mainMenu.js";
-import { selectUserBalanceAccountTable } from "../../api/apiClient.js";
-
+import {getUserBalanceRequest} from "../../api/user.request.js";
 
 export async function showBankAccountMenu(interaction, addedContent) {
     const userId = interaction.user.id;
@@ -36,8 +35,9 @@ export async function handleBankAccountMenu(interaction) {
             break;
 
         case 'account_balance':
-            
-            await showBankAccountMenu(interaction, `${translate(userId, 'bank_account_menu.responseSuccessBalanceRequestContent')} ${await selectUserBalanceAccountTable(userId)}$`);
+
+            const balance = await getUserBalanceRequest(userId);
+            await showBankAccountMenu(interaction, `${translate(userId, 'bank_account_menu.responseSuccessBalanceRequestContent')} ${balance.data.balance}$`);
             break;
     
         default:

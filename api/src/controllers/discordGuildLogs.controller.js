@@ -1,8 +1,11 @@
-const { insertGuildLogChannel, updateGuildLogChannel } = require("../services/discordGuildLogs.service");
-const { createBadRequestResponse, createInternalServerResponse, createOKResponse, createCreatedResponse } = require("../services/handler/status.handler");
+const { insertGuildLogChannel, updateGuildLogChannel, selectGuildLogChannelByGuildId} = require("../services/discordGuildLogs.service");
+const { createBadRequestResponse, createInternalServerResponse, createOKResponse, createCreatedResponse,
+    createNotFoundResponse
+} = require("../services/handler/status.handler");
 
 const err = {
     ErrInternalServerError: "Internal Server Error",
+    ErrNoChannelFound: "No Channel Found",
     ErrNoChannelIdGiven: "No ChannelId Given",
     ErrNoGuildIdGiven: "No GuildId Given"
 };
@@ -28,6 +31,24 @@ async function createNewGuildLogChannel(req, res) {
     }
 }
 
+async function getGuildLogChannel(req, res) {
+    try {
+        const { guildId } = req.params;
+        if (!guildId) {
+            return createBadRequestResponse(res, err.ErrNoGuildIdGiven);
+        }
+
+        const guildChannel = await selectGuildLogChannelByGuildId(guildId);
+        if (!guildChannel) {
+            return createNotFoundResponse(res, err.ErrNoChannelFound);
+        }
+
+        createOKResponse(res, guildChannel);
+    } catch(error) {
+        createInternalServerResponse(res, error);
+    }
+}
+
 async function removeOrUpdateGuildLogChannel(req, res) {
     try {
         const { guildId, channelId } = req.body;
@@ -46,4 +67,4 @@ async function removeOrUpdateGuildLogChannel(req, res) {
     }
 }
 
-module.exports = { createNewGuildLogChannel, removeOrUpdateGuildLogChannel };
+module.exports = { createNewGuildLogChannel, getGuildLogChannel, removeOrUpdateGuildLogChannel };

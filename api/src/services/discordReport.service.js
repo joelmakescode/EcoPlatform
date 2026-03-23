@@ -9,6 +9,15 @@ async function insertNewReport(messageId, reporterId) {
     return result.affectedRows > 0 ? { info: result.info, messageId, reporterId } : null;
 }
 
+async function selectReportData(messageId) {
+    const sql = `SELECT * FROM discord_reports WHERE message_id = ?`;
+    const params = [messageId];
+
+    const [result] = await pool.execute(sql, params);
+
+    return result[0];
+}
+
 async function updateReport(messageId) {
     const sql = `UPDATE discord_reports SET deleted_at = ? WHERE message_id = ?`;
     const params = [new Date(), messageId];
@@ -18,4 +27,4 @@ async function updateReport(messageId) {
     return result.affectedRows > 0 ? { info: result.info, messageId } : null;
 }
 
-module.exports = { insertNewReport, updateReport };
+module.exports = { insertNewReport, selectReportData, updateReport };

@@ -6,7 +6,7 @@ const discordUserController = require('../controllers/discordUser.controller');
 router.post('/discord-users', discordUserController.createDiscordUser);
 
 // Get a User
-router.get('/discord-users', discordUserController.getUserByDiscordId);
+router.get('/discord-users/:discordId', discordUserController.getUserByDiscordId);
 
 // Update Discord User Autofill
 router.patch('/discord-users/autofill', discordUserController.updateDiscordUserAutofill);

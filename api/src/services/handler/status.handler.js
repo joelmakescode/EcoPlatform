@@ -1,9 +1,9 @@
 function createOKResponse(res, data) {
-    res.status(200).json({ data: data });
+    res.status(200).json({ data });
 }
 
 function createCreatedResponse(res, data) {
-    res.status(201).json({ data: data });
+    res.status(201).json({ data });
 }
 
 function createBadRequestResponse(res, message) {

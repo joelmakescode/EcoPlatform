@@ -5,6 +5,9 @@ const discordGuildLogsController = require('../controllers/discordGuildLogs.cont
 // Create New Guild Log Channel
 router.post('/guild-logs', discordGuildLogsController.createNewGuildLogChannel)
 
+// Get Guild Log Channel By GuildId
+router.get('/guild-logs/:guildId', discordGuildLogsController.getGuildLogChannel);
+
 // Update Guild Log Channel
 router.patch('/guild-logs', discordGuildLogsController.removeOrUpdateGuildLogChannel);
 

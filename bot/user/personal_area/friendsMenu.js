@@ -5,7 +5,7 @@ import { errorLog } from "../../logs/logger.js";
 import { showMainMenu } from "./mainMenu.js";
 import { createEmbed } from "../../helper/embedHelper.js";
 import {createFriendRequest, deleteFriendRequest, getFriendlistRequest} from "../../api/friendlist.request.js";
-import {deleteCodeRequest, getCodeRequest} from "../../api/codes.request.js";
+import {createNewCodeRequest, deleteCodeRequest, getCodeRequest} from "../../api/codes.request.js";
 
 
 export async function showFriendsMenu(interaction, extraContent, extraCode, newStringSelectMenu) {
@@ -82,40 +82,40 @@ export async function handleEnterCodeModal(interaction) {
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedInvalidCodeContent'), null)
         }
 
-        if (userId === codeData.discord_id) {
+        if (userId === codeData.data.discord_id) {
             await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedCantAddYourselfContent'), null);
         }
 
-        if (Date.now() > codeData.expires_at) {
+        if (Date.now() > codeData.data.expires_at) {
             await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedExpiredCodeEnteredContent'), null);
         }
 
         const friendlistData = await getFriendlistRequest(userId);
-        if (friendlistData.includes(codeData.discord_id)) {
+        if (friendlistData.data.includes(codeData.data.discord_id)) {
             await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedAlreadyFriendContent'));
         }
 
-        if (friendlistData.length >= 24) {
+        if (friendlistData.data.length >= 24) {
             await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedYouHaveTooManyFriendsContent'));
         }
 
         const userFriendlistData = await getFriendlistRequest(codeData.discord_id);
-        if (userFriendlistData.length >= 24) {
+        if (userFriendlistData.data.length >= 24) {
             await deleteCodeRequest(code);
             return await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseFailedUserHasTooManyFriendsContent'));
         }
 
-        await createFriendRequest(userId, codeData.discord_id);
-        await createFriendRequest(codeData.discord_id, userId);
+        await createFriendRequest(userId, codeData.data.discord_id);
+        await createFriendRequest(codeData.data.discord_id, userId);
 
-        await showFriendsMenu(interaction, `${translate(userId, 'friends_menu.responseSuccessFriendAddedContent')} - <@${codeData.discord_id}>`, null);
+        await showFriendsMenu(interaction, `${translate(userId, 'friends_menu.responseSuccessFriendAddedContent')} - <@${codeData.data.discord_id}>`, null);
 
-        const messageUser = await interaction.client.users.fetch(codeData.discord_id);
-        await messageUser.send({ embeds: [createEmbed(interaction, codeData.discord_id, 'friend_added_dm.title', 'friend_added_dm.description', null, Colors.Green, null, `<@${userId}>`)] });
+        const messageUser = await interaction.client.users.fetch(codeData.data.discord_id);
+        await messageUser.send({ embeds: [createEmbed(interaction, codeData.data.discord_id, 'friend_added_dm.title', 'friend_added_dm.description', null, Colors.Green, null, `<@${userId}>`)] });
 
         await deleteCodeRequest(code);
     } catch (error) {
@@ -173,8 +173,8 @@ async function handleAddFriend(interaction) {
     try {
         const userId = interaction.user.id;
 
-        await createNewCodeRequest(userId);
-        await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseSuccessYourCodeContent'), `\`${code}\``);
+        const codeData = await createNewCodeRequest(userId);
+        await showFriendsMenu(interaction, translate(userId, 'friends_menu.responseSuccessYourCodeContent'), `\`${codeData.data.code}\``);
     } catch (error) {
         errorLog(error, interaction);
         await interaction.update({ content: translate(interaction.user.id, 'standard_menu_option.responseErrorContent') });
