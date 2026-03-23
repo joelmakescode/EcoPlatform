@@ -24,6 +24,8 @@ services:
     build: ./api
     container_name: api
     restart: always
+    env_file:
+      - ./api/.env.dev
     environment:
       DB_USER: myuser
       DB_PASSWORD: mypassword
