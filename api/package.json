@@ -5,7 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node src/server.js",
-    "test": "jest --runInBand"
+    "test": "npx jest --runInBand"
   },
   "dependencies": {
     "dotenv": "^17.3.1",
@@ -15,6 +15,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "jest": "^30.3.0",
     "supertest": "^7.0.0"
   }

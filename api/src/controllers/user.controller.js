@@ -2,7 +2,7 @@ const { createInternalServerResponse, createOKResponse, createBadRequestResponse
 const { insertUser, selectUserBalance, updateUserBalance } = require("../services/user.service");
 
 const err = {
-    ErrNoIdOrUsernameGiven: "No DiscordId or Username given",
+    ErrNoIdAndUsernameGiven: "No DiscordId and Username given",
     ErrNoSumGiven:          "No Sum ($) given",
     ErrUserNotFound:        "User Not Found",
 };
@@ -10,6 +10,9 @@ const err = {
 async function createUser(req, res) {
     try {
         const { discordId, username } = req.body;
+        if (!discordId && !username) {
+            return createBadRequestResponse(res, err.ErrNoIdAndUsernameGiven);
+        }
         const newUser = await insertUser(discordId, username); 
 
         createCreatedResponse(res, newUser);
@@ -23,7 +26,7 @@ async function getUserBalance(req, res) {
         const { discordId, username } = req.query;
 
         if (!discordId && !username) {
-            return createBadRequestResponse(res, err.ErrNoIdOrUsernameGiven);
+            return createBadRequestResponse(res, err.ErrNoIdAndUsernameGiven);
         }
 
         const userData = await selectUserBalance(discordId, username);
@@ -42,7 +45,7 @@ async function addUserBalance(req, res) {
         const { discordId, username, sum } = req.body;
 
         if (!discordId && !username) {
-            return createBadRequestResponse(res, err.ErrNoIdOrUsernameGiven);
+            return createBadRequestResponse(res, err.ErrNoIdAndUsernameGiven);
         }
         if (sum === undefined ||sum === null) {
             return createBadRequestResponse(res, err.ErrNoSumGiven);

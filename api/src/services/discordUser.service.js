@@ -27,12 +27,7 @@ async function updateAutofill(discordId, autofill) {
 
     const [result] = await pool.execute(sql, params);
 
-    return {
-        id: result.insertId,
-        info: result.info,
-        discordId,
-        autofill
-    }
+    return result.affectedRows > 0 ? { info: result.info, discordId,  autofill } : null;
 }
 
 async function updateLanguage(discordId, language) {
@@ -41,12 +36,7 @@ async function updateLanguage(discordId, language) {
 
     const [result] = await pool.execute(sql, params);
 
-    return {
-        id: result.insertId,
-        info: result.info,
-        discordId,
-        language
-    };
+    return result.affectedRows > 0 ? { info: result.info, discordId, language} : null;
 }
 
 async function updatePasswordHash(discordId, passwordHash) {
@@ -55,11 +45,7 @@ async function updatePasswordHash(discordId, passwordHash) {
 
     const [result] = await pool.execute(sql, params);
 
-    return {
-        id: result.insertId,
-        info: result.info,
-        discordId
-    };
+    return result.affectedRows > 0 ? { info: result.info, discordId } : null;
 }
 
 module.exports = { selectUserByDiscordId, insertDiscordUser, updateAutofill, updateLanguage, updatePasswordHash };
