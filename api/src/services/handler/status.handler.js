@@ -18,10 +18,14 @@ function createConflictResponse(res, message) {
     res.status(409).json({ error: message });
 }
 
+function createTooManyRequestsResponse(res, message) {
+    res.status(429).json({ error: message });
+}
+
 function createInternalServerResponse(res, error) {
     console.error(error);
 
     res.status(500).json({ error: error });
 }
 
-module.exports = { createOKResponse, createCreatedResponse, createBadRequestResponse, createNotFoundResponse, createConflictResponse, createInternalServerResponse };
+module.exports = { createOKResponse, createCreatedResponse, createBadRequestResponse, createNotFoundResponse, createConflictResponse, createTooManyRequestsResponse, createInternalServerResponse };
