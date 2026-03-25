@@ -10,19 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install SSH key
+      - name: Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy on server
+      - name: Deploy to Hetzner Server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-            cd /root/EcoPlatform &&
-            git pull &&
-            docker compose down &&
-            docker compose up -d --build
-          "
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            set -e
+
+            cd /root/EcoPlatform
+
+            echo "Pulling latest code..."
+            git pull origin main
+
+            echo "Building new Docker images..."
+            docker compose build
+
+            echo "Recreating containers..."
+            docker compose up -d
+
+            echo "Pruning unused Docker images..."
+            docker image prune -f
+
+            echo "✅ Deployment successful!"
+          EOF
