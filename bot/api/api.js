@@ -4,9 +4,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const API_URL = process.env.API_URL || 'http://localhost/api';
+const API_TOKEN = process.env.API_TOKEN;
 
 const api = axios.create({
-   baseURL: API_URL
+    baseURL: API_URL,
+    headers: {
+        Authorization: `Bearer ${API_TOKEN}`
+    }
 });
 
 export async function request(method, url, data = null) {
