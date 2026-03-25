@@ -6,11 +6,10 @@ services:
     container_name: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: economy
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
-      MYSQL_INITDB_SKIP_TZINFO: 1
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - mysqldata:/var/lib/mysql
       - ./api/src/database:/docker-entrypoint-initdb.d
@@ -25,26 +24,25 @@ services:
     container_name: api
     restart: always
     env_file:
-      - ./api/.env.dev
+      - api/.env
     environment:
-      DB_USER: myuser
-      DB_PASSWORD: mypassword
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: db
       DB_NAME: economy
       DB_PORT: 3306
-      JWT_SECRET: supersecretkey
+      JWT_SECRET: ${JWT_SECRET}
       PORT: 3000
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "3000:3000"
 
   bot:
     build: ./bot
     container_name: bot
     restart: always
-    env_file: ./bot/.env
+    env_file:
+      - ./bot/.env
     depends_on:
       - api
 
@@ -56,7 +54,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./Caddyfile.local:/etc/caddy/Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
