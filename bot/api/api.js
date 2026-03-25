@@ -3,7 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const API_URL = process.env.API_URL || 'http://localhost/api';
+const isLocal = process.env.NODE_ENV === 'local';
+
+const API_URL = isLocal ? 'http://localhost/api' : process.env.API_URL;
 const API_TOKEN = process.env.API_TOKEN;
 
 const api = axios.create({
