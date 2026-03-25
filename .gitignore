@@ -16,7 +16,6 @@ c++/c++.vcxproj.user
 # Env files
 *.env
 bot/.env
-api/.env.dev
 api/.env
 
 # Logs

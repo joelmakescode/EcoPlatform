@@ -14,8 +14,11 @@
   "bank_account_menu": {
     "account_balance": "Kontostand 💰",
     "content": "Bank Account Menü 🏦 - Wähle eine Kategorie aus",
+    "daily_claim": "Tägliche Belohnung einsammeln 💴",
     "placeholder": "Wähle eine Option",
-    "responseSuccessBalanceRequestContent": "Dein Kontostand:"
+    "responseFailedDailyClaimRequestContent": "Deine tägliche Belohnung ist noch nicht verfügbar.",
+    "responseSuccessBalanceRequestContent": "Dein Kontostand:",
+    "responseSuccessDailyClaimRequestContent": "Deine tägliche Belohnung in Höhe von 10$ wurde eingesammelt. ✅"
   },
   "casino_menu": {
     "content": "Casino Menü 💸 - Wähle eine Kategorie aus",

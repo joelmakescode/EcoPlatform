@@ -14,8 +14,11 @@
   "bank_account_menu": {
     "account_balance": "Balance 💰",
     "content": "Bank Account Menu 🏦 - Select a category",
+    "daily_claim": "Claim Your Daily Reward 💴",
     "placeholder": "Select an option",
-    "responseSuccessBalanceRequestContent": "Your balance:"
+    "responseFailedDailyClaimRequestContent": "Your daily reward is not available yet.",
+    "responseSuccessBalanceRequestContent": "Your balance:",
+    "responseSuccessDailyClaimRequestContent": "Your daily reward worth 10$ was claimed. ✅"
   },
   "casino_menu": {
     "content": "Casino Menu 💸 - Select a category",

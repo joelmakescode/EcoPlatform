@@ -1,4 +1,4 @@
-const { selectUserByDiscordId, insertDiscordUser, updatePasswordHash, updateLanguage, updateAutofill } = require('../services/discordUser.service');
+const { selectUserByDiscordId, insertDiscordUser, updatePasswordHash, updateLanguage, updateAutofill, updateDailyClaim} = require('../services/discordUser.service');
 const { createOKResponse, createNotFoundResponse, createBadRequestResponse, createInternalServerResponse, createCreatedResponse, createConflictResponse,
     createTooManyRequestsResponse
 } = require('../services/handler/status.handler');
@@ -147,6 +147,8 @@ async function updateDiscordUserDailyClaim(req, res) {
         }
 
         const updatedUser = await updateUserBalance(discordId, null, 10);
+        await updateDailyClaim(discordId);
+
         if (!updatedUser) {
             createInternalServerResponse(res, updatedUser.info)
         }

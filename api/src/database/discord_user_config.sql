@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS discord_user_config (
     password_hash VARCHAR(255),
     language VARCHAR(255) DEFAULT 'en',
     autofill INT DEFAULT 0,
-    daily_claim TIMESTAMP DEFAULT 0
+    daily_claim BIGINT DEFAULT 0
 );
