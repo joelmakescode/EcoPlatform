@@ -22,3 +22,7 @@ export const patchDiscordUserLanguage = async (discordId, language) => {
 export const patchDiscordUserPassword = async (discordId, passwordHash) => {
     return await request('patch', `${API_BASE_URL}${DISCORD_USERS_URL}/password`, { discordId, passwordHash });
 }
+
+export const patchDiscordUserDailyClaim = async (discordId) => {
+    return await request('patch', `${API_BASE_URL}${DISCORD_USERS_URL}/daily-claim`, { discordId });
+}

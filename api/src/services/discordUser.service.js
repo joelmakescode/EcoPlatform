@@ -62,4 +62,13 @@ async function updatePasswordHash(discordId, passwordHash) {
     };
 }
 
-module.exports = { selectUserByDiscordId, insertDiscordUser, updateAutofill, updateLanguage, updatePasswordHash };
+async function updateDailyClaim(discordId) {
+    const sql = `UPDATE discord_user_config SET daily_claim = ? WHERE discord_id = ?`;
+    const params = [Date.now(), discordId];
+
+    const [result] = await pool.execute(sql, params);
+
+    return result.affectedRows > 0 ? { info: result.info, discordId } : null;
+}
+
+module.exports = { selectUserByDiscordId, insertDiscordUser, updateAutofill, updateLanguage, updatePasswordHash, updateDailyClaim };

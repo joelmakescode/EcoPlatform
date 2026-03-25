@@ -38,7 +38,7 @@ export async function handleSettingsMenu(interaction) {
 
         case 'autofill_password':
 
-            handleAutoFillPassword(interaction);
+            await handleAutoFillPassword(interaction);
             break;
 
         case 'change_password':
@@ -68,10 +68,10 @@ async function handleAutoFillPassword(interaction) {
         const userData = await getDiscordUserRequest(userId);
 
         if (userData.data.autofill === 0) {
-            await patchDiscordUserAutofill(userId, 1);
+            await patchDiscordUserAutofill(userId, "1");
             await showSettingsMenu(interaction, 'settings_menu.responseTurnOnPasswordAutofillContent')
         } else {
-            await patchDiscordUserAutofill(userId, 1);
+            await patchDiscordUserAutofill(userId, "0");
             await showSettingsMenu(interaction, 'settings_menu.responseTurnOffPasswordAutofillContent');
         }
 

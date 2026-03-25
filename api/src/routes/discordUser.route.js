@@ -17,5 +17,7 @@ router.patch('/discord-users/language', discordUserController.updateDiscordUserL
 // Update Discord User Password
 router.patch('/discord-users/password', discordUserController.updateDiscordUserPasswordHash);
 
+// Update Discord User Daily Claim
+router.patch('/discord-users/daily-claim', discordUserController.updateDiscordUserDailyClaim);
 
 module.exports = router;
