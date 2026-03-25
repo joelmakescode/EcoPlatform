@@ -150,7 +150,7 @@ async function updateDiscordUserDailyClaim(req, res) {
         await updateDailyClaim(discordId);
 
         if (!updatedUser) {
-            createInternalServerResponse(res, updatedUser.info)
+            return createInternalServerResponse(res, "Database failure")
         }
 
         createOKResponse(res, updatedUser);
