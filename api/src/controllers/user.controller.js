@@ -62,4 +62,4 @@ async function addUserBalance(req, res) {
     }
 }
 
-module.exports = { createUser, getUserBalance, addUserBalance };
+module.exports = { createUser, getUserBalance, addUserBalance, err };

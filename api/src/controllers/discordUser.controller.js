@@ -16,6 +16,13 @@ async function createDiscordUser(req, res) {
     try {
         const { discordId, passwordHash } = req.body;
 
+        if (!discordId) {
+            createBadRequestResponse(res, err.ErrDiscordIdNotGiven);
+        }
+        if (!passwordHash) {
+            createBadRequestResponse(res, err.ErrPasswordHashNotGiven);
+        }
+
         const userData = await selectUserByDiscordId(discordId);
         if (userData) {
             return createConflictResponse(res, err.ErrUserExists);
@@ -64,7 +71,7 @@ async function updateDiscordUserAutofill(req, res) {
             createNotFoundResponse(res, err.ErrDiscordUserNotFound);
         }
         if (discordUserData.autofill === autofill) {
-            return createBadRequestResponse(res, err.ErrAutofillAlreadyChosen);
+            return createConflictResponse(res, err.ErrAutofillAlreadyChosen);
         }
 
         const updatedUser = await updateAutofill(discordId, autofill);
@@ -91,7 +98,7 @@ async function updateDiscordUserLanguage(req, res) {
             return createNotFoundResponse(res, err.ErrDiscordUserNotFound);
         }
         if (discordUserData.language === language) {
-            return createBadRequestResponse(res, err.ErrLanguageAlreadyChosen);
+            return createConflictResponse(res, err.ErrLanguageAlreadyChosen);
         }
 
         const updatedUser = await updateLanguage(discordId, language);
@@ -126,4 +133,4 @@ async function updateDiscordUserPasswordHash(req, res) {
     }
 }
 
-module.exports = { createDiscordUser, getUserByDiscordId, updateDiscordUserAutofill, updateDiscordUserLanguage, updateDiscordUserPasswordHash };
+module.exports = { createDiscordUser, getUserByDiscordId, updateDiscordUserAutofill, updateDiscordUserLanguage, updateDiscordUserPasswordHash, err };
