@@ -9,6 +9,11 @@ import { handleBankAccountMenu } from "../user/personal_area/bankAccountMenu.js"
 import { handleBugReportButton, handleReportBugModal } from "../user/personal_area/reportBugModal.js";
 import { handleEnterCodeModal, handleRemoveFriendFriendlistStringSelect, handleFriendsMenu, handleFriendlistMenu } from "../user/personal_area/friendsMenu.js";
 import {fetchAndCacheLanguage} from "../helper/translator.js";
+import {
+    handleCasinoGambleMenu,
+    handleCasinoMenu,
+    handleIndividualAmountModal
+} from "../user/personal_area/casinoMenu.js";
 
 export default {
     name: Events.InteractionCreate,
@@ -29,10 +34,13 @@ export default {
             if (interaction.customId === 'personal_area_change_password_modal') await validateChangePassword(interaction);
             if (interaction.customId === 'personal_area_change_password_modal_before_login') await validateChangePasswordBeforeLogin(interaction);
             if (interaction.customId === 'personal_area_friendlist_enter_code_modal') await handleEnterCodeModal(interaction);
+            if (interaction.customId === 'personal_area_individual_amount_gamble') await handleIndividualAmountModal(interaction);
             if (interaction.customId === 'personal_area_report_a_bug_modal') await handleReportBugModal(interaction);
         } else if (interaction.isStringSelectMenu()) {
             if (interaction.customId === 'main_menu_string_select') await handleMainMenu(interaction);
             if (interaction.customId === 'bank_account_menu_string_select') await handleBankAccountMenu(interaction);
+            if (interaction.customId === 'casino_menu_string_select') await handleCasinoMenu(interaction);
+            if (interaction.customId === 'casino_gamble_menu_string_select') await handleCasinoGambleMenu(interaction);
             if (interaction.customId === 'friends_menu_string_select') await handleFriendsMenu(interaction);
             if (interaction.customId === 'friendlist_menu_string_select') await handleFriendlistMenu(interaction);
             if (interaction.customId === 'remove_friend_friendlist_menu_string_select') await handleRemoveFriendFriendlistStringSelect(interaction);

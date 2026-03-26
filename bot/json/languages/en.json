@@ -22,7 +22,24 @@
   },
   "casino_menu": {
     "content": "Casino Menu 💸 - Select a category",
+    "gamble": "Gamble ☘️",
     "placeholder": "Select an option"
+  },
+  "casino_gamble_menu": {
+    "1": "Stake: 1$",
+    "5": "Stake: 5$",
+    "10": "Stake: 10$",
+    "50": "Stake: 50$",
+    "individual_amount": "Set An Individual Stake 💵",
+    "content": "Casino Gamble Menu ☘️ - Select a category",
+    "placeholder": "Select an option",
+    "responseModalLabel": "Stake",
+    "responseModalTitle": "Individual Stake",
+    "responseFailedInsufficientBalance": "You don't have enough money to set this stake.",
+    "responseFailedNaN": "Your input is only allowed to be a number. Don't enter letters or symbols.",
+    "responseFailedTooLow": "The entered amount can't be under 0$.",
+    "responseSuccessLost": "You lost. Maybe next time will get you the win!",
+    "responseSuccessWon": "Congratulations! ☘️ - You won following sum:"
   },
   "change_password_modal": {
     "title": "Change Password 🔑",
@@ -77,6 +94,7 @@
   },
   "main_menu": {
     "bank_account": "Bank Account 🏦",
+    "casino": "Casino 🎰",
     "friends": "Friends 👤",
     "placeholder": "Select an option",
     "roles": "Roles 👤",

@@ -7,6 +7,7 @@ import { showRolesMenu } from "./rolesMenu.js";
 import { showBankAccountMenu } from "./bankAccountMenu.js";
 import { showReportBugModal } from "./reportBugModal.js";
 import { showFriendsMenu } from "./friendsMenu.js";
+import {showCasinoMenu} from "./casinoMenu.js";
 
 export async function showMainMenu(interaction, content) {
     const userId = interaction.user.id;
@@ -42,6 +43,11 @@ export async function handleMainMenu(interaction) {
             await showBankAccountMenu(interaction);
             break;
 
+        case 'casino':
+
+            await showCasinoMenu(interaction);
+            break;
+
         case 'friends':
 
             await showFriendsMenu(interaction);
@@ -54,12 +60,12 @@ export async function handleMainMenu(interaction) {
 
         case 'roles':
 
-            showRolesMenu(interaction);
+            await showRolesMenu(interaction);
             break;
 
         case 'settings':
             
-            showSettingsMenu(interaction);
+            await showSettingsMenu(interaction);
             break;
     
         default:
