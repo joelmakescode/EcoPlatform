@@ -22,7 +22,24 @@
   },
   "casino_menu": {
     "content": "Casino Menü 💸 - Wähle eine Kategorie aus",
+    "gamble": "Zocken ☘️",
     "placeholder": "Wähle eine Option"
+  },
+  "casino_gamble_menu": {
+    "1": "Einsatz: 1$",
+    "5": "Einsatz: 5$",
+    "10": "Einsatz: 10$",
+    "50": "Einsatz: 50$",
+    "individual_amount": "Setze einen individuellen Einsatz 💵",
+    "content": "Casino Zocker Menü ☘️ - Wähle eine Kategorie aus",
+    "placeholder": "Wähle eine Option",
+    "responseModalLabel": "Einsatz",
+    "responseModalTitle": "Individueller Einsatz",
+    "responseFailedInsufficientBalance": "Du hast nicht genug Geld um diesen Einsatz zu setzen.",
+    "responseFailedNaN": "Deine Eingabe muss eine Zahl sein und darf keine Buchstaben oder Sonderzeichen enthalten.",
+    "responseFailedTooLow": "Die eingegebene Zahl darf nicht unter 0$ sein.",
+    "responseSuccessLost": "Schade! Du hast leider verloren.",
+    "responseSuccessWon": "Glückwunsch! ☘️ - Du hast folgende Summe gewonnen:"
   },
   "change_password_modal": {
     "title": "Passwort ändern 🔑",
@@ -77,6 +94,7 @@
   },
   "main_menu": {
     "bank_account": "Bank Account 🏦",
+    "casino": "Casino 🎰",
     "friends": "Freunde 👤",
     "placeholder": "Wähle eine Option",
     "roles": "Rollen 👤",

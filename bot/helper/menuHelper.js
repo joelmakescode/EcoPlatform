@@ -48,7 +48,7 @@ async function determineOptions(userId, menu, users) {
     }
 
     for (const [key, value] of Object.entries(menuSection)) {
-        if (key === 'content' || key === 'placeholder' || key === 'roles' || key.includes("Content")) continue;
+        if (key === 'content' || key === 'placeholder' || key === 'roles' || key.includes("Content") || key.includes('response')) continue;
 
         menuOptions.push({
             label: translate(userId, `${menu}.${key}`), value: key
