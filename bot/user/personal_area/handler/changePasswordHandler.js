@@ -84,7 +84,7 @@ export async function validateChangePasswordBeforeLogin(interaction) {
         const userExists = await getDiscordUserRequest(userId);
         if (!userExists) return await interaction.reply({ content: translate(userId, 'change_password_modal.responseFailedNoUserEntryExistsContent'), flags: MessageFlags.Ephemeral });
 
-        if (verifyPassword(input, userExists.data.password_hash)) {
+        if (await verifyPassword(input, userExists.data.password_hash)) {
             await interaction.reply({ content: translate(userId, 'change_password_modal.responseFailedPasswordChangeContent'), flags: MessageFlags.Ephemeral });
         } else {
             await patchDiscordUserPassword(userId, await hashPassword(input));
