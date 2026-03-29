@@ -15,7 +15,7 @@ int main() {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     #endif
 
-    GLFWwindow* window = glfwCreateWindow(380, 200, "EcoPlatform", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(360, 200, "EcoPlatform", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
 

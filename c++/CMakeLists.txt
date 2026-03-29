@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 # GLFW
 find_package(PkgConfig REQUIRED)
+find_package(CURL REQUIRED)
 pkg_search_module(GLFW REQUIRED glfw3)
 
 find_path(GLFW_INCLUDE_DIR GLFW/glfw3.h
@@ -44,6 +45,13 @@ add_executable(EcoPlatform
         src/ui/Pages/Aktien.cpp
         src/ui/Pages/Login.cpp
         src/ui/Pages/Login.h
+        src/api/HttpClient.h
+        src/api/HttpClient.h
+        src/api/HttpClient.cpp
+        src/api/SessionManager.h
+        src/api/AuthService.cpp
+        src/api/AuthService.h
+        external/json.hpp
 )
 
 # macOS
@@ -54,6 +62,7 @@ if(APPLE)
             "-framework IOKit"
             "-framework CoreVideo"
             "-framework OpenGL"
+            CURL::libcurl
     )
 else()
     target_link_libraries(EcoPlatform

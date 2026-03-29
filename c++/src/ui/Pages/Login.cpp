@@ -28,7 +28,7 @@ void LoginPage::render(bool& loggedIn, GLFWwindow* window) {
         ImGuiWindowFlags_NoCollapse
     );
 
-    float boxWidth = 380.0f;
+    float boxWidth = 360.0f;
     float boxHeight = 200.0f;
 
     ImVec2 boxPos = ImVec2(
@@ -53,8 +53,13 @@ void LoginPage::render(bool& loggedIn, GLFWwindow* window) {
     static char username[128] = "";
     static char password[128] = "";
 
-    ImGui::InputText("Username", username, 128);
-    ImGui::InputText("Password", password, 128, ImGuiInputTextFlags_Password);
+    ImGui::Text("Username");
+    ImGui::SameLine(70);
+    ImGui::InputText("##username", username, 128);
+
+    ImGui::Text("Password");
+    ImGui::SameLine(70);
+    ImGui::InputText("##password", password, 128, ImGuiInputTextFlags_Password);
 
     if (ImGui::Button("Login")) {
         if (tryLogin(username, password)) {
