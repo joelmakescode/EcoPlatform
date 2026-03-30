@@ -52,6 +52,8 @@ add_executable(EcoPlatform
         src/api/AuthService.cpp
         src/api/AuthService.h
         external/json.hpp
+        src/ui/Languages/Translation.h
+        src/ui/Languages/Translation.cpp
 )
 
 # macOS

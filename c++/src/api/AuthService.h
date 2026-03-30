@@ -3,9 +3,11 @@
 #include "HttpClient.h"
 
 class AuthService {
-    public:
+public:
     explicit AuthService(HttpClient& client);
-    bool Login(const std::string& username, const std::string& password) const;
+
+    bool Login(const std::string& username, const std::string& password, std::string& error) const;
+    bool Register(const std::string& username, const std::string& password, std::string& error) const;
 
 private:
     HttpClient& http;

@@ -7,7 +7,7 @@ Sidebar sidebar;
 
 void App::renderUI() {
     if (!loggedIn) {
-        LoginPage::render(loggedIn, window);
+        loginPage.render(loggedIn, window);
     } else {
         sidebar.render();
     }

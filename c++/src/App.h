@@ -1,9 +1,12 @@
 #include <GLFW/glfw3.h>
+#include "ui/Pages/Login.h"
 
 class App {
     public:
-    bool loggedIn = false;
-    GLFWwindow* window = nullptr;
-
     void renderUI();
+    GLFWwindow* window;
+
+    private:
+    bool loggedIn = false;
+    LoginPage loginPage;
 };

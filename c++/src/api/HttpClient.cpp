@@ -44,14 +44,13 @@ std::string HttpClient::Get(const std::string &url) {
     return response;
 }
 
-std::string HttpClient::Post(const std::string &url, const std::string &body) {
+std::string HttpClient::Post(const std::string &url, const std::string &body, long* httpStatus) {
     CURL* curl = curl_easy_init();
     if (!curl) {
         throw std::runtime_error("curl_easy_init failed");
     }
 
     std::string response;
-
     struct curl_slist* headers = nullptr;
     headers = curl_slist_append(headers, "Content-Type: application/json");
 
@@ -66,6 +65,7 @@ std::string HttpClient::Post(const std::string &url, const std::string &body) {
 
     CURLcode res = curl_easy_perform(curl);
 
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, httpStatus);
     curl_slist_free_all(headers);
     curl_easy_cleanup(curl);
 
