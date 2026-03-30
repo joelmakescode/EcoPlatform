@@ -1,8 +1,10 @@
 const { selectUserByDiscordId, insertDiscordUser, updatePasswordHash, updateLanguage, updateAutofill, updateDailyClaim} = require('../services/discordUser.service');
 const { createOKResponse, createNotFoundResponse, createBadRequestResponse, createInternalServerResponse, createCreatedResponse, createConflictResponse,
-    createTooManyRequestsResponse
+    createTooManyRequestsResponse,
+    createUnauthorizedResponse
 } = require('../services/handler/status.handler');
 const {updateUserBalance} = require("../services/user.service");
+const {verifyPassword} = require("../services/handler/passwordhash.handler");
 
 const err = {
     ErrAutofillNotGiven:        "No Autofill Given",
@@ -12,20 +14,27 @@ const err = {
     ErrDiscordUserNotFound:     "Discord User Not Found",
     ErrLanguageAlreadyChosen:   "Language Already Chosen By User",
     ErrLanguageNotGiven:        "No Language Given",
-    ErrPasswordHashNotGiven:    "No Password Hash Given",
+    ErrPasswordNotGiven:        "No Password Given",
+    ErrPasswordSame:            "Password can't be the same",
     ErrUserExists:              "User Already Exists"
 };
 
 async function createDiscordUser(req, res) {
     try {
-        const { discordId, passwordHash } = req.body;
+        const { discordId, password } = req.body;
+        if (!discordId) {
+            return createBadRequestResponse(res, err.ErrDiscordIdNotGiven);
+        }
+        if (!password) {
+            return createBadRequestResponse(res, err.ErrPasswordNotGiven);
+        }
 
         const userData = await selectUserByDiscordId(discordId);
         if (userData) {
             return createConflictResponse(res, err.ErrUserExists);
         }
 
-        const newUser = await insertDiscordUser(discordId, passwordHash);
+        const newUser = await insertDiscordUser(discordId, password);
 
         createCreatedResponse(res, newUser);
     } catch (error) {
@@ -108,21 +117,24 @@ async function updateDiscordUserLanguage(req, res) {
 
 async function updateDiscordUserPasswordHash(req, res) {
     try {
-        const { discordId, passwordHash } = req.body;
+        const { discordId, password } = req.body;
 
         if (!discordId) {
             return createBadRequestResponse(res, err.ErrDiscordIdNotGiven);
         }
-        if (!passwordHash) {
-            return createBadRequestResponse(res, err.ErrPasswordHashNotGiven)
+        if (!password) {
+            return createBadRequestResponse(res, err.ErrPasswordNotGiven)
         }
 
         const discordUserData = await selectUserByDiscordId(discordId);
         if (!discordUserData) {
             return createNotFoundResponse(res, err.ErrDiscordUserNotFound);
         }
+        if (await verifyPassword(password, discordUserData.password_hash)) {
+            return createConflictResponse(res, err.ErrPasswordSame);
+        }
 
-        const updatedUser = await updatePasswordHash(discordId, passwordHash);
+        const updatedUser = await updatePasswordHash(discordId, password);
 
         createOKResponse(res, updatedUser);
     } catch (error) {
@@ -159,4 +171,29 @@ async function updateDiscordUserDailyClaim(req, res) {
     }
 }
 
-module.exports = { createDiscordUser, getUserByDiscordId, updateDiscordUserAutofill, updateDiscordUserLanguage, updateDiscordUserPasswordHash, updateDiscordUserDailyClaim };
+async function loginDiscordUser(req, res) {
+    try {
+        const { discordId, password } = req.body;
+        if (!discordId) {
+            return createBadRequestResponse(res, err.ErrDiscordIdNotGiven);
+        }
+        if (!password) {
+            return createBadRequestResponse(res, err.ErrPasswordNotGiven);
+        }
+
+        const userData = await selectUserByDiscordId(discordId);
+        if (!userData) {
+            return createNotFoundResponse(res, err.ErrDiscordUserNotFound);
+        }
+
+        if (!(await verifyPassword(password, userData.password_hash))) {
+            return createUnauthorizedResponse(res, 'Not authorized')
+        }
+
+        createOKResponse(res, userData.password_hash);
+    } catch(error) {
+        createInternalServerResponse(res, error);
+    }
+}
+
+module.exports = { createDiscordUser, getUserByDiscordId, updateDiscordUserAutofill, updateDiscordUserLanguage, updateDiscordUserPasswordHash, updateDiscordUserDailyClaim, loginDiscordUser };

@@ -1,4 +1,6 @@
 const pool = require('../config/database');
+const {hashPassword} = require("./handler/passwordhash.handler");
+const {hash} = require("bcrypt");
 
 async function selectUserByDiscordId(discordId) {
     const sql = `SELECT * FROM discord_user_config WHERE discord_id = ?`;
@@ -8,7 +10,9 @@ async function selectUserByDiscordId(discordId) {
     return result[0];
 }
 
-async function insertDiscordUser(discordId, passwordHash) {
+async function insertDiscordUser(discordId, password) {
+    const passwordHash = await hashPassword(password);
+
     const sql = `INSERT INTO discord_user_config (discord_id, password_hash) VALUES (?, ?)`;
     const params = [discordId, passwordHash];
 
@@ -49,7 +53,9 @@ async function updateLanguage(discordId, language) {
     };
 }
 
-async function updatePasswordHash(discordId, passwordHash) {
+async function updatePasswordHash(discordId, password) {
+    const passwordHash = await hashPassword(password);
+
     const sql = `UPDATE discord_user_config SET password_hash = ? WHERE discord_id = ?`;
     const params = [passwordHash, discordId];
 
