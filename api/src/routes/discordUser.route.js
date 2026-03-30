@@ -5,6 +5,9 @@ const discordUserController = require('../controllers/discordUser.controller');
 // Create New User
 router.post('/discord-users', discordUserController.createDiscordUser);
 
+// Login User
+router.post('/discord-users/login', discordUserController.loginDiscordUser);
+
 // Get a User
 router.get('/discord-users/:discordId', discordUserController.getUserByDiscordId);
 

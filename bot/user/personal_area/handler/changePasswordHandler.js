@@ -1,9 +1,8 @@
 import { MessageFlags, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { translate } from "../../../helper/translator.js";
 import { errorLog } from "../../../logs/logger.js";
-import { hashPassword, verifyPassword } from "../../../helper/hashHelper.js";
 import { showSettingsMenu } from "../settingsMenu.js";
-import {getDiscordUserRequest, patchDiscordUserPassword} from "../../../api/discordUser.request.js";
+import {patchDiscordUserPassword} from "../../../api/discordUser.request.js";
 
 export async function showChangePasswordModal(interaction) {
     const userId = interaction.user.id;
@@ -60,14 +59,11 @@ export async function validateChangePassword(interaction) {
     const input = interaction.fields.getTextInputValue('change_password_input');
 
     try {
-        const userExists = await getDiscordUserRequest(userId);
-        if (!userExists) return;
-        // MORE PRECISE FEEDBACK
-        
-        if (await verifyPassword(input, userExists.data.password_hash)) {
+        const updatedUser = await patchDiscordUserPassword(userId, input);
+
+        if (updatedUser.status === 409) {
             await showSettingsMenu(interaction, 'settings_menu.responseFailedPasswordChangeContent');
         } else {
-            await patchDiscordUserPassword(userId, await hashPassword(input));
             await showSettingsMenu(interaction, 'settings_menu.responseSuccessPasswordChangeContent');
         }
     } catch (error) {
@@ -81,13 +77,11 @@ export async function validateChangePasswordBeforeLogin(interaction) {
         const userId = interaction.user.id;
         const input = interaction.fields.getTextInputValue('change_password_input');
 
-        const userExists = await getDiscordUserRequest(userId);
-        if (!userExists) return await interaction.reply({ content: translate(userId, 'change_password_modal.responseFailedNoUserEntryExistsContent'), flags: MessageFlags.Ephemeral });
+        const updatedUser = await patchDiscordUserPassword(userId, input);
 
-        if (await verifyPassword(input, userExists.data.password_hash)) {
+        if (updatedUser.status === 409) {
             await interaction.reply({ content: translate(userId, 'change_password_modal.responseFailedPasswordChangeContent'), flags: MessageFlags.Ephemeral });
         } else {
-            await patchDiscordUserPassword(userId, await hashPassword(input));
             await interaction.reply({ content: translate(userId, 'change_password_modal.responseSuccessPasswordChangeContent'), flags: MessageFlags.Ephemeral });
         }
     } catch (error) {
