@@ -15,16 +15,16 @@ const err = {
 
 async function createEcoplatformUser(req, res) {
     try {
-        const { username, passwordHash } = req.body;
+        const { username, password } = req.body;
 
         if (!username) {
             return createBadRequestResponse(res, err.ErrUsernameMissing);
         }
-        if (!passwordHash) {
+        if (!password) {
             return createBadRequestResponse(res, err.ErrPasswordMissing);
         }
 
-        const insertedUser = await insertEcoplatformUser(username, passwordHash);
+        const insertedUser = await insertEcoplatformUser(username, password);
         if (!insertedUser) {
             return createConflictResponse(res, err.ErrUserAlreadyExists);
         }
