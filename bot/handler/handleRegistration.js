@@ -1,6 +1,5 @@
 import { MessageFlags, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { errorLog } from "../logs/logger.js";
-import { hashPassword } from "../helper/hashHelper.js";
 import {createDiscordUserRequest} from "../api/discordUser.request.js";
 
 export async function handleRegistration(interaction) {
@@ -29,7 +28,7 @@ export async function validateRegistration(interaction) {
     try {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         
-        await createDiscordUserRequest(userId, await hashPassword(interaction.fields.getTextInputValue('personal_area_register_password')));
+        await createDiscordUserRequest(userId, interaction.fields.getTextInputValue('personal_area_register_password'));
 
         await interaction.editReply({ content: 'Successfully registered!' });
     } catch (error) {

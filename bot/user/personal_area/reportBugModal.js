@@ -78,7 +78,7 @@ export async function handleBugReportButton(interaction) {
 
             await patchUserBalanceRequest(messageData.data.reporter_id, 10);
             const user = await interaction.client.users.fetch(messageData.data.reporter_id);
-            const embed = createEmbed(interaction, interaction.user.id, 'report_a_bug_dm.finishedTitle', 'report_a_bug_dm.finishedDescription', null, Colors.Green, null)
+            const embed = createEmbed(interaction, interaction.user.id, 'report_a_bug_dm.finishedTitle', 'report_a_bug_dm.finishedDescription', null, Colors.Green, null, "")
             await user.send({
                 embeds: [embed]
             });
@@ -86,7 +86,7 @@ export async function handleBugReportButton(interaction) {
         } else if (interaction.customId === 'bug_report_remove') {
 
             const user = await interaction.client.users.fetch(messageData.data.reporter_id);
-            const embed = createEmbed(interaction, interaction.user.id, 'report_a_bug_dm.removedTitle', 'report_a_bug_dm.removedDescription', null, Colors.Red, null)
+            const embed = createEmbed(interaction, interaction.user.id, 'report_a_bug_dm.removedTitle', 'report_a_bug_dm.removedDescription', null, Colors.Red, null, "")
             await user.send({
                 embeds: [embed]
             });

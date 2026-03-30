@@ -22,8 +22,11 @@ export async function request(method, url, data = null) {
         }
 
         const res = await api(config);
-        return res.data;
+        return { ...res.data, status: res.status };
     } catch (error) {
         console.error("API ERROR!:", error.response?.data || error.message);
+        return {
+            status: error.response?.status
+        }
     }
 }

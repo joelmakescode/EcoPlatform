@@ -44,7 +44,7 @@ export async function handleBankAccountMenu(interaction) {
         case 'daily_claim':
 
             const dailyClaimData = await patchDiscordUserDailyClaim(userId);
-            if (!dailyClaimData) {
+            if (!dailyClaimData.data) {
                return await showBankAccountMenu(interaction, translate(userId, 'bank_account_menu.responseFailedDailyClaimRequestContent'));
             }
 

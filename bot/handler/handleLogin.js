@@ -1,11 +1,10 @@
 import { isValidSnowflake } from "../helper/isValidSnowflake.js";
 import { handleRegistration } from "./handleRegistration.js";
-import { verifyPassword } from "../helper/hashHelper.js";
 import { MessageFlags, ModalBuilder, TextInputStyle, TextInputBuilder } from "discord.js";
 import { translate } from "../helper/translator.js";
 import { showMainMenu } from "../user/personal_area/mainMenu.js";
 import { errorLog, infoLog, warnLog } from "../logs/logger.js";
-import {getDiscordUserRequest} from "../api/discordUser.request.js";
+import {getDiscordUserRequest, postLoginDiscordUserRequest} from "../api/discordUser.request.js";
 
 export async function handleLogin(interaction) {
     const userId = interaction.user.id;    
@@ -52,17 +51,14 @@ export async function validateLogin(interaction) {
 
     try {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-        
-        const userData = await getDiscordUserRequest(userId);
-        const hashed_password = userData.data.password_hash;
+
         const inputPassword = interaction.fields.getTextInputValue('personal_area_login_password');
+        const userData = await postLoginDiscordUserRequest(userId, inputPassword);
 
-        const isValid = await verifyPassword(inputPassword, hashed_password);
-
-        if (isValid) {
+        if (userData.status === 200) {
             infoLog("User successfully logged in.", interaction);
             await showMainMenu(interaction, translate(userId, 'login.isValid'));
-        } else {
+        } else if (userData.status === 401){
             warnLog("User tried to login with wrong credentials.", interaction);
             await interaction.editReply({ content: `${translate(userId, 'login.isNotValid')}` });
         }

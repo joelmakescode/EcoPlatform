@@ -2,7 +2,7 @@ const express = require("express");
 const swaggerUI = require("swagger-ui-express");
 const swaggerSpec = require("./config/swagger");
 const routes = require("./routes");
-const auth = require('../src/config/auth');
+const auth = require('./config/auth');
 
 const app = express();
 app.use(express.json());
