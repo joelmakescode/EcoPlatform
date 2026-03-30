@@ -67,7 +67,7 @@ async function loginEcoplatformUser(req, res) {
         if (!userData) {
             return createNotFoundResponse(res, err.ErrUserNotFound);
         }
-        if (await verifyPassword(password, userData.password_hash)) {
+        if (!await verifyPassword(password, userData.password_hash)) {
             return createUnauthorizedResponse(res, err.ErrNotAllowed);
         }
 
