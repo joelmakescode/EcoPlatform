@@ -1,6 +1,9 @@
 const pool = require('../config/database');
+const {hashPassword} = require("./handler/passwordhash.handler");
 
-async function insertEcoplatformUser(username, passwordHash) {
+async function insertEcoplatformUser(username, password) {
+    const passwordHash = await hashPassword(password);
+
     const sql = `INSERT IGNORE INTO ecoplatform_user_config (username, password_hash) VALUES (?, ?)`;
     const params = [username, passwordHash];
 

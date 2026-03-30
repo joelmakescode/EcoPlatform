@@ -10,6 +10,10 @@ function createBadRequestResponse(res, message) {
     res.status(400).json({ error: message });
 }
 
+function createUnauthorizedResponse(res, message) {
+    res.status(401).json({ error: message });
+}
+
 function createNotFoundResponse(res, message) {
     res.status(404).json({ error: message });
 }
@@ -28,4 +32,4 @@ function createInternalServerResponse(res, error) {
     res.status(500).json({ error: error });
 }
 
-module.exports = { createOKResponse, createCreatedResponse, createBadRequestResponse, createNotFoundResponse, createConflictResponse, createTooManyRequestsResponse, createInternalServerResponse };
+module.exports = { createOKResponse, createCreatedResponse, createBadRequestResponse, createUnauthorizedResponse, createNotFoundResponse, createConflictResponse, createTooManyRequestsResponse, createInternalServerResponse };
