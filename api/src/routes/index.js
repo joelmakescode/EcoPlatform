@@ -33,6 +33,6 @@ router.use(discordUserRoutes);
 router.use(ecoplatformUserRoutes);
 
 // Users
-router.use(auth, userRoutes);
+router.use(userRoutes);
 
 module.exports = router;
