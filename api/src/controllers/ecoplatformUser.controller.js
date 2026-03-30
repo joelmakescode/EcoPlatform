@@ -55,20 +55,20 @@ async function getEcoplatformUser(req, res) {
 
 async function loginEcoplatformUser(req, res) {
     try {
-        const { username, passwordHash } = req.body;
+        const { username, password } = req.body;
         if (!username) {
             return createBadRequestResponse(res, err.ErrUsernameMissing);
         }
-        if (!passwordHash) {
+        if (!password) {
             return createBadRequestResponse(res, err.ErrPasswordMissing);
         }
 
         const userData = await selectEcoplatformUser(username);
-        if (await verifyPassword(passwordHash, userData.passwordHash)) {
-            return createUnauthorizedResponse(res, err.ErrNotAllowed);
-        }
         if (!userData) {
             return createNotFoundResponse(res, err.ErrUserNotFound);
+        }
+        if (await verifyPassword(password, userData.password_hash)) {
+            return createUnauthorizedResponse(res, err.ErrNotAllowed);
         }
 
         createOKResponse(res, { token: process.env.API_TOKEN });
