@@ -5,7 +5,7 @@ async function insertEcoplatformUser(username, password) {
     const passwordHash = await hashPassword(password);
     const backUpCode = generateBackupCode();
 
-    const sql = `INSERT IGNORE INTO ecoplatform_user_config (username, password_hash, backup_code) VALUES (?, ?)`;
+    const sql = `INSERT IGNORE INTO ecoplatform_user_config (username, password_hash, backup_code) VALUES (?, ?, ?)`;
     const params = [username, passwordHash, backUpCode];
 
     const [result] = await pool.execute(sql, params);
