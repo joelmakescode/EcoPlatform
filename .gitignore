@@ -2,21 +2,9 @@
 bot/node_modules/
 api/node_modules/
 
-# C++
-c++/build/
-c++/*.exe
-c++/*.o
-c++/*.obj
-c++/.vs/c++.slnx
-c++/c++.slnx
-c++/c++.vcxproj
-c++/c++.vcxproj.filters
-c++/c++.vcxproj.user
-
 # Env files
 *.env
 bot/.env
-api/.env
 
 # Logs
 *.log
@@ -26,6 +14,3 @@ target/
 
 # .idea
 .idea/
-
-# Caddyfile
-Caddyfile.local
