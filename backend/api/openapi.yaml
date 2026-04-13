@@ -1,0 +1,22 @@
+openapi: 3.1.0
+info:
+  title: EcoPlatform API
+  version: 1.0.0
+
+paths:
+  /ping:
+    get:
+      operationId: Ping
+      summary: Simple ping
+      responses:
+        200:
+          description: OK response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
