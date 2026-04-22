@@ -10,6 +10,6 @@ COPY package*.json ./
 RUN npm ci --build-from-source
 
 # Rest des Codes kopieren
-COPY . .
+COPY bot .
 
 CMD ["node", "index.js"]

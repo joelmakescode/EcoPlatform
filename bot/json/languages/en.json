@@ -1,15 +1,6 @@
 {
   "admin_content": {
-    "failedContent": "An error occured. Please contact the administrator of this bot.",
-    "logChannelNotSetContent": "The log channel hasn't been set yet.",
-    "logChannelSuccessfullyRemovedContent": "The log channel has been successfully removed. ✅",
-    "logChannelSuccessfullySetContent": "The log channel has been successfully set to this channel. ✅",
-    "logChannelSuccessfullyUpdatedContent": "The log channel has been successfully updated to this channel. ✅",
-    "bugReportChannelNotSetContent": "The bug report channel hasn't been set yet.",
-    "bugReportChannelPermissionDeniedContent": "You are not allowed to use this command.",
-    "bugReportChannelSuccessfullyRemovedContent": "The bug report channel has been successfully removed. ✅",
-    "bugReportChannelSuccessfullySetContent": "The bug report channel has been successfully set. ✅",
-    "bugReportChannelSuccessfullyUpdatedContent": "The bug report channel has been successfully updated. ✅"
+    "failedContent": "An error occured. Please contact the administrator of this bot."
   },
   "bank_account_menu": {
     "account_balance": "Balance 💰",
@@ -48,36 +39,6 @@
     "responseFailedPasswordChangeContent": "New password can't be the same as the old password.",
     "responseSuccessPasswordChangeContent": "Password successfully changed. ✅"
   },
-  "enter_code_modal": {
-    "title": "Code",
-    "label": "Enter your Code"
-  },
-  "friend_added_dm": {
-    "description": "Your friend has accepted your friend request:",
-    "title": "Friend added"
-  },
-  "friendlist_menu": {
-    "placeholder": "Select an option",
-    "responseSuccessFriendlistMenuContent": "Your friendlist:"
-  },
-  "friends_menu": {
-    "add_friend": "Add Friend ➕",
-    "content": "Friends Menu 👤 - Select a category",
-    "enter_code": "Enter Friend Code 📟",
-    "friends_list": "Friendlist 📑",
-    "placeholder": "Select an option",
-    "remove_friend": "Remove Friend ➖",
-    "responseFailedAlreadyFriendContent": "This user is already your friend.",
-    "responseFailedCantAddYourselfContent": "You can't add yourself as a friend.",
-    "responseFailedCodeGeneratedBeforeContent": "You already generated a code in the past 30 minutes before, please wait a moment and generate a new one.",
-    "responseFailedExpiredCodeEnteredContent": "The code is expired. Ask your friend for a new one!",
-    "responseFailedNoFriendsContent": "You don't have any friends yet.",
-    "responseFailedInvalidCodeContent": "You entered an invalid code.",
-    "responseFailedUserHasTooManyFriendsContent": "The user that gave you the code has too many friends already.",
-    "responseFailedYouHaveTooManyFriendsContent": "You have too many friends already.",
-    "responseSuccessFriendAddedContent": "This user is your friend now:",
-    "responseSuccessYourCodeContent": "The Code for your friend is (copy now):"
-  },
   "language_menu": {
     "content": "Settings ⚙️ - Language Menu - Your current language:",
     "deutsch": "German",
@@ -100,21 +61,6 @@
     "roles": "Roles 👤",
     "report_bug": "Report a Bug 🗨️",
     "settings": "Settings ⚙️"
-  },
-  "remove_friend_friendlist_menu": {
-    "placeholder": "Select an option",
-    "responseSuccessFriendRemovedContent": "You removed the friend successfully."
-  },
-  "report_a_bug_modal": {
-    "description": "Describe the bug",
-    "title": "Report a Bug",
-    "where": "Tell us where or what is affected by the bug"
-  },
-  "report_a_bug_dm": {
-    "finishedDescription": "Your ticket was successfully implemented! You received 10$ as a reward.",
-    "finishedTitle": "Ticket implemented",
-    "removedDescription": "Your ticket was removed due to an insufficient description of the bug. Please be more precise next time and don't abuse the report a bug function.",  
-    "removedTitle": "Ticket closed"
   },
   "settings_menu": {
     "autofill_password": "Auto-Fill Password 📝",

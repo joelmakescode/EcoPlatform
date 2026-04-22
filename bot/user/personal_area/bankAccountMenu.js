@@ -3,8 +3,7 @@ import { createMenu, determineMenu } from "../../helper/menuHelper.js";
 import { errorLog } from "../../logs/logger.js";
 import { translate } from "../../helper/translator.js";
 import { showMainMenu } from "./mainMenu.js";
-import {getUserBalanceRequest} from "../../api/user.request.js";
-import {patchDiscordUserDailyClaim} from "../../api/discordUser.request.js";
+import { getUserBalanceRequest } from "../../api/user.request.js";
 
 export async function showBankAccountMenu(interaction, addedContent) {
     const userId = interaction.user.id;
@@ -38,17 +37,7 @@ export async function handleBankAccountMenu(interaction) {
         case 'account_balance':
 
             const balance = await getUserBalanceRequest(userId);
-            await showBankAccountMenu(interaction, `${translate(userId, 'bank_account_menu.responseSuccessBalanceRequestContent')} ${balance.data.balance}$`);
-            break;
-
-        case 'daily_claim':
-
-            const dailyClaimData = await patchDiscordUserDailyClaim(userId);
-            if (!dailyClaimData.data) {
-               return await showBankAccountMenu(interaction, translate(userId, 'bank_account_menu.responseFailedDailyClaimRequestContent'));
-            }
-
-            await showBankAccountMenu(interaction, translate(userId, 'bank_account_menu.responseSuccessDailyClaimRequestContent'))
+            await showBankAccountMenu(interaction, `${translate(userId, 'bank_account_menu.responseSuccessBalanceRequestContent')} ${balance}$`);
             break;
     
         default:

@@ -37,13 +37,25 @@ for (const folder of commandFolders) {
 
 const rest = new REST({ version: "10" }).setToken(config.token);
 
-/* --------------------- Command Deletion Examples ---------------------
+// --------------------- Command Deletion Examples ---------------------
 
-await rest.delete(
-    Routes.applicationGuildCommand(config.clientID, config.guildID, "COMMAND_ID")
-);
+/* (async () => {
+    try {
+        console.log("Deleting guild command...");
+        await rest.delete(
+            Routes.applicationGuildCommand(
+                config.clientID,
+                "1315665248258363462",   // GUILD ID
+                "1478366091519725720"    // COMMAND ID
+            )
+        );
+        console.log("Guild command deleted.");
+    } catch (error) {
+        console.error(error);
+    }
+})(); */
 
---------------------------------------------------------------------- */
+// --------------------------------------------------------------------- /
 
 (async () => {
     try {

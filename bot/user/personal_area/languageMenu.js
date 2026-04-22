@@ -3,7 +3,7 @@ import { createMenu, determineMenu } from "../../helper/menuHelper.js";
 import { translate } from "../../helper/translator.js";
 import { errorLog } from "../../logs/logger.js";
 import { showSettingsMenu } from "./settingsMenu.js";
-import {getDiscordUserRequest, patchDiscordUserLanguage} from "../../api/discordUser.request.js";
+import { getDiscordUserRequest, putDiscordUserLanguage } from "../../api/discordUser.request.js";
 
 export async function showLanguageMenu(interaction) {
     const userId = interaction.user.id;
@@ -45,7 +45,7 @@ export async function handleLanguageMenu(interaction) {
                     await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${await whatLanguage(userId)} - ${translate(userId, 'language_menu.responseFailedContent')}`, components: [row] });
                 } else {
                     const languageToChangeTo = shortLanguage(value);
-                    await patchDiscordUserLanguage(userId, languageToChangeTo);
+                    await putDiscordUserLanguage(userId, languageToChangeTo);
                     await interaction.update({ content: `${translate(userId, 'language_menu.content')} ${await whatLanguage(userId)} - ${translate(userId, 'language_menu.responseSuccessContent')}`, components: [row] });
                 }
 

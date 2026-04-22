@@ -1,24 +1,12 @@
 { 
   "admin_content": {
-    "failedContent": "Ein Fehler ist aufgetreten. Bitte kontaktiere den Administrator dieses Bots.",
-    "logChannelNotSetContent": "Der Log-Channel wurde noch nicht gesetzt.",
-    "logChannelSuccessfullyRemovedContent": "Der Log-Channel wurde erfolgreich entfernt. ✅",
-    "logChannelSuccessfullySetContent": "Der Log-Channel wurde erfolgreich gesetzt. ✅",
-    "logChannelSuccessfullyUpdatedContent": "Der Log-Channel wurde erfolgreich aktualisiert. ✅",
-    "bugReportChannelNotSetContent": "Der Bug-Report-Channel wurde noch nicht gesetzt.",
-    "bugReportChannelPermissionDeniedContent": "Du darfst diesen Befehl nicht benutzen.",
-    "bugReportChannelSuccessfullyRemovedContent": "Der Bug-Report-Channel wurde erfolgreich entfernt. ✅",
-    "bugReportChannelSuccessfullySetContent": "Der Bug-Report-Channel wurde erfolgreich gesetzt. ✅",
-    "bugReportChannelSuccessfullyUpdatedContent": "Der Bug-Report-Channel wurde erfolgreich aktualisiert. ✅"
+    "failedContent": "Ein Fehler ist aufgetreten. Bitte kontaktiere den Administrator dieses Bots."
   },
   "bank_account_menu": {
     "account_balance": "Kontostand 💰",
     "content": "Bank Account Menü 🏦 - Wähle eine Kategorie aus",
     "daily_claim": "Tägliche Belohnung einsammeln 💴",
-    "placeholder": "Wähle eine Option",
-    "responseFailedDailyClaimRequestContent": "Deine tägliche Belohnung ist noch nicht verfügbar.",
-    "responseSuccessBalanceRequestContent": "Dein Kontostand:",
-    "responseSuccessDailyClaimRequestContent": "Deine tägliche Belohnung in Höhe von 10$ wurde eingesammelt. ✅"
+    "placeholder": "Wähle eine Option"
   },
   "casino_menu": {
     "content": "Casino Menü 💸 - Wähle eine Kategorie aus",
@@ -48,36 +36,6 @@
     "responseFailedPasswordChangeContent": "Neues Passwort darf nicht dem alten Passwort entsprechen.",
     "responseSuccessPasswordChangeContent": "Passwort erfolgreich geändert. ✅"
   },
-  "enter_code_modal": {
-    "title": "Code Eingabe",
-    "label": "Gib deinen Code ein"
-  },
-  "friend_added_dm": {
-    "description": "Dein Freund hat die Freundschaftsanfrage angenommen:",
-    "title": "Freund hinzugefügt"
-  },
-  "friendlist_menu": {
-    "placeholder": "Wähle eine Option",
-    "responseSuccessFriendlistMenuContent": "Deine Freundesliste:"
-  },
-  "friends_menu": {
-    "add_friend": "Freund hinzufügen ➕",
-    "content": "Freunde Menü👤 - Wähle eine Kategorie aus",
-    "enter_code": "Freundes-Code eingeben 📟",
-    "friends_list": "Freundesliste 📑",
-    "placeholder": "Wähle eine Option",
-    "remove_friend": "Freund entfernen ➖",
-    "responseFailedAlreadyFriendContent": "Der Benutzer ist bereits dein Freund.",
-    "responseFailedCantAddYourselfContent": "Du kannst dich nicht selber als Freund hinzufügen.",
-    "responseFailedCodeGeneratedBeforeContent": "Du hast in den letzten 30 Minuten bereits einen Code generiert, bitte warte und generiere dann einen neuen Code.",
-    "responseFailedExpiredCodeEnteredContent": "Der Code ist abgelaufen. Frag deinen Freund nach einem neuen Code!",
-    "responseFailedNoFriendsContent": "Du hast keine Freunde bis jetzt.",
-    "responseFailedInvalidCodeContent": "Du hast einen nicht gültigen Code eingegeben.",
-    "responseFailedUserHasTooManyFriendsContent": "Der Nutzer, der dir den Code gegeben hat, hat bereits zu viele Freunde.",
-    "responseFailedYouHaveTooManyFriendsContent": "Du hast zu viele Freunde bereits.",
-    "responseSuccessFriendAddedContent": "Folgender Nutzer ist nun dein Freund:",
-    "responseSuccessYourCodeContent": "Der Code für deinen Freund lautet (Jetzt kopieren):"
-  },
   "language_menu": {
     "content": "Einstellungen ⚙️ - Sprachen Menü - Deine momentane Sprache:",
     "deutsch": "Deutsch",
@@ -95,26 +53,12 @@
   "main_menu": {
     "bank_account": "Bank Account 🏦",
     "casino": "Casino 🎰",
-    "friends": "Freunde 👤",
     "placeholder": "Wähle eine Option",
-    "roles": "Rollen 👤",
-    "report_bug": "Melde einen Bug 🗨️",
     "settings": "Einstellungen ⚙️"
   },
   "remove_friend_friendlist_menu": {
     "placeholder": "Wähle eine Option",
     "responseSuccessFriendRemovedContent": "Du hast den Freund erfolgreich entfernt."
-  },
-  "report_a_bug_modal": {
-    "description": "Erläutere den Bug",
-    "title": "Melde einen Bug",
-    "where": "Sag uns, was vom Bug beeinträchtigt wird"
-  },
-  "report_a_bug_dm": {
-    "finishedDescription": "Dein Ticket wurde erfolgreich umgesetzt! Du erhältst 10$ als Belohnung.",
-    "finishedTitle": "Ticket bearbeitet",
-    "removedDescription": "Dein Ticket wurde aufgrund mangelnder Informationen bezüglich des Bugs entfernt. Bitte sei bei der Beschreibung präziser beim nächsten Mal.",
-    "removedTitle": "Ticket geschlossen"  
   },
   "settings_menu": {
     "autofill_password": "Passwort ausfüllen 📝",

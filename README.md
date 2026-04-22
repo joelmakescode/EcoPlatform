@@ -2,9 +2,9 @@
 
 Dieses Repository enthält drei Hauptkomponenten:
 
-- **Bot** – Discord-Bot
-- **API** – Node.js REST-API für die Bot-Kommunikation
-- **C++ App** – Standalone C++ Programm
+- **Bot** – Discord-Bot/Node.js Discord.js
+- **API** – GoLang Backend
+- **Frontend** - HTML Website
 
 Alle Komponenten liegen in separaten Unterordnern, aber teilen sich das gleiche Repository.
 
@@ -15,30 +15,43 @@ Alle Komponenten liegen in separaten Unterordnern, aber teilen sich das gleiche 
 ```text
 ecoplatform/
 ├─ bot/          # Discord-Bot
-├─ api/          # Node.js API
-├─ c++/      # C++ Programm
+├─ backend/      # API - GoLang
+├─ frontend/     # HTML Website
 ├─ README.md
 ├─ .gitignore
-└─ docker-compose.yml  (optional)
-
-# Feature-Branch für API
-git checkout -b feature/api-new
-# Feature-Branch für Bot
-git checkout -b feature/bot-new-command
-# Feature-Branch für C++ App
-git checkout -b feature/cpp-new-feature
-
-# Änderungen hinzufügen
-git add .
+└─ docker-compose.yml  
 
 # Commit mit klarer Nachricht
 git commit -m "feat(api): add new endpoint for stock history"
-
-# Push zu origin
-git push -u origin feature/api-new
 
 ```
 
 ## BRUNO 🐶
 
 ### HTTP REQUESTS
+
+#### User Requests
+
+```text
+POST - http://localhost:8080/api/users
+-----
+GET - http://localhost:8080/api/users/{id}
+GET - http://localhost:8080/api/users/balance/{id}
+-----
+PUT - http://localhost:8080/api/users/balance/{id}
+```
+
+#### Login (API)
+```text
+POST - http://localhost:8080/api/login
+```
+
+#### Login (Discord)
+```text
+POST - http://localhost:8080/api/discord-users/login
+```
+
+#### Discord User Requests
+```text
+POST - http://localhost:8080/api/discord-users
+```

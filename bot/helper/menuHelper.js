@@ -1,7 +1,7 @@
-import { translate, whatLanguage } from "./translator.js";
-import en from '../json/languages/en.json' with { type: "json" };
-import de from '../json/languages/de.json' with { type: "json" };
-import { StringSelectMenuBuilder } from "discord.js";
+import {translate, whatLanguage} from "./translator.js";
+import en from '../json/languages/en.json' with {type: 'json'};
+import de from '../json/languages/de.json' with {type: 'json'};
+import {StringSelectMenuBuilder} from "discord.js";
 import client from "../client.js";
 
 const languages = { en, de };
@@ -15,13 +15,11 @@ export function createMenu(menu) {
 }
 
 export async function determineMenu(userId, menuString, users) {
-    const menu = {
+    return {
         customId: `${menuString}_string_select`,
         placeholder: translate(userId, `${menuString}.placeholder`),
         options: await determineOptions(userId, menuString, users)
-    }
-
-    return menu;
+    };
 }
 
 async function determineOptions(userId, menu, users) {

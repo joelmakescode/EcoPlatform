@@ -2,7 +2,7 @@ import { MessageFlags, ModalBuilder, TextInputBuilder, TextInputStyle } from "di
 import { translate } from "../../../helper/translator.js";
 import { errorLog } from "../../../logs/logger.js";
 import { showSettingsMenu } from "../settingsMenu.js";
-import {patchDiscordUserPassword} from "../../../api/discordUser.request.js";
+import { putDiscordUserPassword } from "../../../api/discordUser.request.js";
 
 export async function showChangePasswordModal(interaction) {
     const userId = interaction.user.id;
@@ -59,7 +59,7 @@ export async function validateChangePassword(interaction) {
     const input = interaction.fields.getTextInputValue('change_password_input');
 
     try {
-        const updatedUser = await patchDiscordUserPassword(userId, input);
+        const updatedUser = await putDiscordUserPassword(userId, input);
 
         if (updatedUser.status === 409) {
             await showSettingsMenu(interaction, 'settings_menu.responseFailedPasswordChangeContent');
@@ -77,7 +77,7 @@ export async function validateChangePasswordBeforeLogin(interaction) {
         const userId = interaction.user.id;
         const input = interaction.fields.getTextInputValue('change_password_input');
 
-        const updatedUser = await patchDiscordUserPassword(userId, input);
+        const updatedUser = await putDiscordUserPassword(userId, input);
 
         if (updatedUser.status === 409) {
             await interaction.reply({ content: translate(userId, 'change_password_modal.responseFailedPasswordChangeContent'), flags: MessageFlags.Ephemeral });
