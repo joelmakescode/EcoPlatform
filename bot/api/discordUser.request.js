@@ -15,18 +15,14 @@ export const getDiscordUserRequest = async (discordId) => {
     return await request('get', `${API_BASE_URL}${DISCORD_USERS_URL}/${discordId}`);
 }
 
-export const patchDiscordUserAutofill = async (discordId, autofill) => {
-    return await request('patch', `${API_BASE_URL}${DISCORD_USERS_URL}/autofill`, { discordId, autofill });
+export const putDiscordUserAutofill = async (discordId) => {
+    return await request('patch', `${API_BASE_URL}${DISCORD_USERS_URL}/autofill/${discordId}`);
 }
 
-export const patchDiscordUserLanguage = async (discordId, language) => {
-    return await request('patch', `${API_BASE_URL}${DISCORD_USERS_URL}/language`, { discordId, language });
+export const putDiscordUserLanguage = async (discordId, language) => {
+    return await request('patch', `${API_BASE_URL}${DISCORD_USERS_URL}/language/${discordId}`, { language });
 }
 
-export const patchDiscordUserPassword = async (discordId, password) => {
-    return await request('patch', `${API_BASE_URL}${DISCORD_USERS_URL}/password`, { discordId, password });
-}
-
-export const patchDiscordUserDailyClaim = async (discordId) => {
-    return await request('patch', `${API_BASE_URL}${DISCORD_USERS_URL}/daily-claim`, { discordId });
+export const putDiscordUserPassword = async (discordId, password) => {
+    return await request('patch', `${API_BASE_URL}${DISCORD_USERS_URL}/password/${discordId}`, { password });
 }

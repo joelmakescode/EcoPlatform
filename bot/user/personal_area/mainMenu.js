@@ -3,23 +3,14 @@ import { translate } from "../../helper/translator.js";
 import { errorLog } from "../../logs/logger.js";
 import { createMenu, determineMenu } from "../../helper/menuHelper.js";
 import { showSettingsMenu } from "./settingsMenu.js";
-import { showRolesMenu } from "./rolesMenu.js";
 import { showBankAccountMenu } from "./bankAccountMenu.js";
-import { showReportBugModal } from "./reportBugModal.js";
-import { showFriendsMenu } from "./friendsMenu.js";
-import {showCasinoMenu} from "./casinoMenu.js";
+import { showCasinoMenu } from "./casinoMenu.js";
 
 export async function showMainMenu(interaction, content) {
     const userId = interaction.user.id;
 
     const mainMenu = await determineMenu(userId, 'main_menu');
-
-    // if (validateRoles(interaction, ['admin-DELETE-WHEN-NEEDED'])) {
-    //     mainMenu.options.push({ label: `${translate(userId, 'main_menu.roles')}`, value: 'roles' });
-    // }
-
     const stringSelectMenu = createMenu(mainMenu);
-
     const row = new ActionRowBuilder().addComponents(stringSelectMenu);
 
     try {    
@@ -48,20 +39,6 @@ export async function handleMainMenu(interaction) {
             await showCasinoMenu(interaction);
             break;
 
-        case 'friends':
-
-            await showFriendsMenu(interaction);
-            break;
-
-        case 'report_bug':
-
-            await showReportBugModal(interaction);
-            break;
-
-        case 'roles':
-
-            await showRolesMenu(interaction);
-            break;
 
         case 'settings':
             

@@ -1,66 +1,58 @@
-version: "3.9"
-
 services:
   db:
-    image: mysql:8.1
+    image: mysql:latest
     container_name: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: economy
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_DATABASE: ecoplatform
+      MYSQL_USER: ecoplatform
+      MYSQL_PASSWORD: 1
     volumes:
       - mysqldata:/var/lib/mysql
-      - ./api/src/database:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
       retries: 10
       timeout: 5s
 
-  api:
-    build: ./api
+  migrate:
+    image: flyway/flyway:latest
+    depends_on:
+      - db
+    volumes:
+      - ./backend/migrations:/flyway/mysql
+    command: >
+      -url=jdbc:mysql://db:3306/ecoplatform
+      -user=ecoplatform
+      -password=1
+      -locations=filesystem:/flyway/mysql
+      -connectRetries=10
+      migrate
+
+  backend:
+    build: ./backend
     container_name: api
     restart: always
     env_file:
-      - api/.env
+      - backend/.env
     environment:
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: db
-      DB_NAME: economy
-      DB_PORT: 3306
-      JWT_SECRET: ${JWT_SECRET}
-      PORT: 3000
+      DSN: ecoplatform:1@tcp(db:3306)/ecoplatform?parseTime=true
     depends_on:
       db:
         condition: service_healthy
+    ports:
+      - "8080:8080"
 
   bot:
     build: ./bot
     container_name: bot
     restart: always
+    profiles: ["bot"]
     env_file:
       - ./bot/.env
     depends_on:
-      - api
-
-  caddy:
-    image: caddy:latest
-    container_name: caddy
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      - api
+      - backend
 
 volumes:
   mysqldata:
-  caddy_data:
-  caddy_config:

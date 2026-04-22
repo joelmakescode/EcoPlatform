@@ -1,0 +1,582 @@
+openapi: 3.0.3
+info:
+  title: EcoPlatform API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+    description: API Server.
+
+paths:
+  /discord-users:
+    x-ogen-operation-group: DiscordUsers
+    post:
+      operationId: createDiscordUser
+      summary: Create a new Discord User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDiscordUserData'
+      responses:
+        201:
+          description: Discord User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscordUser'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        409:
+          $ref: '#/components/responses/Conflict'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /discord-users/login:
+    x-ogen-operation-group: DiscordUsers
+    post:
+      operationId: loginDiscordUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscordUserLoginData'
+      responses:
+        200:
+          description: Discord User successfully logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscordUserSessionData'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /discord-users/autofill/{id}:
+    x-ogen-operation-group: DiscordUsers
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Discord ID of the user
+        schema:
+          type: string
+    get:
+      operationId: getDiscordUserAutofillById
+      summary: Gets Autofill By DiscordId
+      responses:
+        200:
+          description: Discord User Autofill Config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscordUserAutofill'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      operationId: updateDiscordUserAutofillById
+      summary: Updates Discord User Autofill Config
+      responses:
+        200:
+          description: Discord User Autofill Config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscordUserAutofill'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /discord-users/language/{id}:
+    x-ogen-operation-group: DiscordUsers
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Discord ID of the user
+        schema:
+          type: string
+    get:
+      operationId: getDiscordUserLanguageById
+      summary: Get Discord User Language By Id
+      responses:
+        200:
+          description: Discord User Language Config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscordUserLanguage'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      operationId: updateDiscordUserLanguageById
+      summary: Update Discord User Language By Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscordUserLanguage'
+      responses:
+        200:
+          description: Discord User Language Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscordUserLanguage'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /discord-users/link-account/{id}:
+    x-ogen-operation-group: DiscordUsers
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Discord ID of the user
+        schema:
+          type: string
+    get:
+      operationId: getAccountLinkById
+      summary: Get Discord User Account Link By Id
+      responses:
+        200:
+          description: User has linked account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedAccountID'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/Conflict'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      operationId: linkAccount
+      summary: Create Account Link for Discord
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkCode'
+      responses:
+        201:
+          description: Link created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedAccountID'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/Conflict'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /login:
+    x-ogen-operation-group: Login
+    post:
+      operationId: loginUser
+      summary: Login User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginData'
+      responses:
+        200:
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /users:
+    x-ogen-operation-group: Users
+    post:
+      operationId: createUser
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserData'
+      responses:
+        201:
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        409:
+          $ref: '#/components/responses/Conflict'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/{id}:
+    x-ogen-operation-group: Users
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: integer
+    get:
+      operationId: getUserById
+      summary: Get a user by id
+      responses:
+        200:
+          description: User send successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+  /users/balance/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: integer
+    get:
+      x-ogen-operation-group: Users
+      operationId: getUserBalanceById
+      summary: Get User Balance By Id
+      responses:
+        200:
+          description: Balance send successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      x-ogen-operation-group: Users
+      operationId: updateUserBalanceById
+      summary: Update a User Balance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance'
+      responses:
+        200:
+          description: Balance updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/link-account-code/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: integer
+    x-ogen-operation-group: Users
+    post:
+      operationId: createLinkAccountCode
+      summary: Link User Account with Discord User
+      responses:
+        201:
+          description: Code successfully generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkCode'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+
+    Balance:
+      type: object
+      required:
+        - balance
+      properties:
+        balance:
+          type: integer
+          format: int64
+          example: 6767
+
+    BaseEntity:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+
+    DiscordUserAutofill:
+      type: object
+      required:
+        - autofill
+      properties:
+        autofill:
+          type: integer
+          example: 0
+
+    DiscordUserData:
+      type: object
+      required:
+        - discordId
+      properties:
+        discordId:
+          type: string
+          example: 00000000000000000000
+
+    DiscordUserLanguage:
+      type: object
+      required:
+        - language
+      properties:
+        language:
+          type: string
+          example: en
+
+    DiscordUserLoginData:
+      type: object
+      required:
+        - discordId
+        - password
+      properties:
+        discordId:
+          type: string
+          example: 00000000000000000000
+        password:
+          type: string
+          format: password
+
+    DiscordUserRegistrationData:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          format: password
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+
+    LinkCode:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          example: 676767
+
+    LinkedAccountID:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+
+    LoginData:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    Token:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+
+    UserData:
+      type: object
+      required:
+        - email
+        - username
+      properties:
+        email:
+          type: string
+          format: email
+          example: eco@platform.de
+          maxLength: 255
+        username:
+          type: string
+          format: username
+          example: ecoplatform
+          maxLength: 255
+
+    UserRegistrationData:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          description: User password
+          writeOnly: true
+          minLength: 8
+          maxLength: 255
+
+    CreateDiscordUserData:
+      allOf:
+        - $ref: '#/components/schemas/DiscordUserData'
+        - $ref: '#/components/schemas/DiscordUserRegistrationData'
+    CreateUserData:
+      allOf:
+        - $ref: '#/components/schemas/UserData'
+        - $ref: '#/components/schemas/UserRegistrationData'
+    DiscordUser:
+      allOf:
+        - $ref: '#/components/schemas/BaseEntity'
+        - $ref: '#/components/schemas/DiscordUserData'
+    DiscordUserSessionData:
+      allOf:
+        - $ref: '#/components/schemas/DiscordUserData'
+        - $ref: '#/components/schemas/DiscordUserAutofill'
+        - $ref: '#/components/schemas/DiscordUserLanguage'
+    User:
+      allOf:
+        - $ref: '#/components/schemas/BaseEntity'
+        - $ref: '#/components/schemas/UserData'
+
+  responses:
+    BadRequest:
+      description: Invalid Input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+

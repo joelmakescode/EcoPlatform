@@ -6,7 +6,7 @@ import { showMainMenu } from "./mainMenu.js";
 import { showLanguageMenu } from "./languageMenu.js";
 import { showChangePasswordModal } from "./handler/changePasswordHandler.js";
 import version from '../../json/version.json' with { type: 'json' };
-import {getDiscordUserRequest, patchDiscordUserAutofill} from "../../api/discordUser.request.js";
+import { getDiscordUserRequest, putDiscordUserAutofill } from "../../api/discordUser.request.js";
 
 export async function showSettingsMenu(interaction, addedContent) {
     const userId = interaction.user.id;
@@ -65,14 +65,12 @@ async function handleAutoFillPassword(interaction) {
     const userId = interaction.user.id;
     
     try {
-        const userData = await getDiscordUserRequest(userId);
+        const autofill = await putDiscordUserAutofill(userId);
 
-        if (userData.data.autofill === 0) {
-            await patchDiscordUserAutofill(userId, "1");
-            await showSettingsMenu(interaction, 'settings_menu.responseTurnOnPasswordAutofillContent')
-        } else {
-            await patchDiscordUserAutofill(userId, "0");
+        if (autofill === 0) {
             await showSettingsMenu(interaction, 'settings_menu.responseTurnOffPasswordAutofillContent');
+        } else {
+            await showSettingsMenu(interaction, 'settings_menu.responseTurnOnPasswordAutofillContent');
         }
 
     } catch (error) {

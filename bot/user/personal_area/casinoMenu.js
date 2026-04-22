@@ -3,7 +3,7 @@ import {createMenu, determineMenu} from "../../helper/menuHelper.js";
 import {ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle} from "discord.js";
 import {translate} from "../../helper/translator.js";
 import {showMainMenu} from "./mainMenu.js";
-import {getUserBalanceRequest, patchUserBalanceRequest} from "../../api/user.request.js";
+import {getUserBalanceRequest, putUserBalanceRequest } from "../../api/user.request.js";
 
 
 export async function showCasinoMenu(interaction) {
