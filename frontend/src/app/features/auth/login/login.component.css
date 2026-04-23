@@ -1,0 +1,36 @@
+.register-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.register-link a {
+  color: #00ffff;
+  text-decoration: none;
+  font-size: 13px;
+  cursor: pointer;
+
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.register-link a:hover {
+  color: #ff2fdc;
+  text-shadow: 0 0 6px #ff2fdc;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: rgba(0, 255, 255, 0.7);
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  opacity: 0.9;
+}
+
+
+

@@ -1264,7 +1264,7 @@ var jsonFieldsNameOfError = [1]string{
 // Decode decodes Error from json.
 func (s *Error) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode Error to nil")
+		return errors.New("invalid: unable to decode ErrorService to nil")
 	}
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
@@ -1284,7 +1284,7 @@ func (s *Error) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode Error")
+		return errors.Wrap(err, "decode ErrorService")
 	}
 
 	return nil

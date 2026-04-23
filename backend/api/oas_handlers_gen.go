@@ -89,7 +89,7 @@ func (s *Server) handleCreateDiscordUserRequest(args [0]string, argsEscaped bool
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -232,7 +232,7 @@ func (s *Server) handleCreateLinkAccountCodeRequest(args [1]string, argsEscaped 
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -375,7 +375,7 @@ func (s *Server) handleCreateUserRequest(args [0]string, argsEscaped bool, w htt
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -518,7 +518,7 @@ func (s *Server) handleGetAccountLinkByIdRequest(args [1]string, argsEscaped boo
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -661,7 +661,7 @@ func (s *Server) handleGetDiscordUserAutofillByIdRequest(args [1]string, argsEsc
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -804,7 +804,7 @@ func (s *Server) handleGetDiscordUserLanguageByIdRequest(args [1]string, argsEsc
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -947,7 +947,7 @@ func (s *Server) handleGetUserBalanceByIdRequest(args [1]string, argsEscaped boo
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1090,7 +1090,7 @@ func (s *Server) handleGetUserByIdRequest(args [1]string, argsEscaped bool, w ht
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1233,7 +1233,7 @@ func (s *Server) handleLinkAccountRequest(args [1]string, argsEscaped bool, w ht
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1389,7 +1389,7 @@ func (s *Server) handleLoginDiscordUserRequest(args [0]string, argsEscaped bool,
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1532,7 +1532,7 @@ func (s *Server) handleLoginUserRequest(args [0]string, argsEscaped bool, w http
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1675,7 +1675,7 @@ func (s *Server) handleUpdateDiscordUserAutofillByIdRequest(args [1]string, args
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1818,7 +1818,7 @@ func (s *Server) handleUpdateDiscordUserLanguageByIdRequest(args [1]string, args
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1976,7 +1976,7 @@ func (s *Server) handleUpdateUserBalanceByIdRequest(args [1]string, argsEscaped 
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to Error.
+			// max redirects exceeded), in which case status MUST be set to ErrorService.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)

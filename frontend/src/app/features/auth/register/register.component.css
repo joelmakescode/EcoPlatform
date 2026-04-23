@@ -1,0 +1,63 @@
+.auth-back-link {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 13px;
+  color: #00ffff;
+  text-decoration: none;
+  cursor: pointer;
+
+  opacity: 0.8;
+  transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+.auth-back-link:hover {
+  opacity: 1;
+  text-shadow: 0 0 6px #00ffff;
+}
+
+.auth-back-link .arrow {
+  font-size: 18px;
+  color: #9aa0a6;
+  transition: color 0.3s ease;
+}
+
+.auth-back-link .label {
+  font-size: 14px;
+  color: #00ffff;
+
+  opacity: 0;
+  transform: translateX(-4px);
+  pointer-events: none;
+
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.auth-back-link:hover .arrow {
+  color: #00ffff !important;
+}
+
+.auth-back-link:hover .label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.register-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: rgba(0, 255, 255, 0.7);
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.register-button:hover {
+  opacity: 0.9;
+}

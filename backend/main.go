@@ -30,6 +30,7 @@ func main() {
 
 	wrapped := middleware.BotAuthMiddleware(server)
 	wrapped = middleware.AuthMiddleware(wrapped)
+	wrapped = middleware.CORS(wrapped)
 
 	log.Println("API listening on :8080")
 	log.Fatal(http.ListenAndServe(":8080", wrapped))
@@ -47,9 +48,9 @@ func errorHandler(_ context.Context, w http.ResponseWriter, _ *http.Request, err
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, _ = fmt.Fprintf(w, `{"message":%q}`, err.Error())
-	log.Printf("Ogen Error: %v", err)
+	log.Printf("Ogen ErrorService: %v", err)
 
-	http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	http.Error(w, "Internal Server ErrorService", http.StatusInternalServerError)
 }
 
 func connectDB() *gorm.DB {

@@ -253,7 +253,7 @@ func (s *DiscordUserSessionData) SetLanguage(val string) {
 
 func (*DiscordUserSessionData) loginDiscordUserRes() {}
 
-// Ref: #/components/schemas/Error
+// Ref: #/components/schemas/ErrorService
 type Error struct {
 	Message OptString `json:"message"`
 }

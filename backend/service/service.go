@@ -14,7 +14,7 @@ var (
 	ErrInvalidEmailOrPassword     = errors.New("invalid Email or Password")
 	ErrInvalidPassword            = errors.New("invalid Password")
 	ErrPasswordNotHashed          = errors.New("password couldn't be hashed")
-	ErrUniqueConstraint           = errors.New("unique Constraint - Duplicate Entry")
+	ErrUniqueConstraint           = errors.New("conflict")
 	ErrUserCreateEmptyFields      = errors.New("email or Username field empty")
 	ErrUserNotFound               = errors.New("user not found")
 	ErrNoDiscordUserID            = errors.New("no Discord User Id Given")

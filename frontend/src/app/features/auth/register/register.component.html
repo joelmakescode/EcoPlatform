@@ -1,0 +1,101 @@
+<app-auth-layout>
+
+  <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+
+    <a routerLink="/login" class="auth-back-link">
+      <span class="arrow">←</span>
+      <span class="label">Back to Login</span>
+    </a>
+
+    <div class="form-field">
+      <input
+        type="email"
+        placeholder="Email"
+        [(ngModel)]="email"
+        name="email"
+        required
+        #emailField="ngModel"
+      />
+
+      <p class="field-error" *ngIf="emailField.invalid && emailField.touched">
+        * Email is required
+      </p>
+    </div>
+
+    <div class="form-field">
+      <input
+        type="text"
+        placeholder="Username"
+        [(ngModel)]="username"
+        name="username"
+        required
+        minlength="3"
+        #usernameField="ngModel"
+      />
+
+      <p class="field-error" *ngIf="usernameField.touched && usernameField.errors">
+        <span *ngIf="usernameField.errors['required']">
+          * Username is required
+        </span>
+
+        <span *ngIf="usernameField.errors['minlength']">
+          * Username must be at least 3 characters long
+        </span>
+      </p>
+    </div>
+
+    <div class="form-field">
+      <input
+        type="password"
+        placeholder="Password"
+        [(ngModel)]="password"
+        name="password"
+        required
+        minlength="8"
+        #passwordField="ngModel"
+      />
+
+      <p class="field-error" *ngIf="passwordField.touched && passwordField.errors">
+        <span *ngIf="passwordField.errors['required']">
+          * Password is required
+        </span>
+
+        <span *ngIf="passwordField.errors['minlength']">
+          * Password must be at least 8 characters long
+        </span>
+      </p>
+    </div>
+
+    <div class="form-field">
+      <input
+        type="password"
+        placeholder="Repeat Password"
+        [(ngModel)]="repeatPassword"
+        name="repeatpassword"
+        required
+        minlength="8"
+        #repeatpasswordField="ngModel"
+      />
+
+      <p class="field-error" *ngIf="repeatpasswordField.touched && repeatpasswordField.errors">
+        <span *ngIf="repeatpasswordField.errors['required']">
+          * Password is required
+        </span>
+
+        <span *ngIf="repeatpasswordField.errors['minlength']">
+          * Password must be at least 8 characters long
+        </span>
+      </p>
+
+      <p class="field-error" *ngIf="repeatpasswordField.touched && password && repeatPassword && repeatPassword !== password">
+        * Passwords must match
+      </p>
+    </div>
+
+    <button class="register-button" type="submit">
+       Register
+    </button>
+
+  </form>
+
+</app-auth-layout>
