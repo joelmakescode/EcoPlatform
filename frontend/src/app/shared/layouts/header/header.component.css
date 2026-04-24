@@ -1,0 +1,133 @@
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+
+  background: rgba(20, 25, 45, 0.95);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.25);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 24px;
+  z-index: 1000;
+}
+
+.header-left .icon {
+  width: 60px;
+  height: 60px;
+  margin-left: -8px;
+  filter: drop-shadow(0 0 8px #00ffff) drop-shadow(0 0 16px #ff2fdc);
+  cursor: pointer;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.balance {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 2px;
+}
+
+.username {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 12px;
+  border-radius: 10px;
+
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  cursor: pointer;
+}
+
+.user-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.user-icon {
+  width: 33px;
+  height: 33px;
+  margin-left: -4px;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  right: 0;
+
+  min-width: 160px;
+  padding: 8px 0;
+
+  background: rgba(20, 25, 45, 0.97);
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  display: none;
+  z-index: 1001;
+
+  top: calc(100% + 8px);
+  border-radius: 10px;
+}
+
+.user-menu.open .user-dropdown-menu {
+  display: block;
+}
+
+.user-dropdown-item {
+  width: 100%;
+  padding: 10px 16px;
+
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  font-size: 14px;
+
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.user-dropdown-item:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.user-dropdown-item.logout {
+  color: #ff6b6b;
+}
+
+.user-dropdown-item + .user-dropdown-item {
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  row-gap: 4px;
+}
