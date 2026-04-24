@@ -24,7 +24,7 @@ export class SuccessToastComponent {
       setTimeout(() => {
         this.visible = false;
         this.cdr.markForCheck();
-      }, 10000)
+      }, 3000)
     })
   }
 }
