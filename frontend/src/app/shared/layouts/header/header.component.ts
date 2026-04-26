@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, HostListener, inject} from '@angular/core';
 import {UserBalanceState} from '../../../core/user/user-balance.state';
 import {UserIdentityState} from '../../../core/user/user-identity.state';
 import {combineLatest} from 'rxjs';
@@ -23,4 +23,26 @@ export class HeaderComponent {
     identity: this.userState.user$,
     balance: this.balanceState.balance$,
   })
+
+  isDropDownOpen: boolean = false;
+
+  toggleDropDown(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isDropDownOpen = !this.isDropDownOpen;
+  }
+
+  closeDropDown(): void {
+    this.isDropDownOpen = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    if (target.closest('.user-menu')) {
+      return;
+    }
+
+    this.closeDropDown();
+  }
 }

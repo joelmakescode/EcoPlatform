@@ -4,9 +4,9 @@
   </a>
 
   <div class="header-right" *ngIf="vm$ | async as vm">
-    <div class="user-menu" *ngIf="vm.identity">
+    <div class="user-menu" *ngIf="vm.identity" [class.open]="isDropDownOpen" (click)="$event.stopPropagation()">
 
-      <button class="user-button" type="button">
+      <button class="user-button" type="button" (click)="toggleDropDown($event)">
 
         <img src="assets/icon_user.png" alt="user_icon" class="user-icon"/>
 
