@@ -1,7 +1,8 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {AuthService} from '../auth/auth.service';
 import {Observable} from 'rxjs';
+import {UserContextService} from './usercontext.service';
+import {environment} from '../../../environment';
 
 export interface Balance {
   balance: number;
@@ -16,26 +17,14 @@ export interface User {
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
-
-  private balanceUrl = 'http://localhost:8080/api/users/balance';
-  private userUrl = 'http://localhost:8080/api/users';
+  private userCtx = inject(UserContextService);
+  private readonly baseUrl = environment.apiBaseUrl;
 
   getUser() {
-    const userId = this.auth.getUserIdFromToken();
-    if (!userId) {
-      throw new Error('User not logged in.');
-    }
-
-    return this.http.get<User>(`${this.userUrl}/${userId}`);
+    return this.http.get<User>(`${this.baseUrl}/users/${this.userCtx.UserId}`);
   }
 
   getBalance(): Observable<Balance> {
-    const userId = this.auth.getUserIdFromToken();
-    if (!userId) {
-      throw new Error("User not logged in");
-    }
-
-    return this.http.get<Balance>(`${this.balanceUrl}/${userId}`);
+    return this.http.get<Balance>(`${this.baseUrl}/users/balance/${this.userCtx.UserId}`);
   }
 }
