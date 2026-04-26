@@ -8,6 +8,7 @@ import {AuthLayoutComponent} from '../../../shared/layouts/auth-layout/auth-layo
 import {SuccessService} from '../../../core/success/success.service';
 import {UserIdentityState} from '../../../core/user/user-identity.state';
 import {UserBalanceState} from '../../../core/user/user-balance.state';
+import {UserService} from '../../../core/user/user.service';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class LoginComponent {
   private auth = inject(AuthService);
   private errorService = inject(ErrorService);
   private successService = inject(SuccessService);
+  private userService = inject(UserService);
   private router = inject(Router);
 
   private balanceState = inject(UserBalanceState);
@@ -43,10 +45,11 @@ export class LoginComponent {
     this.auth.login(this.email, this.password).subscribe({
       next: () => {
         this.loading = false;
+
         this.successService.showApiSuccess("LOGIN_SUCCESSFUL");
 
-        this.identityState.setIdentity({ email: this.email, username: "Joel" });
-        this.balanceState.setBalance(1000);
+        this.identityState.loadIdentity();
+        this.balanceState.load();
 
         this.router.navigate(['/home']).then();
       },
