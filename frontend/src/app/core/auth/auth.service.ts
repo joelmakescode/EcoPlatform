@@ -1,18 +1,24 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs';
+import {isPlatformBrowser} from '@angular/common';
+import {environment} from '../../../environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient)
+  private platformId = inject(PLATFORM_ID);
 
-  private loginApiUrl: string = "http://localhost:8080/api/login";
-  private registerApiUrl: string = "http://localhost:8080/api/users";
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
+
+  private readonly baseUrl = environment.apiBaseUrl;
 
   login(email: string, password: string) {
-    return this.http.post<{ token: string }>(this.loginApiUrl, {
+    return this.http.post<{ token: string }>(this.baseUrl + "/login", {
       email,
       password,
       }).pipe(tap(response => {
@@ -22,7 +28,7 @@ export class AuthService {
   }
 
   register(email: string, username:string, password: string) {
-    return this.http.post<{ token: string }>(this.registerApiUrl, {
+    return this.http.post<{ token: string }>(this.baseUrl + "/users", {
       email,
       username,
       password,
@@ -30,10 +36,16 @@ export class AuthService {
   }
 
   getToken(): string | null {
+    if (!this.isBrowser()) {
+      return null;
+    }
     return localStorage.getItem('jwt_token');
   }
 
   getUserIdFromToken(): number | null {
+    if (!this.isBrowser()) {
+      return null;
+    }
     const token = localStorage.getItem('jwt_token');
     if (!token) {
       return null;
