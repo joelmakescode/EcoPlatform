@@ -1,6 +1,6 @@
 import {Component, HostListener, inject} from '@angular/core';
-import {UserBalanceState} from '../../../core/user/user-balance.state';
-import {UserIdentityState} from '../../../core/user/user-identity.state';
+import {UserBalanceState} from '../../../../client/states/user-balance.state';
+import {UserIdentityState} from '../../../../client/states/user-identity.state';
 import {combineLatest} from 'rxjs';
 import {AsyncPipe, DecimalPipe, NgIf} from '@angular/common';
 

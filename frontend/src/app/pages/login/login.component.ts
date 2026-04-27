@@ -1,14 +1,13 @@
 import {Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {AuthService} from '../../../core/auth/auth.service';
-import {ErrorService} from '../../../core/error/error.service';
+import {AuthService} from '../../services/auth/auth.service';
+import {ErrorService} from '../../services/messages/error/error.service';
 import {Router, RouterLink} from '@angular/router';
-import {AuthLayoutComponent} from '../../../shared/layouts/auth-layout/auth-layout.component';
-import {SuccessService} from '../../../core/success/success.service';
-import {UserIdentityState} from '../../../core/user/user-identity.state';
-import {UserBalanceState} from '../../../core/user/user-balance.state';
-import {UserService} from '../../../core/user/user.service';
+import {AuthLayoutComponent} from '../../component/shared/layouts/auth-layout/auth-layout.component';
+import {SuccessService} from '../../services/messages/success/success.service';
+import {UserService} from '../../services/user/user.service';
+import {StatesService} from '../../client/states.service';
 
 
 @Component({
@@ -22,12 +21,9 @@ import {UserService} from '../../../core/user/user.service';
 export class LoginComponent {
   private auth = inject(AuthService);
   private errorService = inject(ErrorService);
+  private statesService = inject(StatesService);
   private successService = inject(SuccessService);
-  private userService = inject(UserService);
   private router = inject(Router);
-
-  private balanceState = inject(UserBalanceState);
-  private identityState = inject(UserIdentityState);
 
   email: string = '';
   password: string = '';
@@ -47,9 +43,7 @@ export class LoginComponent {
         this.loading = false;
 
         this.successService.showApiSuccess("LOGIN_SUCCESSFUL");
-
-        this.identityState.loadIdentity();
-        this.balanceState.load();
+        this.statesService.loadRefreshStates();
 
         this.router.navigate(['/home']).then();
       },

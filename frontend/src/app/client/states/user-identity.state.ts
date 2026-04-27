@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {UserService} from './user.service';
+import {UserService} from '../../services/user/user.service';
 
 export interface UserIdentity {
   email: string;
@@ -20,7 +20,9 @@ export class UserIdentityState {
         this.identitySubject.next({
           email: user.email,
           username: user.username
-        })
+        });
+
+        localStorage.setItem('identity', JSON.stringify(user.username));
       },
       error: (error) => {
         console.error(error);
@@ -31,5 +33,6 @@ export class UserIdentityState {
 
   clear() {
     this.identitySubject.next(null);
+    localStorage.removeItem('identity');
   }
 }

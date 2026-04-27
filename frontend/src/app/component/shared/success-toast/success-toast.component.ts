@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SuccessService} from '../../core/success/success.service';
+import {SuccessService} from '../../../services/messages/success/success.service';
 
 @Component({
   selector: 'app-success-toast',

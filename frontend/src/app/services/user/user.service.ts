@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {UserContextService} from './usercontext.service';
-import {environment} from '../../../environment';
+import {environment} from '../../../environment/environment';
 
 export interface Balance {
   balance: number;

@@ -1,9 +1,8 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {ErrorToastComponent} from './shared/error-toast/error-toast.component';
-import {SuccessToastComponent} from './shared/success-toast/success-toast.component';
-import {HeaderComponent} from './shared/layouts/header/header.component';
-import {AppInitService} from './appinit.service';
+import {ErrorToastComponent} from './component/shared/error-toast/error-toast.component';
+import {SuccessToastComponent} from './component/shared/success-toast/success-toast.component';
+import {RefreshService} from './services/refresh/refresh.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +12,7 @@ import {AppInitService} from './appinit.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  constructor(init: AppInitService) {
-    init.init();
+  constructor(refresh: RefreshService) {
+    refresh.init();
   }
 }

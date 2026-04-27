@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ErrorService} from '../../core/error/error.service';
+import {ErrorService} from '../../../services/messages/error/error.service';
 
 @Component({
   selector: 'app-error-toast',

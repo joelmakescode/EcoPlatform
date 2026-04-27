@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {UserService} from './user.service';
+import {UserService} from '../../services/user/user.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -13,10 +13,12 @@ export class UserBalanceState {
   load() {
     this.userService.getBalance().subscribe(response => {
       this.balanceSubject.next(response.balance);
+      localStorage.setItem('balance', JSON.stringify(response.balance));
     })
   }
 
   clear(): void {
     this.balanceSubject.next(null);
+    localStorage.removeItem('balance');
   }
 }

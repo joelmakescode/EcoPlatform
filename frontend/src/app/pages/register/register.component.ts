@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {AuthLayoutComponent} from '../../../shared/layouts/auth-layout/auth-layout.component';
+import {AuthLayoutComponent} from '../../component/shared/layouts/auth-layout/auth-layout.component';
 import {RouterLink} from '@angular/router';
-import {AuthService} from '../../../core/auth/auth.service';
-import {SuccessService} from '../../../core/success/success.service';
-import {ErrorService} from '../../../core/error/error.service';
+import {AuthService} from '../../services/auth/auth.service';
+import {SuccessService} from '../../services/messages/success/success.service';
+import {ErrorService} from '../../services/messages/error/error.service';
 
 @Component({
   selector: 'app-register',
