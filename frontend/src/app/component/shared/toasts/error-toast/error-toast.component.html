@@ -2,9 +2,13 @@
   <div class="error-content">
     <img src="assets/icon_error.png" alt="icon_error" class="error-icon">
 
-    <span class="label">Message:</span>
-    {{message}}
+    <span class="error-message">
+      <span class="error-label">Message:</span>
+      {{message}}
+    </span>
   </div>
 
-  <strong class="error-text" *ngIf="status">Error {{status}}</strong>
+  <strong class="error-text" *ngIf="status">
+    Error {{status}}
+  </strong>
 </div>
