@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ErrorService} from '../../../services/messages/error/error.service';
+import {ErrorService} from '../../../../services/messages/error/error.service';
+import {ToastService} from '../toastservice/toast.service';
 
 @Component({
   selector: 'app-error-toast',
@@ -14,10 +15,16 @@ export class ErrorToastComponent implements OnInit {
   message: string | null = null;
   status?: number;
   visible = false;
+  top: number = 80;
 
-  constructor(private errorService: ErrorService, private cdr: ChangeDetectorRef) {}
+  constructor(private errorService: ErrorService, private toastService: ToastService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.toastService.topPosition$.subscribe(position => {
+      this.top = position;
+      this.cdr.markForCheck();
+    })
+
     this.errorService.error$.subscribe(error => {
       this.message = error.message;
       this.status = error.status;
