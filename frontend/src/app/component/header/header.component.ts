@@ -1,8 +1,9 @@
 import {Component, HostListener, inject} from '@angular/core';
-import {UserBalanceState} from '../../../../client/states/user-balance.state';
-import {UserIdentityState} from '../../../../client/states/user-identity.state';
+import {UserBalanceState} from '../../client/states/user-balance.state';
+import {UserIdentityState} from '../../client/states/user-identity.state';
 import {combineLatest} from 'rxjs';
 import {AsyncPipe, DecimalPipe, NgIf} from '@angular/common';
+import {AuthFacadeService} from '../../services/auth-facade/auth-facade.service';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +19,8 @@ import {AsyncPipe, DecimalPipe, NgIf} from '@angular/common';
 export class HeaderComponent {
   private balanceState = inject(UserBalanceState);
   private userState = inject(UserIdentityState);
+
+  private authFacadeService = inject(AuthFacadeService);
 
   vm$ = combineLatest({
     identity: this.userState.user$,
@@ -44,5 +47,9 @@ export class HeaderComponent {
     }
 
     this.closeDropDown();
+  }
+
+  logout() {
+    this.authFacadeService.logout();
   }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {HeaderComponent} from '../../component/shared/layouts/header/header.component';
+import {HeaderComponent} from '../../component/header/header.component';
 import {SidebarComponent} from '../../component/sidebar/sidebar.component';
 
 @Component({
