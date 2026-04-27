@@ -1,0 +1,10 @@
+<div class="error-toast" [class.show]="visible" [style.top.px]="top">
+  <div class="error-content">
+    <img src="assets/icon_error.png" alt="icon_error" class="error-icon">
+
+    <span class="label">Message:</span>
+    {{message}}
+  </div>
+
+  <strong class="error-text" *ngIf="status">Error {{status}}</strong>
+</div>

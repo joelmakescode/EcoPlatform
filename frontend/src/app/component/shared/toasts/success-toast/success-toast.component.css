@@ -1,0 +1,50 @@
+.success-toast {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+
+  background-color: #b9ffca;
+  border-color: #1cdc50;
+  color: #1f7a32;
+
+  padding: 14px;
+  border-radius: 8px;
+  min-width: 260px;
+  max-width: 380px;
+  box-sizing: border-box;
+
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+
+  box-shadow: 0 0 20px rgba(86, 255, 0, 0.6);
+  font-weight: bold;
+  z-index: 9999;
+
+  transform: translateX(120%);
+  opacity: 0;
+
+  transition: 0.4s ease, opacity 0.4s ease;
+}
+
+.success-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.success-toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.success-toast .success-label {
+  opacity: 0.85;
+}
+
+.success-icon {
+  height: 24px;
+  width: 24px;
+  flex-shrink: 0;
+}
+
