@@ -8,7 +8,7 @@
 
       <button class="user-button" type="button" (click)="toggleDropDown($event)">
 
-        <img src="assets/icon_user.png" alt="user_icon" class="user-icon"/>
+        <img src="assets/icons-header/icon_user.png" alt="user_icon" class="user-icon"/>
 
         <div class="user-text">
           <span class="username"> {{vm.identity.username}} </span>
@@ -21,8 +21,16 @@
       </button>
 
       <div class="user-dropdown-menu">
-        <button class="user-dropdown-item">Settings</button>
-        <button class="user-dropdown-item logout" (click)="logout()">Logout</button>
+        <button class="user-dropdown-item">
+          <img src="assets/icons-header/icon_settings.png" alt="icon_settings" class="user-dropdown-icon">
+
+          Settings
+        </button>
+        <button class="user-dropdown-item logout" (click)="logout()">
+          <img src="assets/icons-header/icon_logout.png" alt="icon_logout" class="user-dropdown-icon">
+
+          Logout
+        </button>
       </div>
     </div>
 
