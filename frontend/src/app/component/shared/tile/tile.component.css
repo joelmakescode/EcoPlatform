@@ -1,0 +1,79 @@
+.tile {
+  position: relative;
+  height: 260px;
+  width: 360px;
+  padding: 20px;
+  border-radius: 20px;
+
+  background: rgba(30, 30, 46, 0.75);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    backdrop-filter 0.25s ease;
+}
+
+.tile-header {
+  margin-top: -10px;
+  display: flex;
+  align-items: center;
+}
+
+.tile-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.tile-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.tile-body {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+}
+
+.tile:hover {
+  transform: translateY(-6px);
+
+  background: rgba(40, 40, 70, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    120% 120% at top left,
+    rgba(255, 255, 255, 0.08),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.tile:hover::before {
+  opacity: 1;
+}

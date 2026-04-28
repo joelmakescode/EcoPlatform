@@ -11,14 +11,6 @@ html, body {
   padding-top: 64px;
 }
 
-.container {
-  min-height: 100vh;
-  background: #0b0f1a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .form-field {
   margin-bottom: 12px;
 }
