@@ -1,0 +1,13 @@
+<div class="tile" [routerLink]="route">
+  <div class="tile-header">
+    <img *ngIf="icon" [src]="icon" class="tile-icon"/>
+
+    <h3 class="tile-title">
+      {{ title }}
+    </h3>
+  </div>
+
+  <div class="tile-body">
+    <ng-content></ng-content>
+  </div>
+</div>
