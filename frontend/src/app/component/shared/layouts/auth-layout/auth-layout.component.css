@@ -1,3 +1,10 @@
+.auth-container {
+  min-height: 100vh;
+  background: #0b0f1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .auth-card {
   position: relative;
   width: 500px;

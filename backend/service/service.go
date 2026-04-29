@@ -27,6 +27,14 @@ var (
 	ErrInvalidCode                = errors.New("invalid code")
 	ErrCodeExpired                = errors.New("code expired")
 	ErrCodeUsed                   = errors.New("code already used")
+	ErrCouldNotDecodeCursor       = errors.New("could not decode cursor")
+	ErrSameUser                   = errors.New("user cannot be the same")
+	ErrInvalidTransactionType     = errors.New("error invalid transaction type")
+	ErrMoneyNotSend               = errors.New("money couldn't be send")
+	ErrInsufficientBalance        = errors.New("insufficient balance")
+	ErrNoUserID                   = errors.New("no user id given")
+	ErrInvalidUUID                = errors.New("invalid uuid")
+	ErrTransactionNotCompleted    = errors.New("transaction couldn't be completed")
 )
 
 func HashPassword(password string) ([]byte, error) {

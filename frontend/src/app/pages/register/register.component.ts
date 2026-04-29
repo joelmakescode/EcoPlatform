@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {AuthLayoutComponent} from '../../component/shared/layouts/auth-layout/auth-layout.component';
 import {RouterLink} from '@angular/router';
 import {AuthService} from '../../services/auth/auth.service';
 import {SuccessService} from '../../services/messages/success/success.service';
@@ -10,7 +9,7 @@ import {ErrorService} from '../../services/messages/error/error.service';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, AuthLayoutComponent, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })

@@ -228,6 +228,147 @@ paths:
         500:
           $ref: '#/components/responses/InternalServerError'
 
+  /transactions:
+    x-ogen-operation-group: Transactions
+    post:
+      operationId: createTransaction
+      summary: Create New Transaction
+      description: Creates A New Transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransaction'
+
+      responses:
+        201:
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/Conflict'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /transactions/{id}/accept:
+    x-ogen-operation-group: Transactions
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Transaction ID
+        schema:
+          type: string
+    post:
+      operationId: acceptTransaction
+      summary: Accept a Transaction
+      responses:
+        204:
+          description: Transaction completed successfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /transactions/{id}/reject:
+    x-ogen-operation-group: Transactions
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Transaction ID
+        schema:
+          type: string
+    post:
+      operationId: rejectTransaction
+      summary: Reject a Transaction
+      responses:
+        204:
+          description: Transaction completed successfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /transactions/{id}/cancel:
+    x-ogen-operation-group: Transactions
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Transaction ID
+        schema:
+          type: string
+    post:
+      operationId: cancelTransaction
+      summary: Cancel a Transaction
+      responses:
+        204:
+          description: Transaction completed successfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /transactions/{id}:
+    x-ogen-operation-group: Transactions
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: number
+    get:
+      operationId: getTransactions
+      summary: Get User Transactions
+      description: Returns a paginated list of transactions for a user
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of transactions to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+
+        - name: cursor
+          in: query
+          description: Cursor for pagination
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: User Transactions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transactions'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+
+
   /users:
     x-ogen-operation-group: Users
     post:
@@ -479,6 +620,89 @@ components:
         token:
           type: string
 
+    Transaction:
+      type: object
+      required:
+        - id
+        - sender_id
+        - receiver_id
+        - amount
+        - type
+        - status
+        - created_at
+      properties:
+        id:
+          $ref: '#/components/schemas/TransactionID'
+        sender_id:
+          type: integer
+          description: Sender User ID
+        receiver_id:
+          type: integer
+          description: Receiver User ID
+        amount:
+          type: number
+          format: double
+          description: Transaction amount (positive or negative)
+        type:
+          type: string
+          enum: [send, request, refund]
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    TransactionID:
+      type: string
+      format: uuid
+      description: Transaction ID
+
+    TransactionPagination:
+      type: object
+      required:
+        - limit
+        - has_more
+      properties:
+        limit:
+          type: integer
+          description: Number of items returned
+        next_cursor:
+          type: string
+          nullable: true
+          description: Cursor for next page
+        has_more:
+          type: boolean
+          description: Indicates if more results exist
+
+    TransactionStatus:
+      type: string
+      enum:
+        - pending
+        - completed
+        - rejected
+        - cancelled
+
+    Transactions:
+      type: object
+      required:
+        - id
+        - transactions
+        - pagination
+      properties:
+        id:
+          type: integer
+          description: User ID
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        pagination:
+          $ref: '#/components/schemas/TransactionPagination'
+
     UserData:
       type: object
       required:
@@ -512,6 +736,31 @@ components:
       allOf:
         - $ref: '#/components/schemas/DiscordUserData'
         - $ref: '#/components/schemas/DiscordUserRegistrationData'
+    CreateTransaction:
+      type: object
+      required:
+        - sender_id
+        - receiver_id
+        - amount
+        - type
+      properties:
+        sender_id:
+          type: integer
+          format: int64
+
+        receiver_id:
+          type: integer
+          format: int64
+
+        amount:
+          type: number
+          format: double
+          minimum: 0.01
+
+        type:
+          type: string
+          enum: [send, request]
+          
     CreateUserData:
       allOf:
         - $ref: '#/components/schemas/UserData'

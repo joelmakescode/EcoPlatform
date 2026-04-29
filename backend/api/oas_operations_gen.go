@@ -6,17 +6,22 @@ package api
 type OperationName = string
 
 const (
+	AcceptTransactionOperation             OperationName = "AcceptTransaction"
+	CancelTransactionOperation             OperationName = "CancelTransaction"
 	CreateDiscordUserOperation             OperationName = "CreateDiscordUser"
 	CreateLinkAccountCodeOperation         OperationName = "CreateLinkAccountCode"
+	CreateTransactionOperation             OperationName = "CreateTransaction"
 	CreateUserOperation                    OperationName = "CreateUser"
 	GetAccountLinkByIdOperation            OperationName = "GetAccountLinkById"
 	GetDiscordUserAutofillByIdOperation    OperationName = "GetDiscordUserAutofillById"
 	GetDiscordUserLanguageByIdOperation    OperationName = "GetDiscordUserLanguageById"
+	GetTransactionsOperation               OperationName = "GetTransactions"
 	GetUserBalanceByIdOperation            OperationName = "GetUserBalanceById"
 	GetUserByIdOperation                   OperationName = "GetUserById"
 	LinkAccountOperation                   OperationName = "LinkAccount"
 	LoginDiscordUserOperation              OperationName = "LoginDiscordUser"
 	LoginUserOperation                     OperationName = "LoginUser"
+	RejectTransactionOperation             OperationName = "RejectTransaction"
 	UpdateDiscordUserAutofillByIdOperation OperationName = "UpdateDiscordUserAutofillById"
 	UpdateDiscordUserLanguageByIdOperation OperationName = "UpdateDiscordUserLanguageById"
 	UpdateUserBalanceByIdOperation         OperationName = "UpdateUserBalanceById"

@@ -1,7 +1,5 @@
-<app-auth-layout>
-  <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate>
-
-    <div class="form-field">
+<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate>
+   <div class="form-field">
       <input
         type="email"
         placeholder="Email"
@@ -20,35 +18,33 @@
       </p>
     </div>
 
-    <div class="form-field">
-      <input
-        type="password"
-        placeholder="Password"
-        [(ngModel)]="password"
-        name="password"
-        required
-        minlength="8"
-        #passwordField="ngModel"
-      />
-      <p class="field-error" *ngIf="passwordField.touched && passwordField.errors">
-        <span *ngIf="passwordField.errors['required']">
-          * Password field is required
-        </span>
-        <span *ngIf="passwordField.errors['minlength']">
-          * Password must be at least 8 characters long
-        </span>
-      </p>
-    </div>
+  <div class="form-field">
+    <input
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password"
+      name="password"
+      required
+      minlength="8"
+      #passwordField="ngModel"
+    />
+    <p class="field-error" *ngIf="passwordField.touched && passwordField.errors">
+      <span *ngIf="passwordField.errors['required']">
+        * Password field is required
+      </span>
+      <span *ngIf="passwordField.errors['minlength']">
+        * Password must be at least 8 characters long
+      </span>
+    </p>
+  </div>
 
-    <button class="login-button" type="submit">
-      {{ loading ? 'Logging in...' : 'Login' }}
-    </button>
+  <button class="login-button" type="submit">
+    {{ loading ? 'Logging in...' : 'Login' }}
+  </button>
 
-    <div class="register-link">
-      <a routerLink="/register">
-        Don't have an account yet? Register now!
-      </a>
-    </div>
-
-  </form>
-</app-auth-layout>
+  <div class="register-link">
+    <a routerLink="/register">
+      Don't have an account yet? Register now!
+    </a>
+  </div>
+</form>

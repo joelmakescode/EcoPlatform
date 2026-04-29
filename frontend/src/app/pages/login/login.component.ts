@@ -4,16 +4,14 @@ import {FormsModule} from '@angular/forms';
 import {AuthService} from '../../services/auth/auth.service';
 import {ErrorService} from '../../services/messages/error/error.service';
 import {Router, RouterLink} from '@angular/router';
-import {AuthLayoutComponent} from '../../component/shared/layouts/auth-layout/auth-layout.component';
 import {SuccessService} from '../../services/messages/success/success.service';
-import {UserService} from '../../services/user/user.service';
 import {StatesService} from '../../client/states.service';
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, AuthLayoutComponent],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })

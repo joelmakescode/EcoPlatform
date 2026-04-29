@@ -76,15 +76,18 @@ func connectDB() *gorm.DB {
 
 func initDependencies(gormDB *gorm.DB) api.Handler {
 	discordUserRepository := repository.NewDiscordUserRepository(gormDB)
+	transactionRepository := repository.NewTransactionRepository(gormDB)
 	userRepository := repository.NewUserRepository(gormDB)
 
-	discordUserService := service.NewDiscordUserService(discordUserRepository)
-	userService := service.NewUserService(userRepository)
 	authService := service.NewAuthService(userRepository)
+	discordUserService := service.NewDiscordUserService(discordUserRepository)
+	transactionService := service.NewTransactionService(transactionRepository, userRepository)
+	userService := service.NewUserService(userRepository)
 
-	discordUserHandler := handler.NewDiscordUserHandler(discordUserService)
-	userHandler := handler.NewUserHandler(userService)
 	authHandler := handler.NewAuthHandler(authService)
+	discordUserHandler := handler.NewDiscordUserHandler(discordUserService)
+	transactionHandler := handler.NewTransactionHandler(transactionService)
+	userHandler := handler.NewUserHandler(userService)
 
-	return handler.NewHandler(discordUserHandler, authHandler, userHandler)
+	return handler.NewHandler(discordUserHandler, authHandler, transactionHandler, userHandler)
 }

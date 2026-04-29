@@ -2,6 +2,30 @@
 
 package api
 
+import (
+	"time"
+
+	"github.com/go-faster/errors"
+	"github.com/google/uuid"
+)
+
+type AcceptTransactionBadRequest Error
+
+func (*AcceptTransactionBadRequest) acceptTransactionRes() {}
+
+type AcceptTransactionInternalServerError Error
+
+func (*AcceptTransactionInternalServerError) acceptTransactionRes() {}
+
+// AcceptTransactionNoContent is response for AcceptTransaction operation.
+type AcceptTransactionNoContent struct{}
+
+func (*AcceptTransactionNoContent) acceptTransactionRes() {}
+
+type AcceptTransactionNotFound Error
+
+func (*AcceptTransactionNotFound) acceptTransactionRes() {}
+
 // Ref: #/components/schemas/Balance
 type Balance struct {
 	Balance int64 `json:"balance"`
@@ -19,6 +43,23 @@ func (s *Balance) SetBalance(val int64) {
 
 func (*Balance) getUserBalanceByIdRes()    {}
 func (*Balance) updateUserBalanceByIdRes() {}
+
+type CancelTransactionBadRequest Error
+
+func (*CancelTransactionBadRequest) cancelTransactionRes() {}
+
+type CancelTransactionInternalServerError Error
+
+func (*CancelTransactionInternalServerError) cancelTransactionRes() {}
+
+// CancelTransactionNoContent is response for CancelTransaction operation.
+type CancelTransactionNoContent struct{}
+
+func (*CancelTransactionNoContent) cancelTransactionRes() {}
+
+type CancelTransactionNotFound Error
+
+func (*CancelTransactionNotFound) cancelTransactionRes() {}
 
 type CreateDiscordUserBadRequest Error
 
@@ -70,6 +111,111 @@ func (*CreateLinkAccountCodeInternalServerError) createLinkAccountCodeRes() {}
 type CreateLinkAccountCodeNotFound Error
 
 func (*CreateLinkAccountCodeNotFound) createLinkAccountCodeRes() {}
+
+// Ref: #/components/schemas/CreateTransaction
+type CreateTransaction struct {
+	SenderID   int64                 `json:"sender_id"`
+	ReceiverID int64                 `json:"receiver_id"`
+	Amount     float64               `json:"amount"`
+	Type       CreateTransactionType `json:"type"`
+}
+
+// GetSenderID returns the value of SenderID.
+func (s *CreateTransaction) GetSenderID() int64 {
+	return s.SenderID
+}
+
+// GetReceiverID returns the value of ReceiverID.
+func (s *CreateTransaction) GetReceiverID() int64 {
+	return s.ReceiverID
+}
+
+// GetAmount returns the value of Amount.
+func (s *CreateTransaction) GetAmount() float64 {
+	return s.Amount
+}
+
+// GetType returns the value of Type.
+func (s *CreateTransaction) GetType() CreateTransactionType {
+	return s.Type
+}
+
+// SetSenderID sets the value of SenderID.
+func (s *CreateTransaction) SetSenderID(val int64) {
+	s.SenderID = val
+}
+
+// SetReceiverID sets the value of ReceiverID.
+func (s *CreateTransaction) SetReceiverID(val int64) {
+	s.ReceiverID = val
+}
+
+// SetAmount sets the value of Amount.
+func (s *CreateTransaction) SetAmount(val float64) {
+	s.Amount = val
+}
+
+// SetType sets the value of Type.
+func (s *CreateTransaction) SetType(val CreateTransactionType) {
+	s.Type = val
+}
+
+type CreateTransactionBadRequest Error
+
+func (*CreateTransactionBadRequest) createTransactionRes() {}
+
+type CreateTransactionConflict Error
+
+func (*CreateTransactionConflict) createTransactionRes() {}
+
+type CreateTransactionInternalServerError Error
+
+func (*CreateTransactionInternalServerError) createTransactionRes() {}
+
+type CreateTransactionNotFound Error
+
+func (*CreateTransactionNotFound) createTransactionRes() {}
+
+type CreateTransactionType string
+
+const (
+	CreateTransactionTypeSend    CreateTransactionType = "send"
+	CreateTransactionTypeRequest CreateTransactionType = "request"
+)
+
+// AllValues returns all CreateTransactionType values.
+func (CreateTransactionType) AllValues() []CreateTransactionType {
+	return []CreateTransactionType{
+		CreateTransactionTypeSend,
+		CreateTransactionTypeRequest,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s CreateTransactionType) MarshalText() ([]byte, error) {
+	switch s {
+	case CreateTransactionTypeSend:
+		return []byte(s), nil
+	case CreateTransactionTypeRequest:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *CreateTransactionType) UnmarshalText(data []byte) error {
+	switch CreateTransactionType(data) {
+	case CreateTransactionTypeSend:
+		*s = CreateTransactionTypeSend
+		return nil
+	case CreateTransactionTypeRequest:
+		*s = CreateTransactionTypeRequest
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
 
 type CreateUserBadRequest Error
 
@@ -253,7 +399,7 @@ func (s *DiscordUserSessionData) SetLanguage(val string) {
 
 func (*DiscordUserSessionData) loginDiscordUserRes() {}
 
-// Ref: #/components/schemas/ErrorService
+// Ref: #/components/schemas/Error
 type Error struct {
 	Message OptString `json:"message"`
 }
@@ -307,6 +453,18 @@ func (*GetDiscordUserLanguageByIdInternalServerError) getDiscordUserLanguageById
 type GetDiscordUserLanguageByIdNotFound Error
 
 func (*GetDiscordUserLanguageByIdNotFound) getDiscordUserLanguageByIdRes() {}
+
+type GetTransactionsBadRequest Error
+
+func (*GetTransactionsBadRequest) getTransactionsRes() {}
+
+type GetTransactionsInternalServerError Error
+
+func (*GetTransactionsInternalServerError) getTransactionsRes() {}
+
+type GetTransactionsNotFound Error
+
+func (*GetTransactionsNotFound) getTransactionsRes() {}
 
 type GetUserBalanceByIdBadRequest Error
 
@@ -457,6 +615,178 @@ type LoginUserUnauthorized Error
 
 func (*LoginUserUnauthorized) loginUserRes() {}
 
+// NewOptInt returns new OptInt with value set to v.
+func NewOptInt(v int) OptInt {
+	return OptInt{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptInt is optional int.
+type OptInt struct {
+	Value int
+	Set   bool
+}
+
+// IsSet returns true if OptInt was set.
+func (o OptInt) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptInt) Reset() {
+	var v int
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptInt) SetTo(v int) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptInt) Get() (v int, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptInt) Or(d int) int {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilDateTime returns new OptNilDateTime with value set to v.
+func NewOptNilDateTime(v time.Time) OptNilDateTime {
+	return OptNilDateTime{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilDateTime is optional nullable time.Time.
+type OptNilDateTime struct {
+	Value time.Time
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilDateTime was set.
+func (o OptNilDateTime) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilDateTime) Reset() {
+	var v time.Time
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilDateTime) SetTo(v time.Time) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilDateTime) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilDateTime) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v time.Time
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilDateTime) Get() (v time.Time, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilDateTime) Or(d time.Time) time.Time {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilString returns new OptNilString with value set to v.
+func NewOptNilString(v string) OptNilString {
+	return OptNilString{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilString is optional nullable string.
+type OptNilString struct {
+	Value string
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilString was set.
+func (o OptNilString) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilString) Reset() {
+	var v string
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilString) SetTo(v string) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilString) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilString) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v string
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilString) Get() (v string, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {
 	return OptString{
@@ -503,6 +833,23 @@ func (o OptString) Or(d string) string {
 	return d
 }
 
+type RejectTransactionBadRequest Error
+
+func (*RejectTransactionBadRequest) rejectTransactionRes() {}
+
+type RejectTransactionInternalServerError Error
+
+func (*RejectTransactionInternalServerError) rejectTransactionRes() {}
+
+// RejectTransactionNoContent is response for RejectTransaction operation.
+type RejectTransactionNoContent struct{}
+
+func (*RejectTransactionNoContent) rejectTransactionRes() {}
+
+type RejectTransactionNotFound Error
+
+func (*RejectTransactionNotFound) rejectTransactionRes() {}
+
 // Ref: #/components/schemas/Token
 type Token struct {
 	Token string `json:"token"`
@@ -519,6 +866,289 @@ func (s *Token) SetToken(val string) {
 }
 
 func (*Token) loginUserRes() {}
+
+// Ref: #/components/schemas/Transaction
+type Transaction struct {
+	ID TransactionID `json:"id"`
+	// Sender User ID.
+	SenderID int `json:"sender_id"`
+	// Receiver User ID.
+	ReceiverID int `json:"receiver_id"`
+	// Transaction amount (positive or negative).
+	Amount      float64           `json:"amount"`
+	Type        TransactionType   `json:"type"`
+	Status      TransactionStatus `json:"status"`
+	CreatedAt   time.Time         `json:"created_at"`
+	CompletedAt OptNilDateTime    `json:"completed_at"`
+}
+
+// GetID returns the value of ID.
+func (s *Transaction) GetID() TransactionID {
+	return s.ID
+}
+
+// GetSenderID returns the value of SenderID.
+func (s *Transaction) GetSenderID() int {
+	return s.SenderID
+}
+
+// GetReceiverID returns the value of ReceiverID.
+func (s *Transaction) GetReceiverID() int {
+	return s.ReceiverID
+}
+
+// GetAmount returns the value of Amount.
+func (s *Transaction) GetAmount() float64 {
+	return s.Amount
+}
+
+// GetType returns the value of Type.
+func (s *Transaction) GetType() TransactionType {
+	return s.Type
+}
+
+// GetStatus returns the value of Status.
+func (s *Transaction) GetStatus() TransactionStatus {
+	return s.Status
+}
+
+// GetCreatedAt returns the value of CreatedAt.
+func (s *Transaction) GetCreatedAt() time.Time {
+	return s.CreatedAt
+}
+
+// GetCompletedAt returns the value of CompletedAt.
+func (s *Transaction) GetCompletedAt() OptNilDateTime {
+	return s.CompletedAt
+}
+
+// SetID sets the value of ID.
+func (s *Transaction) SetID(val TransactionID) {
+	s.ID = val
+}
+
+// SetSenderID sets the value of SenderID.
+func (s *Transaction) SetSenderID(val int) {
+	s.SenderID = val
+}
+
+// SetReceiverID sets the value of ReceiverID.
+func (s *Transaction) SetReceiverID(val int) {
+	s.ReceiverID = val
+}
+
+// SetAmount sets the value of Amount.
+func (s *Transaction) SetAmount(val float64) {
+	s.Amount = val
+}
+
+// SetType sets the value of Type.
+func (s *Transaction) SetType(val TransactionType) {
+	s.Type = val
+}
+
+// SetStatus sets the value of Status.
+func (s *Transaction) SetStatus(val TransactionStatus) {
+	s.Status = val
+}
+
+// SetCreatedAt sets the value of CreatedAt.
+func (s *Transaction) SetCreatedAt(val time.Time) {
+	s.CreatedAt = val
+}
+
+// SetCompletedAt sets the value of CompletedAt.
+func (s *Transaction) SetCompletedAt(val OptNilDateTime) {
+	s.CompletedAt = val
+}
+
+func (*Transaction) createTransactionRes() {}
+
+type TransactionID uuid.UUID
+
+// Ref: #/components/schemas/TransactionPagination
+type TransactionPagination struct {
+	// Number of items returned.
+	Limit int `json:"limit"`
+	// Cursor for next page.
+	NextCursor OptNilString `json:"next_cursor"`
+	// Indicates if more results exist.
+	HasMore bool `json:"has_more"`
+}
+
+// GetLimit returns the value of Limit.
+func (s *TransactionPagination) GetLimit() int {
+	return s.Limit
+}
+
+// GetNextCursor returns the value of NextCursor.
+func (s *TransactionPagination) GetNextCursor() OptNilString {
+	return s.NextCursor
+}
+
+// GetHasMore returns the value of HasMore.
+func (s *TransactionPagination) GetHasMore() bool {
+	return s.HasMore
+}
+
+// SetLimit sets the value of Limit.
+func (s *TransactionPagination) SetLimit(val int) {
+	s.Limit = val
+}
+
+// SetNextCursor sets the value of NextCursor.
+func (s *TransactionPagination) SetNextCursor(val OptNilString) {
+	s.NextCursor = val
+}
+
+// SetHasMore sets the value of HasMore.
+func (s *TransactionPagination) SetHasMore(val bool) {
+	s.HasMore = val
+}
+
+// Ref: #/components/schemas/TransactionStatus
+type TransactionStatus string
+
+const (
+	TransactionStatusPending   TransactionStatus = "pending"
+	TransactionStatusCompleted TransactionStatus = "completed"
+	TransactionStatusRejected  TransactionStatus = "rejected"
+	TransactionStatusCancelled TransactionStatus = "cancelled"
+)
+
+// AllValues returns all TransactionStatus values.
+func (TransactionStatus) AllValues() []TransactionStatus {
+	return []TransactionStatus{
+		TransactionStatusPending,
+		TransactionStatusCompleted,
+		TransactionStatusRejected,
+		TransactionStatusCancelled,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s TransactionStatus) MarshalText() ([]byte, error) {
+	switch s {
+	case TransactionStatusPending:
+		return []byte(s), nil
+	case TransactionStatusCompleted:
+		return []byte(s), nil
+	case TransactionStatusRejected:
+		return []byte(s), nil
+	case TransactionStatusCancelled:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *TransactionStatus) UnmarshalText(data []byte) error {
+	switch TransactionStatus(data) {
+	case TransactionStatusPending:
+		*s = TransactionStatusPending
+		return nil
+	case TransactionStatusCompleted:
+		*s = TransactionStatusCompleted
+		return nil
+	case TransactionStatusRejected:
+		*s = TransactionStatusRejected
+		return nil
+	case TransactionStatusCancelled:
+		*s = TransactionStatusCancelled
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+type TransactionType string
+
+const (
+	TransactionTypeSend    TransactionType = "send"
+	TransactionTypeRequest TransactionType = "request"
+	TransactionTypeRefund  TransactionType = "refund"
+)
+
+// AllValues returns all TransactionType values.
+func (TransactionType) AllValues() []TransactionType {
+	return []TransactionType{
+		TransactionTypeSend,
+		TransactionTypeRequest,
+		TransactionTypeRefund,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s TransactionType) MarshalText() ([]byte, error) {
+	switch s {
+	case TransactionTypeSend:
+		return []byte(s), nil
+	case TransactionTypeRequest:
+		return []byte(s), nil
+	case TransactionTypeRefund:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *TransactionType) UnmarshalText(data []byte) error {
+	switch TransactionType(data) {
+	case TransactionTypeSend:
+		*s = TransactionTypeSend
+		return nil
+	case TransactionTypeRequest:
+		*s = TransactionTypeRequest
+		return nil
+	case TransactionTypeRefund:
+		*s = TransactionTypeRefund
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+// Ref: #/components/schemas/Transactions
+type Transactions struct {
+	// User ID.
+	ID           int                   `json:"id"`
+	Transactions []Transaction         `json:"transactions"`
+	Pagination   TransactionPagination `json:"pagination"`
+}
+
+// GetID returns the value of ID.
+func (s *Transactions) GetID() int {
+	return s.ID
+}
+
+// GetTransactions returns the value of Transactions.
+func (s *Transactions) GetTransactions() []Transaction {
+	return s.Transactions
+}
+
+// GetPagination returns the value of Pagination.
+func (s *Transactions) GetPagination() TransactionPagination {
+	return s.Pagination
+}
+
+// SetID sets the value of ID.
+func (s *Transactions) SetID(val int) {
+	s.ID = val
+}
+
+// SetTransactions sets the value of Transactions.
+func (s *Transactions) SetTransactions(val []Transaction) {
+	s.Transactions = val
+}
+
+// SetPagination sets the value of Pagination.
+func (s *Transactions) SetPagination(val TransactionPagination) {
+	s.Pagination = val
+}
+
+func (*Transactions) getTransactionsRes() {}
 
 type UpdateDiscordUserAutofillByIdBadRequest Error
 
