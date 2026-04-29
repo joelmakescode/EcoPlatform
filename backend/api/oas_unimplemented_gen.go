@@ -13,6 +13,24 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
+// AcceptTransaction implements acceptTransaction operation.
+//
+// Accept a Transaction.
+//
+// POST /transactions/{id}/accept
+func (UnimplementedHandler) AcceptTransaction(ctx context.Context, params AcceptTransactionParams) (r AcceptTransactionRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CancelTransaction implements cancelTransaction operation.
+//
+// Cancel a Transaction.
+//
+// POST /transactions/{id}/cancel
+func (UnimplementedHandler) CancelTransaction(ctx context.Context, params CancelTransactionParams) (r CancelTransactionRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // CreateDiscordUser implements createDiscordUser operation.
 //
 // Create a new Discord User.
@@ -28,6 +46,15 @@ func (UnimplementedHandler) CreateDiscordUser(ctx context.Context, req *CreateDi
 //
 // POST /users/link-account-code/{id}
 func (UnimplementedHandler) CreateLinkAccountCode(ctx context.Context, params CreateLinkAccountCodeParams) (r CreateLinkAccountCodeRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CreateTransaction implements createTransaction operation.
+//
+// Creates A New Transaction.
+//
+// POST /transactions
+func (UnimplementedHandler) CreateTransaction(ctx context.Context, req *CreateTransaction) (r CreateTransactionRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -64,6 +91,15 @@ func (UnimplementedHandler) GetDiscordUserAutofillById(ctx context.Context, para
 //
 // GET /discord-users/language/{id}
 func (UnimplementedHandler) GetDiscordUserLanguageById(ctx context.Context, params GetDiscordUserLanguageByIdParams) (r GetDiscordUserLanguageByIdRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetTransactions implements getTransactions operation.
+//
+// Returns a paginated list of transactions for a user.
+//
+// GET /transactions/{id}
+func (UnimplementedHandler) GetTransactions(ctx context.Context, params GetTransactionsParams) (r GetTransactionsRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -107,6 +143,15 @@ func (UnimplementedHandler) LoginDiscordUser(ctx context.Context, req *DiscordUs
 //
 // POST /login
 func (UnimplementedHandler) LoginUser(ctx context.Context, req *LoginData) (r LoginUserRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// RejectTransaction implements rejectTransaction operation.
+//
+// Reject a Transaction.
+//
+// POST /transactions/{id}/reject
+func (UnimplementedHandler) RejectTransaction(ctx context.Context, params RejectTransactionParams) (r RejectTransactionRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import {TileComponent} from '../../component/shared/tile/tile.component';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-wallet',
   standalone: true,
   imports: [
     TileComponent
   ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  templateUrl: './wallet.component.html',
+  styleUrl: './wallet.component.css',
 })
-export class HomeComponent {}
+export class WalletComponent {}

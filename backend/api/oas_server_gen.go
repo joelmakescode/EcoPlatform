@@ -10,6 +10,7 @@ import (
 type Handler interface {
 	DiscordUsersHandler
 	LoginHandler
+	TransactionsHandler
 	UsersHandler
 }
 
@@ -75,6 +76,42 @@ type LoginHandler interface {
 	//
 	// POST /login
 	LoginUser(ctx context.Context, req *LoginData) (LoginUserRes, error)
+}
+
+// TransactionsHandler handles operations described by OpenAPI v3 specification.
+//
+// x-ogen-operation-group: Transactions
+type TransactionsHandler interface {
+	// AcceptTransaction implements acceptTransaction operation.
+	//
+	// Accept a Transaction.
+	//
+	// POST /transactions/{id}/accept
+	AcceptTransaction(ctx context.Context, params AcceptTransactionParams) (AcceptTransactionRes, error)
+	// CancelTransaction implements cancelTransaction operation.
+	//
+	// Cancel a Transaction.
+	//
+	// POST /transactions/{id}/cancel
+	CancelTransaction(ctx context.Context, params CancelTransactionParams) (CancelTransactionRes, error)
+	// CreateTransaction implements createTransaction operation.
+	//
+	// Creates A New Transaction.
+	//
+	// POST /transactions
+	CreateTransaction(ctx context.Context, req *CreateTransaction) (CreateTransactionRes, error)
+	// GetTransactions implements getTransactions operation.
+	//
+	// Returns a paginated list of transactions for a user.
+	//
+	// GET /transactions/{id}
+	GetTransactions(ctx context.Context, params GetTransactionsParams) (GetTransactionsRes, error)
+	// RejectTransaction implements rejectTransaction operation.
+	//
+	// Reject a Transaction.
+	//
+	// POST /transactions/{id}/reject
+	RejectTransaction(ctx context.Context, params RejectTransactionParams) (RejectTransactionRes, error)
 }
 
 // UsersHandler handles operations described by OpenAPI v3 specification.

@@ -33,6 +33,292 @@ func (c *codeRecorder) Unwrap() http.ResponseWriter {
 	return c.ResponseWriter
 }
 
+// handleAcceptTransactionRequest handles acceptTransaction operation.
+//
+// Accept a Transaction.
+//
+// POST /transactions/{id}/accept
+func (s *Server) handleAcceptTransactionRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("acceptTransaction"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/transactions/{id}/accept"),
+	}
+	// Add attributes from config.
+	otelAttrs = append(otelAttrs, s.cfg.Attributes...)
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), AcceptTransactionOperation,
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+
+		attrSet := labeler.AttributeSet()
+		attrs := attrSet.ToSlice()
+		code := statusWriter.status
+		if code != 0 {
+			codeAttr := semconv.HTTPResponseStatusCode(code)
+			attrs = append(attrs, codeAttr)
+			span.SetAttributes(codeAttr)
+		}
+		attrOpt := metric.WithAttributes(attrs...)
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+
+			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
+			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
+			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
+			// max redirects exceeded), in which case status MUST be set to Error.
+			code := statusWriter.status
+			if code < 100 || code >= 500 {
+				span.SetStatus(codes.Error, stage)
+			}
+
+			attrSet := labeler.AttributeSet()
+			attrs := attrSet.ToSlice()
+			if code != 0 {
+				attrs = append(attrs, semconv.HTTPResponseStatusCode(code))
+			}
+
+			s.errors.Add(ctx, 1, metric.WithAttributes(attrs...))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: AcceptTransactionOperation,
+			ID:   "acceptTransaction",
+		}
+	)
+	params, err := decodeAcceptTransactionParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var rawBody []byte
+
+	var response AcceptTransactionRes
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    AcceptTransactionOperation,
+			OperationSummary: "Accept a Transaction",
+			OperationID:      "acceptTransaction",
+			Body:             nil,
+			RawBody:          rawBody,
+			Params: middleware.Parameters{
+				{
+					Name: "id",
+					In:   "path",
+				}: params.ID,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = AcceptTransactionParams
+			Response = AcceptTransactionRes
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackAcceptTransactionParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.AcceptTransaction(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.AcceptTransaction(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeAcceptTransactionResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleCancelTransactionRequest handles cancelTransaction operation.
+//
+// Cancel a Transaction.
+//
+// POST /transactions/{id}/cancel
+func (s *Server) handleCancelTransactionRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("cancelTransaction"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/transactions/{id}/cancel"),
+	}
+	// Add attributes from config.
+	otelAttrs = append(otelAttrs, s.cfg.Attributes...)
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), CancelTransactionOperation,
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+
+		attrSet := labeler.AttributeSet()
+		attrs := attrSet.ToSlice()
+		code := statusWriter.status
+		if code != 0 {
+			codeAttr := semconv.HTTPResponseStatusCode(code)
+			attrs = append(attrs, codeAttr)
+			span.SetAttributes(codeAttr)
+		}
+		attrOpt := metric.WithAttributes(attrs...)
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+
+			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
+			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
+			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
+			// max redirects exceeded), in which case status MUST be set to Error.
+			code := statusWriter.status
+			if code < 100 || code >= 500 {
+				span.SetStatus(codes.Error, stage)
+			}
+
+			attrSet := labeler.AttributeSet()
+			attrs := attrSet.ToSlice()
+			if code != 0 {
+				attrs = append(attrs, semconv.HTTPResponseStatusCode(code))
+			}
+
+			s.errors.Add(ctx, 1, metric.WithAttributes(attrs...))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: CancelTransactionOperation,
+			ID:   "cancelTransaction",
+		}
+	)
+	params, err := decodeCancelTransactionParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var rawBody []byte
+
+	var response CancelTransactionRes
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    CancelTransactionOperation,
+			OperationSummary: "Cancel a Transaction",
+			OperationID:      "cancelTransaction",
+			Body:             nil,
+			RawBody:          rawBody,
+			Params: middleware.Parameters{
+				{
+					Name: "id",
+					In:   "path",
+				}: params.ID,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = CancelTransactionParams
+			Response = CancelTransactionRes
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackCancelTransactionParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.CancelTransaction(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.CancelTransaction(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeCancelTransactionResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
 // handleCreateDiscordUserRequest handles createDiscordUser operation.
 //
 // Create a new Discord User.
@@ -89,7 +375,7 @@ func (s *Server) handleCreateDiscordUserRequest(args [0]string, argsEscaped bool
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -232,7 +518,7 @@ func (s *Server) handleCreateLinkAccountCodeRequest(args [1]string, argsEscaped 
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -319,6 +605,149 @@ func (s *Server) handleCreateLinkAccountCodeRequest(args [1]string, argsEscaped 
 	}
 }
 
+// handleCreateTransactionRequest handles createTransaction operation.
+//
+// Creates A New Transaction.
+//
+// POST /transactions
+func (s *Server) handleCreateTransactionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("createTransaction"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/transactions"),
+	}
+	// Add attributes from config.
+	otelAttrs = append(otelAttrs, s.cfg.Attributes...)
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), CreateTransactionOperation,
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+
+		attrSet := labeler.AttributeSet()
+		attrs := attrSet.ToSlice()
+		code := statusWriter.status
+		if code != 0 {
+			codeAttr := semconv.HTTPResponseStatusCode(code)
+			attrs = append(attrs, codeAttr)
+			span.SetAttributes(codeAttr)
+		}
+		attrOpt := metric.WithAttributes(attrs...)
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+
+			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
+			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
+			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
+			// max redirects exceeded), in which case status MUST be set to Error.
+			code := statusWriter.status
+			if code < 100 || code >= 500 {
+				span.SetStatus(codes.Error, stage)
+			}
+
+			attrSet := labeler.AttributeSet()
+			attrs := attrSet.ToSlice()
+			if code != 0 {
+				attrs = append(attrs, semconv.HTTPResponseStatusCode(code))
+			}
+
+			s.errors.Add(ctx, 1, metric.WithAttributes(attrs...))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: CreateTransactionOperation,
+			ID:   "createTransaction",
+		}
+	)
+
+	var rawBody []byte
+	request, rawBody, close, err := s.decodeCreateTransactionRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response CreateTransactionRes
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    CreateTransactionOperation,
+			OperationSummary: "Create New Transaction",
+			OperationID:      "createTransaction",
+			Body:             request,
+			RawBody:          rawBody,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *CreateTransaction
+			Params   = struct{}
+			Response = CreateTransactionRes
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.CreateTransaction(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.CreateTransaction(ctx, request)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeCreateTransactionResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
 // handleCreateUserRequest handles createUser operation.
 //
 // Create a new user.
@@ -375,7 +804,7 @@ func (s *Server) handleCreateUserRequest(args [0]string, argsEscaped bool, w htt
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -518,7 +947,7 @@ func (s *Server) handleGetAccountLinkByIdRequest(args [1]string, argsEscaped boo
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -661,7 +1090,7 @@ func (s *Server) handleGetDiscordUserAutofillByIdRequest(args [1]string, argsEsc
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -804,7 +1233,7 @@ func (s *Server) handleGetDiscordUserLanguageByIdRequest(args [1]string, argsEsc
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -891,6 +1320,157 @@ func (s *Server) handleGetDiscordUserLanguageByIdRequest(args [1]string, argsEsc
 	}
 }
 
+// handleGetTransactionsRequest handles getTransactions operation.
+//
+// Returns a paginated list of transactions for a user.
+//
+// GET /transactions/{id}
+func (s *Server) handleGetTransactionsRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getTransactions"),
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/transactions/{id}"),
+	}
+	// Add attributes from config.
+	otelAttrs = append(otelAttrs, s.cfg.Attributes...)
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), GetTransactionsOperation,
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+
+		attrSet := labeler.AttributeSet()
+		attrs := attrSet.ToSlice()
+		code := statusWriter.status
+		if code != 0 {
+			codeAttr := semconv.HTTPResponseStatusCode(code)
+			attrs = append(attrs, codeAttr)
+			span.SetAttributes(codeAttr)
+		}
+		attrOpt := metric.WithAttributes(attrs...)
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+
+			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
+			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
+			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
+			// max redirects exceeded), in which case status MUST be set to Error.
+			code := statusWriter.status
+			if code < 100 || code >= 500 {
+				span.SetStatus(codes.Error, stage)
+			}
+
+			attrSet := labeler.AttributeSet()
+			attrs := attrSet.ToSlice()
+			if code != 0 {
+				attrs = append(attrs, semconv.HTTPResponseStatusCode(code))
+			}
+
+			s.errors.Add(ctx, 1, metric.WithAttributes(attrs...))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: GetTransactionsOperation,
+			ID:   "getTransactions",
+		}
+	)
+	params, err := decodeGetTransactionsParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var rawBody []byte
+
+	var response GetTransactionsRes
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    GetTransactionsOperation,
+			OperationSummary: "Get User Transactions",
+			OperationID:      "getTransactions",
+			Body:             nil,
+			RawBody:          rawBody,
+			Params: middleware.Parameters{
+				{
+					Name: "limit",
+					In:   "query",
+				}: params.Limit,
+				{
+					Name: "cursor",
+					In:   "query",
+				}: params.Cursor,
+				{
+					Name: "id",
+					In:   "path",
+				}: params.ID,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = GetTransactionsParams
+			Response = GetTransactionsRes
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackGetTransactionsParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetTransactions(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetTransactions(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeGetTransactionsResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
 // handleGetUserBalanceByIdRequest handles getUserBalanceById operation.
 //
 // Get User Balance By Id.
@@ -947,7 +1527,7 @@ func (s *Server) handleGetUserBalanceByIdRequest(args [1]string, argsEscaped boo
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1090,7 +1670,7 @@ func (s *Server) handleGetUserByIdRequest(args [1]string, argsEscaped bool, w ht
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1233,7 +1813,7 @@ func (s *Server) handleLinkAccountRequest(args [1]string, argsEscaped bool, w ht
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1389,7 +1969,7 @@ func (s *Server) handleLoginDiscordUserRequest(args [0]string, argsEscaped bool,
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1532,7 +2112,7 @@ func (s *Server) handleLoginUserRequest(args [0]string, argsEscaped bool, w http
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1619,6 +2199,149 @@ func (s *Server) handleLoginUserRequest(args [0]string, argsEscaped bool, w http
 	}
 }
 
+// handleRejectTransactionRequest handles rejectTransaction operation.
+//
+// Reject a Transaction.
+//
+// POST /transactions/{id}/reject
+func (s *Server) handleRejectTransactionRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("rejectTransaction"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/transactions/{id}/reject"),
+	}
+	// Add attributes from config.
+	otelAttrs = append(otelAttrs, s.cfg.Attributes...)
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), RejectTransactionOperation,
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+
+		attrSet := labeler.AttributeSet()
+		attrs := attrSet.ToSlice()
+		code := statusWriter.status
+		if code != 0 {
+			codeAttr := semconv.HTTPResponseStatusCode(code)
+			attrs = append(attrs, codeAttr)
+			span.SetAttributes(codeAttr)
+		}
+		attrOpt := metric.WithAttributes(attrs...)
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+
+			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
+			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
+			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
+			// max redirects exceeded), in which case status MUST be set to Error.
+			code := statusWriter.status
+			if code < 100 || code >= 500 {
+				span.SetStatus(codes.Error, stage)
+			}
+
+			attrSet := labeler.AttributeSet()
+			attrs := attrSet.ToSlice()
+			if code != 0 {
+				attrs = append(attrs, semconv.HTTPResponseStatusCode(code))
+			}
+
+			s.errors.Add(ctx, 1, metric.WithAttributes(attrs...))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: RejectTransactionOperation,
+			ID:   "rejectTransaction",
+		}
+	)
+	params, err := decodeRejectTransactionParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var rawBody []byte
+
+	var response RejectTransactionRes
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    RejectTransactionOperation,
+			OperationSummary: "Reject a Transaction",
+			OperationID:      "rejectTransaction",
+			Body:             nil,
+			RawBody:          rawBody,
+			Params: middleware.Parameters{
+				{
+					Name: "id",
+					In:   "path",
+				}: params.ID,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = RejectTransactionParams
+			Response = RejectTransactionRes
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackRejectTransactionParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.RejectTransaction(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.RejectTransaction(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeRejectTransactionResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
 // handleUpdateDiscordUserAutofillByIdRequest handles updateDiscordUserAutofillById operation.
 //
 // Updates Discord User Autofill Config.
@@ -1675,7 +2398,7 @@ func (s *Server) handleUpdateDiscordUserAutofillByIdRequest(args [1]string, args
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1818,7 +2541,7 @@ func (s *Server) handleUpdateDiscordUserLanguageByIdRequest(args [1]string, args
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
@@ -1976,7 +2699,7 @@ func (s *Server) handleUpdateUserBalanceByIdRequest(args [1]string, argsEscaped 
 			// https://opentelemetry.io/docs/specs/semconv/http/http-spans/#status
 			// Span Status MUST be left unset if HTTP status code was in the 1xx, 2xx or 3xx ranges,
 			// unless there was another error (e.g., network error receiving the response body; or 3xx codes with
-			// max redirects exceeded), in which case status MUST be set to ErrorService.
+			// max redirects exceeded), in which case status MUST be set to Error.
 			code := statusWriter.status
 			if code < 100 || code >= 500 {
 				span.SetStatus(codes.Error, stage)
