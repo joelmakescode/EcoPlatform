@@ -625,7 +625,9 @@ components:
       required:
         - id
         - sender_id
+        - sender_username
         - receiver_id
+        - receiver_username
         - amount
         - type
         - status
@@ -636,9 +638,15 @@ components:
         sender_id:
           type: integer
           description: Sender User ID
+        sender_username:
+          type: string
+          description: Sender Username
         receiver_id:
           type: integer
           description: Receiver User ID
+        receiver_username:
+          type: string
+          description: Receiver Username
         amount:
           type: number
           format: double

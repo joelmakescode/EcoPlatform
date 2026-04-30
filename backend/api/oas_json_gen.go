@@ -3871,8 +3871,16 @@ func (s *Transaction) encodeFields(e *jx.Encoder) {
 		e.Int(s.SenderID)
 	}
 	{
+		e.FieldStart("sender_username")
+		e.Str(s.SenderUsername)
+	}
+	{
 		e.FieldStart("receiver_id")
 		e.Int(s.ReceiverID)
+	}
+	{
+		e.FieldStart("receiver_username")
+		e.Str(s.ReceiverUsername)
 	}
 	{
 		e.FieldStart("amount")
@@ -3898,15 +3906,17 @@ func (s *Transaction) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfTransaction = [8]string{
+var jsonFieldsNameOfTransaction = [10]string{
 	0: "id",
 	1: "sender_id",
-	2: "receiver_id",
-	3: "amount",
-	4: "type",
-	5: "status",
-	6: "created_at",
-	7: "completed_at",
+	2: "sender_username",
+	3: "receiver_id",
+	4: "receiver_username",
+	5: "amount",
+	6: "type",
+	7: "status",
+	8: "created_at",
+	9: "completed_at",
 }
 
 // Decode decodes Transaction from json.
@@ -3914,7 +3924,7 @@ func (s *Transaction) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode Transaction to nil")
 	}
-	var requiredBitSet [1]uint8
+	var requiredBitSet [2]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -3940,8 +3950,20 @@ func (s *Transaction) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"sender_id\"")
 			}
-		case "receiver_id":
+		case "sender_username":
 			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				v, err := d.Str()
+				s.SenderUsername = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"sender_username\"")
+			}
+		case "receiver_id":
+			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
 				v, err := d.Int()
 				s.ReceiverID = int(v)
@@ -3952,8 +3974,20 @@ func (s *Transaction) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"receiver_id\"")
 			}
+		case "receiver_username":
+			requiredBitSet[0] |= 1 << 4
+			if err := func() error {
+				v, err := d.Str()
+				s.ReceiverUsername = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"receiver_username\"")
+			}
 		case "amount":
-			requiredBitSet[0] |= 1 << 3
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				v, err := d.Float64()
 				s.Amount = float64(v)
@@ -3965,7 +3999,7 @@ func (s *Transaction) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"amount\"")
 			}
 		case "type":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -3975,7 +4009,7 @@ func (s *Transaction) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"type\"")
 			}
 		case "status":
-			requiredBitSet[0] |= 1 << 5
+			requiredBitSet[0] |= 1 << 7
 			if err := func() error {
 				if err := s.Status.Decode(d); err != nil {
 					return err
@@ -3985,7 +4019,7 @@ func (s *Transaction) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"status\"")
 			}
 		case "created_at":
-			requiredBitSet[0] |= 1 << 6
+			requiredBitSet[1] |= 1 << 0
 			if err := func() error {
 				v, err := json.DecodeDateTime(d)
 				s.CreatedAt = v
@@ -4015,8 +4049,9 @@ func (s *Transaction) Decode(d *jx.Decoder) error {
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b01111111,
+	for i, mask := range [2]uint8{
+		0b11111111,
+		0b00000001,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
