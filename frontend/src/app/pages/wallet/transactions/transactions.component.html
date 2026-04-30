@@ -1,0 +1,48 @@
+<main class="content-transactions-overview">
+  <section class="transactions-box">
+
+    <span class="transactions-header-title">Transactions</span>
+
+    <!-- Pfeil -->
+    <a routerLink="/wallet" class="transactions-overview-back-link">
+      <span class="arrow">←</span>
+      <span class="label">Back to Wallet Overview</span>
+    </a>
+
+    <div class="transactions-header">
+      <span>Sender</span>
+      <span>Receiver</span>
+      <span>Amount</span>
+      <span>Type</span>
+      <span>Status</span>
+      <span>Created at</span>
+    </div>
+
+    <div class="transactions-body">
+      <div class="transaction-row" *ngFor="let tx of transactions; trackBy: trackByTxId">
+        <span> {{ tx.sender_username }} </span>
+        <span>  {{ tx.receiver_username }} </span>
+        <span class="amount" [class.amount--positive]="tx.receiver_id === userId" [class.amount--negative]="tx.sender_id === userId">
+            {{ tx.amount | amount:tx.sender_id:tx.receiver_id:userId }}
+        </span>
+        <span> {{ tx.type | type }} </span>
+        <span class="status" [ngClass]="getStatusClass(tx.status)">
+          <img class="status-icon" [src]="getStatusIcon(tx.status)" alt=""/>
+          {{ tx.status | status }}
+        </span>
+        <span> {{ tx.created_at | date:'short' }} </span>
+      </div>
+    </div>
+
+    <div class="transactions-pagination">
+      <button class="pagination-button" (click)="previousPage()" [disabled]="isFirstPage || isLoading">
+        Previous
+      </button>
+
+      <button class="pagination-button" (click)="nextPage()" [disabled]="isLastPage || isLoading">
+        Next
+      </button>
+    </div>
+
+  </section>
+</main>
