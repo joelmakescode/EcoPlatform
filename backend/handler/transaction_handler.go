@@ -136,13 +136,15 @@ func mapTransactions(txs []model.Transaction) []api.Transaction {
 		}
 
 		out = append(out, api.Transaction{
-			ID:         api.TransactionID(uuidVal),
-			SenderID:   int(tx.SenderID),
-			ReceiverID: int(tx.ReceiverID),
-			Amount:     tx.Amount,
-			Type:       api.TransactionType(tx.Type),
-			Status:     api.TransactionStatus(tx.Status),
-			CreatedAt:  tx.CreatedAt,
+			ID:               api.TransactionID(uuidVal),
+			SenderID:         int(tx.SenderID),
+			SenderUsername:   tx.SenderUsername,
+			ReceiverID:       int(tx.ReceiverID),
+			ReceiverUsername: tx.ReceiverUsername,
+			Amount:           tx.Amount,
+			Type:             api.TransactionType(tx.Type),
+			Status:           api.TransactionStatus(tx.Status),
+			CreatedAt:        tx.CreatedAt,
 		})
 	}
 

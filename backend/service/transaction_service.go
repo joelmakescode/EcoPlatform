@@ -25,11 +25,13 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderId uin
 		return nil, ErrSameUser
 	}
 
-	if _, err := s.userRepo.GetUserById(uint(senderId)); err != nil {
+	senderUsername, err := s.userRepo.GetUsernameById(uint(senderId))
+	if err != nil {
 		return nil, ErrUserNotFound
 	}
 
-	if _, err := s.userRepo.GetUserById(uint(receiverId)); err != nil {
+	receiverUsername, err := s.userRepo.GetUsernameById(uint(receiverId))
+	if err != nil {
 		return nil, ErrUserNotFound
 	}
 
@@ -62,12 +64,14 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderId uin
 	}
 
 	tx := &model.Transaction{
-		SenderID:    int64(senderId),
-		ReceiverID:  int64(receiverId),
-		Amount:      amount,
-		Type:        txType,
-		Status:      status,
-		CompletedAt: completedAt,
+		SenderID:         int64(senderId),
+		SenderUsername:   senderUsername,
+		ReceiverID:       int64(receiverId),
+		ReceiverUsername: receiverUsername,
+		Amount:           amount,
+		Type:             txType,
+		Status:           status,
+		CompletedAt:      completedAt,
 	}
 
 	if err := s.repo.Create(ctx, tx); err != nil {

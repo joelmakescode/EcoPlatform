@@ -32,6 +32,16 @@ func (r *UserRepository) GetUserById(userId uint) (*model.User, error) {
 	return &user, nil
 }
 
+func (r *UserRepository) GetUsernameById(userId uint) (string, error) {
+	var username string
+	err := r.db.Model(&model.User{}).Select("username").Where("id = ?", userId).Scan(&username).Error
+	if err != nil {
+		return "", err
+	}
+
+	return username, nil
+}
+
 func (r *UserRepository) GetUserBalanceById(userId uint) (*model.Account, error) {
 	var user model.User
 	err := r.db.Preload("Account").First(&user, userId).Error

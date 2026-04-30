@@ -46,14 +46,16 @@ type LinkAccountCode struct {
 }
 
 type Transaction struct {
-	ID          []byte `gorm:"type:binary(16);primaryKey"`
-	SenderID    int64  `gorm:"index"`
-	ReceiverID  int64
-	Amount      float64
-	Type        string
-	Status      string
-	CreatedAt   time.Time
-	CompletedAt *time.Time
+	ID               []byte `gorm:"type:binary(16);primaryKey"`
+	SenderID         int64  `gorm:"index"`
+	SenderUsername   string `gorm:"column:sender_username"`
+	ReceiverID       int64
+	ReceiverUsername string `gorm:"column:receiver_username"`
+	Amount           float64
+	Type             string
+	Status           string
+	CreatedAt        time.Time
+	CompletedAt      *time.Time
 }
 
 func (t *Transaction) BeforeCreate(tx *gorm.DB) error {

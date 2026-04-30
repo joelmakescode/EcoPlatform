@@ -872,8 +872,12 @@ type Transaction struct {
 	ID TransactionID `json:"id"`
 	// Sender User ID.
 	SenderID int `json:"sender_id"`
+	// Sender Username.
+	SenderUsername string `json:"sender_username"`
 	// Receiver User ID.
 	ReceiverID int `json:"receiver_id"`
+	// Receiver Username.
+	ReceiverUsername string `json:"receiver_username"`
 	// Transaction amount (positive or negative).
 	Amount      float64           `json:"amount"`
 	Type        TransactionType   `json:"type"`
@@ -892,9 +896,19 @@ func (s *Transaction) GetSenderID() int {
 	return s.SenderID
 }
 
+// GetSenderUsername returns the value of SenderUsername.
+func (s *Transaction) GetSenderUsername() string {
+	return s.SenderUsername
+}
+
 // GetReceiverID returns the value of ReceiverID.
 func (s *Transaction) GetReceiverID() int {
 	return s.ReceiverID
+}
+
+// GetReceiverUsername returns the value of ReceiverUsername.
+func (s *Transaction) GetReceiverUsername() string {
+	return s.ReceiverUsername
 }
 
 // GetAmount returns the value of Amount.
@@ -932,9 +946,19 @@ func (s *Transaction) SetSenderID(val int) {
 	s.SenderID = val
 }
 
+// SetSenderUsername sets the value of SenderUsername.
+func (s *Transaction) SetSenderUsername(val string) {
+	s.SenderUsername = val
+}
+
 // SetReceiverID sets the value of ReceiverID.
 func (s *Transaction) SetReceiverID(val int) {
 	s.ReceiverID = val
+}
+
+// SetReceiverUsername sets the value of ReceiverUsername.
+func (s *Transaction) SetReceiverUsername(val string) {
+	s.ReceiverUsername = val
 }
 
 // SetAmount sets the value of Amount.
