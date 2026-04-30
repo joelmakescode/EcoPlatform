@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
-import {UserIdentityState} from './states/user-identity.state';
-import {UserBalanceState} from './states/user-balance.state';
+import {UserIdentityState} from './user-identity.state';
+import {UserBalanceState} from './user-balance.state';
 
 @Injectable({ providedIn: 'root' })
 export class StatesService {

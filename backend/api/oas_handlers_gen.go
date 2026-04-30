@@ -1414,7 +1414,7 @@ func (s *Server) handleGetTransactionsRequest(args [1]string, argsEscaped bool, 
 		mreq := middleware.Request{
 			Context:          ctx,
 			OperationName:    GetTransactionsOperation,
-			OperationSummary: "Get User Transactions",
+			OperationSummary: "Get User TransactionsComponent",
 			OperationID:      "getTransactions",
 			Body:             nil,
 			RawBody:          rawBody,

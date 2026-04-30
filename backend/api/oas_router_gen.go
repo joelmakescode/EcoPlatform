@@ -962,7 +962,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.name = CreateTransactionOperation
 						r.summary = "Create New Transaction"
 						r.operationID = "createTransaction"
-						r.operationGroup = "Transactions"
+						r.operationGroup = "TransactionsComponent"
 						r.pathPattern = "/transactions"
 						r.args = args
 						r.count = 0
@@ -993,9 +993,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						switch method {
 						case "GET":
 							r.name = GetTransactionsOperation
-							r.summary = "Get User Transactions"
+							r.summary = "Get User TransactionsComponent"
 							r.operationID = "getTransactions"
-							r.operationGroup = "Transactions"
+							r.operationGroup = "TransactionsComponent"
 							r.pathPattern = "/transactions/{id}"
 							r.args = args
 							r.count = 1
@@ -1032,7 +1032,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									r.name = AcceptTransactionOperation
 									r.summary = "Accept a Transaction"
 									r.operationID = "acceptTransaction"
-									r.operationGroup = "Transactions"
+									r.operationGroup = "TransactionsComponent"
 									r.pathPattern = "/transactions/{id}/accept"
 									r.args = args
 									r.count = 1
@@ -1057,7 +1057,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									r.name = CancelTransactionOperation
 									r.summary = "Cancel a Transaction"
 									r.operationID = "cancelTransaction"
-									r.operationGroup = "Transactions"
+									r.operationGroup = "TransactionsComponent"
 									r.pathPattern = "/transactions/{id}/cancel"
 									r.args = args
 									r.count = 1
@@ -1082,7 +1082,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									r.name = RejectTransactionOperation
 									r.summary = "Reject a Transaction"
 									r.operationID = "rejectTransaction"
-									r.operationGroup = "Transactions"
+									r.operationGroup = "TransactionsComponent"
 									r.pathPattern = "/transactions/{id}/reject"
 									r.args = args
 									r.count = 1

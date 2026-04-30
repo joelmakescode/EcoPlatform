@@ -229,7 +229,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /transactions:
-    x-ogen-operation-group: Transactions
+    x-ogen-operation-group: TransactionsComponent
     post:
       operationId: createTransaction
       summary: Create New Transaction
@@ -258,7 +258,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /transactions/{id}/accept:
-    x-ogen-operation-group: Transactions
+    x-ogen-operation-group: TransactionsComponent
     parameters:
       - name: id
         in: path
@@ -280,7 +280,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /transactions/{id}/reject:
-    x-ogen-operation-group: Transactions
+    x-ogen-operation-group: TransactionsComponent
     parameters:
       - name: id
         in: path
@@ -302,7 +302,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /transactions/{id}/cancel:
-    x-ogen-operation-group: Transactions
+    x-ogen-operation-group: TransactionsComponent
     parameters:
       - name: id
         in: path
@@ -324,7 +324,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /transactions/{id}:
-    x-ogen-operation-group: Transactions
+    x-ogen-operation-group: TransactionsComponent
     parameters:
       - name: id
         in: path
@@ -334,7 +334,7 @@ paths:
           type: number
     get:
       operationId: getTransactions
-      summary: Get User Transactions
+      summary: Get User TransactionsComponent
       description: Returns a paginated list of transactions for a user
       parameters:
         - name: limit
@@ -355,7 +355,7 @@ paths:
 
       responses:
         200:
-          description: User Transactions
+          description: User TransactionsComponent
           content:
             application/json:
               schema:
@@ -366,8 +366,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/InternalServerError'
-
-
 
   /users:
     x-ogen-operation-group: Users

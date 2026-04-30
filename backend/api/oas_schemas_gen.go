@@ -1134,7 +1134,7 @@ func (s *TransactionType) UnmarshalText(data []byte) error {
 	}
 }
 
-// Ref: #/components/schemas/Transactions
+// Ref: #/components/schemas/TransactionsComponent
 type Transactions struct {
 	// User ID.
 	ID           int                   `json:"id"`

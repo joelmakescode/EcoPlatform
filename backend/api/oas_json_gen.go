@@ -4389,7 +4389,7 @@ var jsonFieldsNameOfTransactions = [3]string{
 // Decode decodes Transactions from json.
 func (s *Transactions) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode Transactions to nil")
+		return errors.New("invalid: unable to decode TransactionsComponent to nil")
 	}
 	var requiredBitSet [1]uint8
 
@@ -4440,7 +4440,7 @@ func (s *Transactions) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode Transactions")
+		return errors.Wrap(err, "decode TransactionsComponent")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
