@@ -39,4 +39,33 @@ html, body {
   color: rgba(255, 77, 77, 0.6);
 }
 
+.back-link {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 13px;
+  color: #00ffff;
+  text-decoration: none;
+  cursor: pointer;
+
+  opacity: 0.8;
+  transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+.back-link:hover {
+  opacity: 1;
+  text-shadow: 0 0 6px #00ffff;
+}
+
+.back-link .arrow {
+  font-size: 18px;
+  color: #9aa0a6;
+  transition: color 0.3s ease;
+}
+
 

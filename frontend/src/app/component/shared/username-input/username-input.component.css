@@ -1,0 +1,42 @@
+.username-input {
+  position: relative;
+  width: 200px;
+}
+
+input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #1a1f26;
+  border: 1px solid #2a2f36;
+  color: #e3e6eb;
+}
+
+h3 {
+  color: white;
+  font-size: 14px;
+}
+
+ul {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+
+  background: #121826;
+  border: 1px solid #2a2f36;
+  border-radius: 6px;
+
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+li {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+li:hover {
+  background: rgba(0, 255, 255, 0.05);
+}

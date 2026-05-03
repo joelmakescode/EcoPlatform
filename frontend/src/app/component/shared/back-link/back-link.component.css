@@ -1,0 +1,48 @@
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  gap: 6px;
+
+  font-size: 22px;
+  color: #00ffff;
+  text-decoration: none;
+  cursor: pointer;
+
+  opacity: 0.8;
+  transition: color 0.2s ease;
+
+  will-change: transform, opacity;
+}
+
+.back-link:hover {
+  opacity: 1;
+}
+
+.back-link .arrow {
+  font-size: 22px;
+  color: #9aa0a6;
+  transition: color 0.3s ease;
+}
+
+.back-link .label {
+  font-size: 14px;
+  color: #00ffff;
+
+  opacity: 0;
+  transform: translate3d(-6px, 0, 0);
+  pointer-events: none;
+
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.back-link:hover .arrow {
+  color: #00ffff !important;
+}
+
+.back-link:hover .label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+

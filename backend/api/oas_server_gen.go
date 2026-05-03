@@ -130,6 +130,12 @@ type UsersHandler interface {
 	//
 	// POST /users
 	CreateUser(ctx context.Context, req *CreateUserData) (CreateUserRes, error)
+	// GetIdByUsername implements getIdByUsername operation.
+	//
+	// Get id by username.
+	//
+	// GET /users
+	GetIdByUsername(ctx context.Context, params GetIdByUsernameParams) (GetIdByUsernameRes, error)
 	// GetUserBalanceById implements getUserBalanceById operation.
 	//
 	// Get User Balance By Id.

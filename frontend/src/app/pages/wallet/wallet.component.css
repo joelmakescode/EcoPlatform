@@ -1,11 +1,1 @@
-.content-wallet {
-  align-content: start;
 
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-
-  margin-top: 250px;
-  margin-left: 236px;
-  padding: 32px;
-}

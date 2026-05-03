@@ -4,6 +4,7 @@ import (
 	"backend/api"
 	"backend/repository"
 	"backend/repository/model"
+	"context"
 	"crypto/rand"
 	"fmt"
 	"math/big"
@@ -69,6 +70,19 @@ func (s *UserService) GetUserById(userId uint) (*api.User, error) {
 	}
 
 	return s.MapModelToApiUser(user), nil
+}
+
+func (s *UserService) GetIdByUsername(ctx context.Context, username string) (uint, error) {
+	id, err := s.repo.GetIdByUsername(ctx, username)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 0, ErrUserNotFound
+		}
+
+		return 0, err
+	}
+
+	return id, nil
 }
 
 func (s *UserService) GetUserBalanceById(userId uint) (*api.Balance, error) {

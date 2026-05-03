@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {AuthFacadeService} from '../auth-facade/auth-facade.service';
-import {StatesService} from '../../client/states.service';
+import {StatesService} from '../../client/states/states.service';
 import {Router} from '@angular/router';
 
 @Injectable({ providedIn: 'root' })

@@ -1,0 +1,15 @@
+<app-content-box title="Request Money">
+  <app-back-link link="/wallet" label="Back to Wallet Overview"></app-back-link>
+
+  <app-transactions-input-layout
+    placeholderTitle="Request from"
+    placeholder="Donor"
+    infoMessage="I understand that the request will be sent immediately. Abusing the request option could lead to a block from the opposed donor."
+    buttonMessage="Request"
+    (submit)="requestMoneyTransaction($event)">
+  </app-transactions-input-layout>
+
+  <div class="transactions-layout-margin">
+    <app-transactions-layout [transactions]="transactions" [userId]="userId"></app-transactions-layout>
+  </div>
+</app-content-box>

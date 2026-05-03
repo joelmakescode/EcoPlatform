@@ -1,0 +1,31 @@
+.translations-scroll {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.transactions-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.pagination-button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #1a1f26;
+  color: #9aa0a6;
+  border: none;
+  cursor: pointer;
+}
+
+.pagination-button:hover:not(:disabled) {
+  color: #00ffff;
+  background: #202634;
+}
+
+.pagination-button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}

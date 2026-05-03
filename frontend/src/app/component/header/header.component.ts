@@ -1,7 +1,7 @@
-import {Component, HostListener, inject} from '@angular/core';
+import {ChangeDetectorRef, Component, HostListener, inject, OnInit} from '@angular/core';
 import {UserBalanceState} from '../../client/states/user-balance.state';
 import {UserIdentityState} from '../../client/states/user-identity.state';
-import {combineLatest} from 'rxjs';
+import {combineLatest, interval} from 'rxjs';
 import {AsyncPipe, DecimalPipe, NgIf} from '@angular/common';
 import {AuthFacadeService} from '../../services/auth-facade/auth-facade.service';
 
@@ -9,7 +9,6 @@ import {AuthFacadeService} from '../../services/auth-facade/auth-facade.service'
   selector: 'app-header',
   standalone: true,
   imports: [
-    DecimalPipe,
     NgIf,
     AsyncPipe
   ],
@@ -21,6 +20,7 @@ export class HeaderComponent {
   private userState = inject(UserIdentityState);
 
   private authFacadeService = inject(AuthFacadeService);
+  private cdr = inject(ChangeDetectorRef);
 
   vm$ = combineLatest({
     identity: this.userState.user$,

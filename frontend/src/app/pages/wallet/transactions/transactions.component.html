@@ -1,0 +1,18 @@
+<app-content-box title="Transactions">
+  <app-back-link link="/wallet" label="Back to Wallet Overview"></app-back-link>
+
+  <div class="translations-scroll">
+    <app-transactions-layout [transactions]="transactions" [userId]="userId"></app-transactions-layout>
+  </div>
+
+
+  <div class="transactions-pagination">
+    <button class="pagination-button" (click)="previousPage()" [disabled]="isFirstPage || isLoading">
+      Previous
+    </button>
+
+    <button class="pagination-button" (click)="nextPage()" [disabled]="isLastPage || isLoading">
+      Next
+    </button>
+  </div>
+</app-content-box>

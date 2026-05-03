@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import {TileComponent} from '../../component/shared/tile/tile.component';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-wallet',
   standalone: true,
   imports: [
-    TileComponent
+    RouterOutlet
   ],
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.css',

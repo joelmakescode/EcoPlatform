@@ -15,6 +15,7 @@ const (
 	GetAccountLinkByIdOperation            OperationName = "GetAccountLinkById"
 	GetDiscordUserAutofillByIdOperation    OperationName = "GetDiscordUserAutofillById"
 	GetDiscordUserLanguageByIdOperation    OperationName = "GetDiscordUserLanguageById"
+	GetIdByUsernameOperation               OperationName = "GetIdByUsername"
 	GetTransactionsOperation               OperationName = "GetTransactions"
 	GetUserBalanceByIdOperation            OperationName = "GetUserBalanceById"
 	GetUserByIdOperation                   OperationName = "GetUserById"

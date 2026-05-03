@@ -1,0 +1,100 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.transactions-table {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.transactions-box-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.transactions-header {
+  position: sticky;
+  top: 0;
+  font-size: 13px;
+  color: #ffffff;
+  border-bottom: 1px solid #1f242c;
+}
+
+.transactions-header,
+.transaction-row {
+  display: grid;
+  grid-template-columns:
+    1.5fr
+    1.5fr
+    1.5fr
+    1.5fr
+    1.5fr
+    1.5fr;
+  align-items: center;
+}
+
+.transactions-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.transactions-header,
+.transaction-row {
+  padding: 12px 0;
+  font-size: 14px;
+  color: #e3e6eb;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.transaction-row:hover {
+  background: rgba(0, 255, 255, 0.03);
+}
+
+.status {
+  margin-left: -16px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.status-icon {
+  height: 20px;
+  width: 20px;
+}
+
+.status--success {
+  color: #22c55e;
+}
+
+.status--pending {
+  color: #facc15;
+}
+
+.status--error {
+  color: #ef4444;
+}
+
+.amount {
+  font-weight: 600;
+}
+
+.amount--positive {
+  color: #22c55e;
+}
+
+.amount--negative {
+  color: #ef4444;
+}
+
+
+
+

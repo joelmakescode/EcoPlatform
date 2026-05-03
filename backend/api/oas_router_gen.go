@@ -480,11 +480,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 				if len(elem) == 0 {
 					switch r.Method {
+					case "GET":
+						s.handleGetIdByUsernameRequest([0]string{}, elemIsEscaped, w, r)
 					case "POST":
 						s.handleCreateUserRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, notAllowedParams{
-							allowedMethods: "POST",
+							allowedMethods: "GET,POST",
 							allowedHeaders: rn11AllowedHeaders,
 							acceptPost:     "application/json",
 							acceptPatch:    "",
@@ -1108,6 +1110,15 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 
 				if len(elem) == 0 {
 					switch method {
+					case "GET":
+						r.name = GetIdByUsernameOperation
+						r.summary = "Get id by username"
+						r.operationID = "getIdByUsername"
+						r.operationGroup = "Users"
+						r.pathPattern = "/users"
+						r.args = args
+						r.count = 0
+						return r, true
 					case "POST":
 						r.name = CreateUserOperation
 						r.summary = "Create a new user"

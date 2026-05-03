@@ -1,0 +1,15 @@
+<app-content-box title="Send Money">
+  <app-back-link link="/wallet" label="Back to Wallet Overview"></app-back-link>
+
+  <app-transactions-input-layout
+    placeholderTitle="Recipient"
+    placeholder="Recipient"
+    infoMessage="I understand that the funds will be sent immediately. A refund is available within the first 24 hours after sending the money."
+    buttonMessage="Send"
+    (submit)="sendMoney($event)">
+  </app-transactions-input-layout>
+
+  <div class="transactions-layout-margin">
+    <app-transactions-layout [transactions]="transactions" [userId]="userId"></app-transactions-layout>
+  </div>
+</app-content-box>

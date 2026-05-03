@@ -5,7 +5,7 @@ import {AuthService} from '../../services/auth/auth.service';
 import {ErrorService} from '../../services/messages/error/error.service';
 import {Router, RouterLink} from '@angular/router';
 import {SuccessService} from '../../services/messages/success/success.service';
-import {StatesService} from '../../client/states.service';
+import {StatesService} from '../../client/states/states.service';
 
 
 @Component({
