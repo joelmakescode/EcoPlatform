@@ -1,10 +1,12 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {map, Observable, switchMap} from 'rxjs';
-import {TransactionResponse} from '../../client/models/transactions/transaction-response.model';
 import {environment} from '../../../environment/environment';
 import {UserService} from '../user/user.service';
-import {Transaction} from '../../client/models/transactions/transaction.model';
+import {
+  Transaction,
+  TransactionResponse,
+} from '../../client/models/transactions/transaction.model';
 import {AuthTokenService} from '../auth-token/auth-token.service';
 
 @Injectable({ providedIn: "root" })
@@ -34,7 +36,7 @@ export class TransactionService {
         return this.http.post<Transaction>(this.baseUrl, {
           sender_id: this.authTokenService.getUserId(),
           receiver_id: receiverId,
-          amount: amount,
+          amount: amount * 100,
           type: 'send'
         })
       })
@@ -48,12 +50,11 @@ export class TransactionService {
         return this.http.post<Transaction>(this.baseUrl, {
           sender_id: senderId,
           receiver_id: this.authTokenService.getUserId(),
-          amount: amount,
+          // must be taken * 100 since we calculate in cents, should be put into the backend probably
+          amount: amount * 100,
           type: 'request'
         })
       })
     )
   }
-
-  // TODO: refactor this to one method that gets called by both send and request money transactions
 }
