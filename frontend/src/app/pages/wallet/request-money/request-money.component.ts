@@ -11,8 +11,7 @@ import {AuthTokenService} from '../../../services/auth-token/auth-token.service'
 import {TransactionService} from '../../../services/transactions/transaction.service';
 import {Transaction} from '../../../client/models/transactions/transaction.model';
 import {TransactionResponse} from '../../../client/models/transactions/transaction-response.model';
-import {interval, switchMap, take} from 'rxjs';
-import {response} from 'express';
+import {interval, switchMap} from 'rxjs';
 import {SuccessService} from '../../../services/messages/success/success.service';
 import {ErrorService} from '../../../services/messages/error/error.service';
 
