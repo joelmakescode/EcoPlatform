@@ -39,11 +39,9 @@
 }
 
 .error-toast .error-label {
+  line-height: 1.4;
+  word-break: break-word;
   opacity: 0.85;
-}
-
-.error-toast strong {
-  display: block;
 }
 
 .error-text {
@@ -55,10 +53,4 @@
   width: 24px;
   flex-shrink: 0;
   margin-top: -1px;
-}
-
-.error-message {
-  display: inline;
-  line-height: 1.4;
-  word-break: break-word;
 }
