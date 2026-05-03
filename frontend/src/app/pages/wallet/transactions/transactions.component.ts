@@ -1,25 +1,21 @@
 import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
-import {RouterLink} from '@angular/router';
 import {Transaction} from '../../../client/models/transactions/transaction.model';
 import {TransactionService} from '../../../services/transactions/transaction.service';
-import {DatePipe, NgClass, NgForOf, NgOptimizedImage} from '@angular/common';
 import {AuthTokenService} from '../../../services/auth-token/auth-token.service';
-import {AmountPipe} from '../../../pipes/transactions/amount.pipe';
-import {TypePipe} from '../../../pipes/transactions/type.pipe';
-import {StatusPipe} from '../../../pipes/transactions/status.pipe';
-import {interval, switchMap} from 'rxjs';
+import {filter, interval, switchMap} from 'rxjs';
+import {ContentBoxComponent} from '../../../component/content-box/content-box.component';
+import {BackLinkComponent} from '../../../component/shared/back-link/back-link.component';
+import {
+  TransactionsLayoutComponent
+} from '../../../component/shared/layouts/transactions-layout/transactions-layout.component';
 
 @Component({
   selector: 'app-transactions',
   standalone: true,
   imports: [
-    RouterLink,
-    DatePipe,
-    NgForOf,
-    AmountPipe,
-    TypePipe,
-    StatusPipe,
-    NgClass,
+    ContentBoxComponent,
+    BackLinkComponent,
+    TransactionsLayoutComponent,
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.css',
@@ -32,7 +28,6 @@ export class TransactionsComponent implements OnInit {
   transactions: Transaction[] = [];
 
   userId = this.tokenService.getUserId();
-  username = localStorage.getItem("identity");
   limit = 20;
 
   nextCursor: string | null = null;
@@ -45,11 +40,18 @@ export class TransactionsComponent implements OnInit {
 
     interval(2000)
       .pipe(
+        filter(() => !this.isLoading && this.isFirstPage),
         switchMap(() =>
           this.transactionService.getTransactions(this.userId, this.limit)
         )
       )
-      .subscribe(res => { this.transactions = res.transactions; this.cdr.detectChanges(); });
+      .subscribe(res => {
+        if (!res?.transactions) return;
+
+        this.transactions = res.transactions;
+        this.nextCursor = res.pagination.next_cursor;
+        this.cdr.detectChanges();
+      });
   }
 
   loadTransactions(cursor: string | null = null) {
@@ -87,37 +89,5 @@ export class TransactionsComponent implements OnInit {
 
   get isLastPage(): boolean {
     return !this.nextCursor;
-  }
-
-  trackByTxId(_: number, tx: Transaction) {
-    return tx.id;
-  }
-
-  getStatusClass(status: string): string {
-    switch (status) {
-      case 'completed':
-        return 'status--success';
-      case 'pending':
-        return 'status--pending';
-      case 'cancelled':
-      case 'rejected':
-        return 'status--error';
-      default:
-        return '';
-    }
-  }
-
-  getStatusIcon(status: string): string {
-    switch (status) {
-      case 'completed':
-        return 'assets/icon_success.png';
-      case 'pending':
-        return 'assets/icon_pending.png';
-      case 'cancelled':
-      case 'rejected':
-        return 'assets/icon_error.png';
-      default:
-        return '';
-    }
   }
 }

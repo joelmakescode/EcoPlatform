@@ -44,6 +44,23 @@ func (s *Balance) SetBalance(val int64) {
 func (*Balance) getUserBalanceByIdRes()    {}
 func (*Balance) updateUserBalanceByIdRes() {}
 
+// Ref: #/components/schemas/BaseEntity
+type BaseEntity struct {
+	ID int `json:"id"`
+}
+
+// GetID returns the value of ID.
+func (s *BaseEntity) GetID() int {
+	return s.ID
+}
+
+// SetID sets the value of ID.
+func (s *BaseEntity) SetID(val int) {
+	s.ID = val
+}
+
+func (*BaseEntity) getIdByUsernameRes() {}
+
 type CancelTransactionBadRequest Error
 
 func (*CancelTransactionBadRequest) cancelTransactionRes() {}
@@ -453,6 +470,18 @@ func (*GetDiscordUserLanguageByIdInternalServerError) getDiscordUserLanguageById
 type GetDiscordUserLanguageByIdNotFound Error
 
 func (*GetDiscordUserLanguageByIdNotFound) getDiscordUserLanguageByIdRes() {}
+
+type GetIdByUsernameBadRequest Error
+
+func (*GetIdByUsernameBadRequest) getIdByUsernameRes() {}
+
+type GetIdByUsernameInternalServerError Error
+
+func (*GetIdByUsernameInternalServerError) getIdByUsernameRes() {}
+
+type GetIdByUsernameNotFound Error
+
+func (*GetIdByUsernameNotFound) getIdByUsernameRes() {}
 
 type GetTransactionsBadRequest Error
 
@@ -1134,7 +1163,7 @@ func (s *TransactionType) UnmarshalText(data []byte) error {
 	}
 }
 
-// Ref: #/components/schemas/TransactionsComponent
+// Ref: #/components/schemas/Transactions
 type Transactions struct {
 	// User ID.
 	ID           int                   `json:"id"`

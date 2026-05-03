@@ -51,7 +51,11 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderId uin
 
 		status = "completed"
 		completedAt = &now
-		_, err := s.userRepo.UpdateUserBalanceById(uint(receiverId), int64(amount))
+		_, err := s.userRepo.UpdateUserBalanceById(uint(senderId), int64(-amount))
+		if err != nil {
+			return nil, ErrMoneyNotSend
+		}
+		_, err = s.userRepo.UpdateUserBalanceById(uint(receiverId), int64(amount))
 		if err != nil {
 			return nil, ErrMoneyNotSend
 		}

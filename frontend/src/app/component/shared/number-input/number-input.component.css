@@ -1,0 +1,37 @@
+.amount-input {
+  position: relative;
+  width: 200px;
+}
+
+.amount-input input {
+  width: 100%;
+  padding: 8px 28px 8px 10px;
+  border-radius: 6px;
+  background: #1a1f26;
+  border: 1px solid #2a2f36;
+  color: #e3e6eb;
+}
+
+.amount-input .currency {
+  position: absolute;
+  right: 10px;
+  top: 38px;
+  color: white;
+  pointer-events: none;
+  font-size: 14px;
+}
+
+h3 {
+  color: white;
+  font-size: 14px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

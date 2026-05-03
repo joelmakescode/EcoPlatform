@@ -480,11 +480,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 				if len(elem) == 0 {
 					switch r.Method {
+					case "GET":
+						s.handleGetIdByUsernameRequest([0]string{}, elemIsEscaped, w, r)
 					case "POST":
 						s.handleCreateUserRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, notAllowedParams{
-							allowedMethods: "POST",
+							allowedMethods: "GET,POST",
 							allowedHeaders: rn11AllowedHeaders,
 							acceptPost:     "application/json",
 							acceptPatch:    "",
@@ -962,7 +964,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.name = CreateTransactionOperation
 						r.summary = "Create New Transaction"
 						r.operationID = "createTransaction"
-						r.operationGroup = "TransactionsComponent"
+						r.operationGroup = "Transactions"
 						r.pathPattern = "/transactions"
 						r.args = args
 						r.count = 0
@@ -993,9 +995,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						switch method {
 						case "GET":
 							r.name = GetTransactionsOperation
-							r.summary = "Get User TransactionsComponent"
+							r.summary = "Get User Transactions"
 							r.operationID = "getTransactions"
-							r.operationGroup = "TransactionsComponent"
+							r.operationGroup = "Transactions"
 							r.pathPattern = "/transactions/{id}"
 							r.args = args
 							r.count = 1
@@ -1032,7 +1034,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									r.name = AcceptTransactionOperation
 									r.summary = "Accept a Transaction"
 									r.operationID = "acceptTransaction"
-									r.operationGroup = "TransactionsComponent"
+									r.operationGroup = "Transactions"
 									r.pathPattern = "/transactions/{id}/accept"
 									r.args = args
 									r.count = 1
@@ -1057,7 +1059,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									r.name = CancelTransactionOperation
 									r.summary = "Cancel a Transaction"
 									r.operationID = "cancelTransaction"
-									r.operationGroup = "TransactionsComponent"
+									r.operationGroup = "Transactions"
 									r.pathPattern = "/transactions/{id}/cancel"
 									r.args = args
 									r.count = 1
@@ -1082,7 +1084,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									r.name = RejectTransactionOperation
 									r.summary = "Reject a Transaction"
 									r.operationID = "rejectTransaction"
-									r.operationGroup = "TransactionsComponent"
+									r.operationGroup = "Transactions"
 									r.pathPattern = "/transactions/{id}/reject"
 									r.args = args
 									r.count = 1
@@ -1108,6 +1110,15 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 
 				if len(elem) == 0 {
 					switch method {
+					case "GET":
+						r.name = GetIdByUsernameOperation
+						r.summary = "Get id by username"
+						r.operationID = "getIdByUsername"
+						r.operationGroup = "Users"
+						r.pathPattern = "/users"
+						r.args = args
+						r.count = 0
+						return r, true
 					case "POST":
 						r.name = CreateUserOperation
 						r.summary = "Create a new user"

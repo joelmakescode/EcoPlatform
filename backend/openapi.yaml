@@ -229,7 +229,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /transactions:
-    x-ogen-operation-group: TransactionsComponent
+    x-ogen-operation-group: Transactions
     post:
       operationId: createTransaction
       summary: Create New Transaction
@@ -258,7 +258,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /transactions/{id}/accept:
-    x-ogen-operation-group: TransactionsComponent
+    x-ogen-operation-group: Transactions
     parameters:
       - name: id
         in: path
@@ -280,7 +280,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /transactions/{id}/reject:
-    x-ogen-operation-group: TransactionsComponent
+    x-ogen-operation-group: Transactions
     parameters:
       - name: id
         in: path
@@ -302,7 +302,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /transactions/{id}/cancel:
-    x-ogen-operation-group: TransactionsComponent
+    x-ogen-operation-group: Transactions
     parameters:
       - name: id
         in: path
@@ -324,7 +324,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   /transactions/{id}:
-    x-ogen-operation-group: TransactionsComponent
+    x-ogen-operation-group: Transactions
     parameters:
       - name: id
         in: path
@@ -334,7 +334,7 @@ paths:
           type: number
     get:
       operationId: getTransactions
-      summary: Get User TransactionsComponent
+      summary: Get User Transactions
       description: Returns a paginated list of transactions for a user
       parameters:
         - name: limit
@@ -355,7 +355,7 @@ paths:
 
       responses:
         200:
-          description: User TransactionsComponent
+          description: User Transactions
           content:
             application/json:
               schema:
@@ -369,6 +369,29 @@ paths:
 
   /users:
     x-ogen-operation-group: Users
+    get:
+      operationId: getIdByUsername
+      summary: Get id by username
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: User sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseEntity'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
     post:
       operationId: createUser
       summary: Create a new user
@@ -421,6 +444,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/InternalServerError'
+
   /users/balance/{id}:
     parameters:
       - name: id

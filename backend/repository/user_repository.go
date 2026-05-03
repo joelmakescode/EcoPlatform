@@ -2,6 +2,7 @@ package repository
 
 import (
 	"backend/repository/model"
+	"context"
 
 	"gorm.io/gorm"
 )
@@ -12,6 +13,16 @@ type UserRepository struct {
 
 func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
+}
+
+func (r *UserRepository) GetIdByUsername(ctx context.Context, username string) (uint, error) {
+	var user model.User
+	err := r.db.WithContext(ctx).Where("username = ?", username).First(&user).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return user.ID, nil
 }
 
 func (r *UserRepository) GetUserByEmail(email string) (*model.User, error) {

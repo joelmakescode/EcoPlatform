@@ -56,6 +56,20 @@ func (h *UserHandler) GetUserById(ctx context.Context, params api.GetUserByIdPar
 	return user, nil
 }
 
+func (h *UserHandler) GetIdByUsername(ctx context.Context, params api.GetIdByUsernameParams) (api.GetIdByUsernameRes, error) {
+	id, err := h.service.GetIdByUsername(ctx, params.Username)
+	if err != nil {
+		switch {
+		case errors.Is(err, service.ErrUserNotFound):
+			return &api.GetIdByUsernameNotFound{Message: api.NewOptString(err.Error())}, nil
+		default:
+			return &api.GetIdByUsernameInternalServerError{Message: api.NewOptString(err.Error())}, nil
+		}
+	}
+
+	return &api.BaseEntity{ID: int(id)}, nil
+}
+
 func (h *UserHandler) GetUserBalanceById(ctx context.Context, params api.GetUserBalanceByIdParams) (api.GetUserBalanceByIdRes, error) {
 	if err := authz.Self(ctx, uint(params.ID)); err != nil {
 		return &api.GetUserBalanceByIdForbidden{Message: api.NewOptString(err.Error())}, nil

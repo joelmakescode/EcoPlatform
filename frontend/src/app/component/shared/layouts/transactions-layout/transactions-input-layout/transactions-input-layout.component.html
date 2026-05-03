@@ -1,0 +1,20 @@
+<div class="transactions-input-layout-form">
+  <app-username-input [placeholder]="placeholder" [placeholderTitle]="placeholderTitle" (valueChange)="username = $event"></app-username-input>
+  <app-number-input (valueChange)="amount = $event"></app-number-input>
+
+  <div class="send-confirmation-row">
+    <label class="confirmation-checkbox">
+      <input type="checkbox" [(ngModel)]="sendConfirmed"/>
+
+      <img class="info-icon" src="assets/icon_info.png" alt="info-icon">
+
+      <span>
+        {{ infoMessage }}
+      </span>
+    </label>
+
+    <button class="send-button" [disabled]="!sendConfirmed || !username || amount <= 0" (click)="onSubmit()">
+      {{ buttonMessage }}
+    </button>
+  </div>
+</div>

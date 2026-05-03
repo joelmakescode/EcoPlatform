@@ -94,6 +94,15 @@ func (UnimplementedHandler) GetDiscordUserLanguageById(ctx context.Context, para
 	return r, ht.ErrNotImplemented
 }
 
+// GetIdByUsername implements getIdByUsername operation.
+//
+// Get id by username.
+//
+// GET /users
+func (UnimplementedHandler) GetIdByUsername(ctx context.Context, params GetIdByUsernameParams) (r GetIdByUsernameRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // GetTransactions implements getTransactions operation.
 //
 // Returns a paginated list of transactions for a user.
