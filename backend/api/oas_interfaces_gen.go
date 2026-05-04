@@ -65,6 +65,10 @@ type LoginUserRes interface {
 	loginUserRes()
 }
 
+type RefundTransactionRes interface {
+	refundTransactionRes()
+}
+
 type RejectTransactionRes interface {
 	rejectTransactionRes()
 }

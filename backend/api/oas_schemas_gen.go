@@ -862,6 +862,23 @@ func (o OptString) Or(d string) string {
 	return d
 }
 
+type RefundTransactionBadRequest Error
+
+func (*RefundTransactionBadRequest) refundTransactionRes() {}
+
+type RefundTransactionInternalServerError Error
+
+func (*RefundTransactionInternalServerError) refundTransactionRes() {}
+
+// RefundTransactionNoContent is response for RefundTransaction operation.
+type RefundTransactionNoContent struct{}
+
+func (*RefundTransactionNoContent) refundTransactionRes() {}
+
+type RefundTransactionNotFound Error
+
+func (*RefundTransactionNotFound) refundTransactionRes() {}
+
 type RejectTransactionBadRequest Error
 
 func (*RejectTransactionBadRequest) rejectTransactionRes() {}

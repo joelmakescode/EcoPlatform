@@ -22,6 +22,7 @@ const (
 	LinkAccountOperation                   OperationName = "LinkAccount"
 	LoginDiscordUserOperation              OperationName = "LoginDiscordUser"
 	LoginUserOperation                     OperationName = "LoginUser"
+	RefundTransactionOperation             OperationName = "RefundTransaction"
 	RejectTransactionOperation             OperationName = "RejectTransaction"
 	UpdateDiscordUserAutofillByIdOperation OperationName = "UpdateDiscordUserAutofillById"
 	UpdateDiscordUserLanguageByIdOperation OperationName = "UpdateDiscordUserLanguageById"

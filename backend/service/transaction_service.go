@@ -129,12 +129,16 @@ func (s *TransactionService) AcceptTransaction(ctx context.Context, transactionI
 	return s.unrollTransaction(ctx, transactionID, "completed")
 }
 
-func (s *TransactionService) RejectTransaction(ctx context.Context, transactionID string) error {
-	return s.unrollTransaction(ctx, transactionID, "rejected")
-}
-
 func (s *TransactionService) CancelTransaction(ctx context.Context, transactionID string) error {
 	return s.unrollTransaction(ctx, transactionID, "cancelled")
+}
+
+func (s *TransactionService) RefundTransaction(ctx context.Context, transactionID string) error {
+	return s.unrollTransaction(ctx, transactionID, "refund")
+}
+
+func (s *TransactionService) RejectTransaction(ctx context.Context, transactionID string) error {
+	return s.unrollTransaction(ctx, transactionID, "rejected")
 }
 
 func (s *TransactionService) unrollTransaction(ctx context.Context, transactionID, status string) error {
@@ -155,7 +159,21 @@ func (s *TransactionService) unrollTransaction(ctx context.Context, transactionI
 		}
 
 		_, err = s.userRepo.UpdateUserBalanceById(uint(sender), int64(-amount))
+		if err != nil {
+			return err
+		}
 		_, err = s.userRepo.UpdateUserBalanceById(uint(receiver), int64(amount))
+		if err != nil {
+			return err
+		}
+	}
+
+	if status == "refund" {
+		_, err := s.userRepo.UpdateUserBalanceById(uint(sender), int64(amount))
+		if err != nil {
+			return err
+		}
+		_, err = s.userRepo.UpdateUserBalanceById(uint(receiver), int64(-amount))
 		if err != nil {
 			return err
 		}

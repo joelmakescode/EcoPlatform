@@ -437,31 +437,72 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								return
 							}
 
-						case 'r': // Prefix: "reject"
+						case 'r': // Prefix: "re"
 
-							if l := len("reject"); len(elem) >= l && elem[0:l] == "reject" {
+							if l := len("re"); len(elem) >= l && elem[0:l] == "re" {
 								elem = elem[l:]
 							} else {
 								break
 							}
 
 							if len(elem) == 0 {
-								// Leaf node.
-								switch r.Method {
-								case "POST":
-									s.handleRejectTransactionRequest([1]string{
-										args[0],
-									}, elemIsEscaped, w, r)
-								default:
-									s.notAllowed(w, r, notAllowedParams{
-										allowedMethods: "POST",
-										allowedHeaders: nil,
-										acceptPost:     "",
-										acceptPatch:    "",
-									})
+								break
+							}
+							switch elem[0] {
+							case 'f': // Prefix: "fund"
+
+								if l := len("fund"); len(elem) >= l && elem[0:l] == "fund" {
+									elem = elem[l:]
+								} else {
+									break
 								}
 
-								return
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleRefundTransactionRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, notAllowedParams{
+											allowedMethods: "POST",
+											allowedHeaders: nil,
+											acceptPost:     "",
+											acceptPatch:    "",
+										})
+									}
+
+									return
+								}
+
+							case 'j': // Prefix: "ject"
+
+								if l := len("ject"); len(elem) >= l && elem[0:l] == "ject" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleRejectTransactionRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, notAllowedParams{
+											allowedMethods: "POST",
+											allowedHeaders: nil,
+											acceptPost:     "",
+											acceptPatch:    "",
+										})
+									}
+
+									return
+								}
+
 							}
 
 						}
@@ -1069,29 +1110,68 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 							}
 
-						case 'r': // Prefix: "reject"
+						case 'r': // Prefix: "re"
 
-							if l := len("reject"); len(elem) >= l && elem[0:l] == "reject" {
+							if l := len("re"); len(elem) >= l && elem[0:l] == "re" {
 								elem = elem[l:]
 							} else {
 								break
 							}
 
 							if len(elem) == 0 {
-								// Leaf node.
-								switch method {
-								case "POST":
-									r.name = RejectTransactionOperation
-									r.summary = "Reject a Transaction"
-									r.operationID = "rejectTransaction"
-									r.operationGroup = "Transactions"
-									r.pathPattern = "/transactions/{id}/reject"
-									r.args = args
-									r.count = 1
-									return r, true
-								default:
-									return
+								break
+							}
+							switch elem[0] {
+							case 'f': // Prefix: "fund"
+
+								if l := len("fund"); len(elem) >= l && elem[0:l] == "fund" {
+									elem = elem[l:]
+								} else {
+									break
 								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "POST":
+										r.name = RefundTransactionOperation
+										r.summary = "Refund a Transaction"
+										r.operationID = "refundTransaction"
+										r.operationGroup = "Transactions"
+										r.pathPattern = "/transactions/{id}/refund"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+
+							case 'j': // Prefix: "ject"
+
+								if l := len("ject"); len(elem) >= l && elem[0:l] == "ject" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "POST":
+										r.name = RejectTransactionOperation
+										r.summary = "Reject a Transaction"
+										r.operationID = "rejectTransaction"
+										r.operationGroup = "Transactions"
+										r.pathPattern = "/transactions/{id}/reject"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+
 							}
 
 						}
