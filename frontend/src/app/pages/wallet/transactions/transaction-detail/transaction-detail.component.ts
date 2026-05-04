@@ -50,7 +50,7 @@ export class TransactionDetailComponent {
     const tx = this.transaction;
     if (!tx) return false;
 
-    if (tx.status === 'refund' || tx.type !== 'send') {
+    if (tx.status === 'refund' || tx.type !== 'send' || tx.receiver_id === this.userId) {
       return false;
     }
 
@@ -71,11 +71,11 @@ export class TransactionDetailComponent {
   }
 
   get ShowAcceptedReceiverInfoText(): boolean {
-    return this.transaction?.status === 'completed' && this.transaction.receiver_id === this.userId;
+    return this.transaction?.status === 'completed' && this.transaction.receiver_id === this.userId && this.transaction?.type === 'request';
   }
 
   get ShowCancelledReceiverInfoText(): boolean {
-    return this.transaction?.status === 'cancelled' && this.transaction.receiver_id === this.userId;
+    return this.transaction?.status === 'cancelled' && this.transaction.receiver_id === this.userId && this.transaction?.type === 'request';
   }
 
   get ShowCancelledSenderInfoText(): boolean {
@@ -106,6 +106,10 @@ export class TransactionDetailComponent {
 
   get ShowRejectedSenderInfoText(): boolean {
     return this.transaction?.status === 'rejected' && this.transaction.sender_id === this.userId;
+  }
+
+  get ShowSentMoneyInfoText(): boolean {
+    return this.transaction?.type === 'send' && this.transaction.receiver_id === this.userId && !this.ShowRefundedReceiverInfoText;
   }
 
   onClose(): void {

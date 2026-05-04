@@ -42,6 +42,10 @@
       </button>
     </div>
 
+    <div class="info-text-wrapper" *ngIf="ShowSentMoneyInfoText">
+      <app-info-text infoMessage="Someone sent you money."></app-info-text>
+    </div>
+
     <div class="info-text-wrapper" *ngIf="ShowAcceptedReceiverInfoText">
       <app-info-text infoMessage="Your request was accepted by the donor."></app-info-text>
     </div>
