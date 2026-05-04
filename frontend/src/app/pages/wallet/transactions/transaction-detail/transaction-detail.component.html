@@ -66,16 +66,24 @@
       <app-info-text infoMessage="The refund option is only available within the first 24 hours after sending the money and completing the transaction."></app-info-text>
     </div>
 
-    <div class="info-text-wrapper" *ngIf="ShowRefundedInfoText">
+    <div class="info-text-wrapper" *ngIf="ShowRefundedSenderInfoText">
       <app-info-text infoMessage="You refunded this transaction and received your money back."></app-info-text>
+    </div>
+
+    <div class="info-text-wrapper" *ngIf="ShowRefundedReceiverInfoText">
+      <app-info-text infoMessage="The donor of this transaction refunded this transaction. The amount was taken out of your account."></app-info-text>
     </div>
 
     <button class="cancel-request-button" *ngIf="CanCancel" (click)="cancel.emit(transaction!)">
       Cancel Request
     </button>
 
-    <div class="info-text-wrapper" *ngIf="ShowCancelledInfoText">
+    <div class="info-text-wrapper" *ngIf="ShowCancelledReceiverInfoText">
       <app-info-text infoMessage="You cancelled this transaction request."></app-info-text>
+    </div>
+
+    <div class="info-text-wrapper" *ngIf="ShowCancelledSenderInfoText">
+      <app-info-text infoMessage="The requester cancelled this transaction."></app-info-text>
     </div>
   </div>
 </app-detail-box>
