@@ -1,0 +1,14 @@
+.info-text {
+  display: flex;
+  padding: 4px;
+  gap: 6px;
+  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.info-icon {
+  height: 24px;
+  width: 24px;
+}

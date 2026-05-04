@@ -6,7 +6,6 @@
     <span>Amount</span>
     <span>Type</span>
     <span>Status</span>
-    <span>Created at</span>
   </div>
 
   <div class="transactions-body">
@@ -31,9 +30,7 @@
         {{ tx.status | status }}
       </span>
 
-      <span>{{ tx.created_at | date:'short' }}</span>
+      <img class="transaction-icon" src="assets/icon_info.png" alt="info_icon" (click)="openTransaction(tx)"/>
     </div>
-
   </div>
-
 </div>
