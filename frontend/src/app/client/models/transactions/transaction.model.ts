@@ -10,6 +10,11 @@ export interface Transaction {
   created_at: string;
 }
 
+export interface DetailedTransactionAttributes {
+  totalTransactions: number;
+  totalAmountMoved: number;
+}
+
 export interface TransactionRequest {
   receiver_id: number;
   type: TransactionType;
@@ -28,5 +33,5 @@ export interface TransactionPagination {
   has_more: boolean;
 }
 
-export type TransactionStatus = 'pending' | 'completed' | 'rejected' | 'cancelled';
-export type TransactionType = 'request' | 'send' | 'refund';
+export type TransactionStatus = 'pending' | 'completed' | 'rejected' | 'cancelled' | 'refund' ;
+export type TransactionType = 'request' | 'send';

@@ -1,0 +1,110 @@
+h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* GRID */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 20px;
+}
+
+.detail-item {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  color: #9aa3b2;
+  margin-bottom: 4px;
+}
+
+.value {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+@keyframes pop {
+  from {
+    transform: translate(-50%, -60%) scale(0.94);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+}
+
+.accept-reject-buttons {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.accept-button,
+.reject-button {
+  padding: 8px 16px;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.accept-button {
+  background: green;
+}
+
+.reject-button {
+  background: red;
+}
+
+.cancel-request-button {
+  grid-column: 1/-1;
+  width: 40%;
+  left: 30%;
+  padding: 8px;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  background: red;
+}
+
+.refund-button {
+  grid-column: 1/-1;
+  width: 40%;
+  left: 30%;
+  background: orange;
+  padding: 8px;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.info-text-wrapper {
+  grid-column: 1/-1;
+}

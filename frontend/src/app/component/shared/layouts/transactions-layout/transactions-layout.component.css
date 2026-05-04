@@ -36,8 +36,9 @@
     1.5fr
     1.5fr
     1.5fr
-    1.5fr;
+    0.5fr;
   align-items: center;
+  justify-content: center;
 }
 
 .transactions-body {
@@ -93,6 +94,11 @@
 
 .amount--negative {
   color: #ef4444;
+}
+
+.transaction-icon {
+  height: 18px;
+  width: 18px;
 }
 
 
