@@ -106,6 +106,12 @@ type TransactionsHandler interface {
 	//
 	// GET /transactions/{id}
 	GetTransactions(ctx context.Context, params GetTransactionsParams) (GetTransactionsRes, error)
+	// RefundTransaction implements refundTransaction operation.
+	//
+	// Refund a Transaction.
+	//
+	// POST /transactions/{id}/refund
+	RefundTransaction(ctx context.Context, params RefundTransactionParams) (RefundTransactionRes, error)
 	// RejectTransaction implements rejectTransaction operation.
 	//
 	// Reject a Transaction.

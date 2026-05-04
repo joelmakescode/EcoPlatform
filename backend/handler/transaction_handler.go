@@ -98,20 +98,6 @@ func (h *TransactionHandler) AcceptTransaction(ctx context.Context, param api.Ac
 	return &api.AcceptTransactionNoContent{}, nil
 }
 
-func (h *TransactionHandler) RejectTransaction(ctx context.Context, param api.RejectTransactionParams) (api.RejectTransactionRes, error) {
-	if err := h.service.RejectTransaction(ctx, param.ID); err != nil {
-		switch {
-		case errors.Is(err, service.ErrInvalidUUID):
-			return &api.RejectTransactionBadRequest{Message: api.NewOptString(err.Error())}, nil
-
-		default:
-			return &api.RejectTransactionInternalServerError{Message: api.NewOptString(err.Error())}, nil
-		}
-	}
-
-	return &api.RejectTransactionNoContent{}, nil
-}
-
 func (h *TransactionHandler) CancelTransaction(ctx context.Context, param api.CancelTransactionParams) (api.CancelTransactionRes, error) {
 	if err := h.service.CancelTransaction(ctx, param.ID); err != nil {
 		switch {
@@ -124,6 +110,33 @@ func (h *TransactionHandler) CancelTransaction(ctx context.Context, param api.Ca
 	}
 
 	return &api.CancelTransactionNoContent{}, nil
+}
+
+func (h *TransactionHandler) RefundTransaction(ctx context.Context, param api.RefundTransactionParams) (api.RefundTransactionRes, error) {
+	if err := h.service.RefundTransaction(ctx, param.ID); err != nil {
+		switch {
+		case errors.Is(err, service.ErrInvalidUUID):
+			return &api.RefundTransactionBadRequest{Message: api.NewOptString(err.Error())}, nil
+		default:
+			return &api.RefundTransactionInternalServerError{Message: api.NewOptString(err.Error())}, nil
+		}
+	}
+
+	return &api.RefundTransactionNoContent{}, nil
+}
+
+func (h *TransactionHandler) RejectTransaction(ctx context.Context, param api.RejectTransactionParams) (api.RejectTransactionRes, error) {
+	if err := h.service.RejectTransaction(ctx, param.ID); err != nil {
+		switch {
+		case errors.Is(err, service.ErrInvalidUUID):
+			return &api.RejectTransactionBadRequest{Message: api.NewOptString(err.Error())}, nil
+
+		default:
+			return &api.RejectTransactionInternalServerError{Message: api.NewOptString(err.Error())}, nil
+		}
+	}
+
+	return &api.RejectTransactionNoContent{}, nil
 }
 
 func mapTransactions(txs []model.Transaction) []api.Transaction {

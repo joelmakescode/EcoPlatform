@@ -155,6 +155,15 @@ func (UnimplementedHandler) LoginUser(ctx context.Context, req *LoginData) (r Lo
 	return r, ht.ErrNotImplemented
 }
 
+// RefundTransaction implements refundTransaction operation.
+//
+// Refund a Transaction.
+//
+// POST /transactions/{id}/refund
+func (UnimplementedHandler) RefundTransaction(ctx context.Context, params RefundTransactionParams) (r RefundTransactionRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // RejectTransaction implements rejectTransaction operation.
 //
 // Reject a Transaction.
