@@ -33,40 +33,48 @@
     </div>
 
     <div class="accept-reject-buttons">
-      <button class="accept-button" *ngIf="canAcceptOrReject" [class.disabled]="!canAcceptOrReject" (click)="accept.emit(transaction!)">
+      <button class="accept-button" *ngIf="CanAcceptOrReject" (click)="accept.emit(transaction!)">
         Accept
       </button>
 
-      <button class="reject-button" *ngIf="canAcceptOrReject" [class.disabled]="!canAcceptOrReject" (click)="reject.emit(transaction!)">
+      <button class="reject-button" *ngIf="CanAcceptOrReject" (click)="reject.emit(transaction!)">
         Reject
       </button>
     </div>
 
-    <div class="info-text-wrapper" *ngIf="showRejectedReceiverInfoText">
+    <div class="info-text-wrapper" *ngIf="ShowAcceptedReceiverInfoText">
+      <app-info-text infoMessage="Your request was accepted by the donor."></app-info-text>
+    </div>
+
+    <div class="info-text-wrapper" *ngIf="ShowAcceptedSenderInfoText">
+      <app-info-text infoMessage="You accepted this transaction request."></app-info-text>
+    </div>
+
+    <div class="info-text-wrapper" *ngIf="ShowRejectedReceiverInfoText">
       <app-info-text infoMessage="Your request was rejected by the presumed donor."></app-info-text>
     </div>
 
-    <div class="info-text-wrapper" *ngIf="showRejectedSenderInfoText">
+    <div class="info-text-wrapper" *ngIf="ShowRejectedSenderInfoText">
       <app-info-text infoMessage="You rejected this request."></app-info-text>
     </div>
 
-    <button class="refund-button" *ngIf="canRefund" (click)="refund.emit(transaction!)">
+    <button class="refund-button" *ngIf="CanRefund" (click)="refund.emit(transaction!)">
       Refund
     </button>
 
-    <div class="info-text-wrapper" *ngIf="showRefundNotAvailableInfoText">
+    <div class="info-text-wrapper" *ngIf="ShowRefundNotAvailableInfoText">
       <app-info-text infoMessage="The refund option is only available within the first 24 hours after sending the money and completing the transaction."></app-info-text>
     </div>
 
-    <div class="info-text-wrapper" *ngIf="showRefundedInfoText">
+    <div class="info-text-wrapper" *ngIf="ShowRefundedInfoText">
       <app-info-text infoMessage="You refunded this transaction and received your money back."></app-info-text>
     </div>
 
-    <button class="cancel-request-button" *ngIf="canCancel" [class.disabled]="!canCancel" (click)="cancel.emit(transaction!)">
+    <button class="cancel-request-button" *ngIf="CanCancel" (click)="cancel.emit(transaction!)">
       Cancel Request
     </button>
 
-    <div class="info-text-wrapper" *ngIf="showCancelledInfoText">
+    <div class="info-text-wrapper" *ngIf="ShowCancelledInfoText">
       <app-info-text infoMessage="You cancelled this transaction request."></app-info-text>
     </div>
   </div>

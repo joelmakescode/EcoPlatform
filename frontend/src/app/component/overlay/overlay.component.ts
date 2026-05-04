@@ -51,10 +51,8 @@ export class OverlayComponent {
     this.closeModal();
   }
 
-
-  // REFUND BACKEND FUNCTIONALITY MUST BE PROVIDED
-
-  onRefund(tx: Transaction) {
+  onRefund(transaction: Transaction) {
+    this.transactionModalService.refundTransaction(transaction);
     this.closeModal();
   }
 

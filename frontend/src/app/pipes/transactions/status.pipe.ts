@@ -9,6 +9,7 @@ export class StatusPipe implements PipeTransform {
       case 'pending': return 'Pending';
       case 'cancelled': return 'Cancelled';
       case 'rejected': return 'Rejected';
+      case 'refund': return 'Refunded';
       default: return status;
     }
   }

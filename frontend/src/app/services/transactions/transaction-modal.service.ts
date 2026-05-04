@@ -44,6 +44,17 @@ export class TransactionModalService {
     })
   }
 
+  refundTransaction(transaction: Transaction) {
+    this.transactionService.refundTransaction(transaction.id).subscribe({
+      next: () => {
+        this.successService.showApiSuccess("REFUND_TRANSACTION_SUCCESSFUL");
+      },
+      error: err => {
+        this.errorService.showApiError(err.error?.message, err.status);
+      }
+    })
+  }
+
   rejectTransaction(transaction: Transaction) {
     this.transactionService.rejectTransaction(transaction.id).subscribe({
       next: () => {

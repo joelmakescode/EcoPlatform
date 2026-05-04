@@ -36,21 +36,21 @@ export class TransactionDetailComponent {
   private authTokenService = inject(AuthTokenService);
   userId = this.authTokenService.getUserId();
 
-  get canAcceptOrReject(): boolean {
+  get CanAcceptOrReject(): boolean {
     const tx = this.transaction;
     return !!tx && tx.type === 'request' && tx.status === 'pending' && tx.sender_id === this.userId;
   }
 
-  get canCancel(): boolean {
+  get CanCancel(): boolean {
     const tx = this.transaction;
     return !!tx && tx.type === 'request' && tx.status === 'pending' && tx.receiver_id === this.userId;
   }
 
-  get canRefund(): boolean {
+  get CanRefund(): boolean {
     const tx = this.transaction;
     if (!tx) return false;
 
-    if (tx.type !== 'send' || tx.sender_id !== this.userId) {
+    if (tx.status === 'refund' || tx.type !== 'send') {
       return false;
     }
 
@@ -62,24 +62,34 @@ export class TransactionDetailComponent {
     return now - createdAt <= secondsPassed;
   }
 
-  get showCancelledInfoText(): boolean {
+  get ShowAcceptedSenderInfoText(): boolean {
+    const notRefunded = !this.CanRefund
+    return notRefunded && this.transaction?.status === 'completed' && this.transaction.sender_id === this.userId;
+  }
+
+  get ShowAcceptedReceiverInfoText(): boolean {
+    return this.transaction?.status === 'completed' && this.transaction.receiver_id === this.userId;
+  }
+
+  get ShowCancelledInfoText(): boolean {
     return this.transaction?.status === 'cancelled' && this.transaction.receiver_id === this.userId;
   }
 
-  get showRefundNotAvailableInfoText(): boolean {
-    const valid = this.canRefund;
-    return !valid && this.transaction?.type === 'send' && this.transaction?.sender_id === this.userId;
+  get ShowRefundNotAvailableInfoText(): boolean {
+    const valid = this.CanRefund;
+    const notRefunded = this.ShowRefundedInfoText;
+    return !valid && !notRefunded && this.transaction?.type === 'send' && this.transaction?.sender_id === this.userId;
   }
 
-  get showRefundedInfoText(): boolean {
-    return this.transaction?.type === 'refund' && this.transaction.sender_id === this.userId;
+  get ShowRefundedInfoText(): boolean {
+    return this.transaction?.status === 'refund' && this.transaction.sender_id === this.userId;
   }
 
-  get showRejectedReceiverInfoText(): boolean {
+  get ShowRejectedReceiverInfoText(): boolean {
     return this.transaction?.status === 'rejected' && this.transaction.receiver_id === this.userId;
   }
 
-  get showRejectedSenderInfoText(): boolean {
+  get ShowRejectedSenderInfoText(): boolean {
     return this.transaction?.status === 'rejected' && this.transaction.sender_id === this.userId;
   }
 

@@ -66,6 +66,10 @@ export class TransactionService {
     return this.http.post<void>(`${this.baseUrl}/${id}/cancel`, null);
   }
 
+  refundTransaction(id: string) {
+    return this.http.post<void>(`${this.baseUrl}/${id}/refund`, null);
+  }
+
   rejectTransaction(id: string) {
     return this.http.post<void>(`${this.baseUrl}/${id}/reject`, null);
   }

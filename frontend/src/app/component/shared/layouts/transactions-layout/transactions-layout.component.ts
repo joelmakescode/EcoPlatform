@@ -32,6 +32,7 @@ export class TransactionsLayoutComponent {
   getStatusClass(status: string): string {
     switch (status) {
       case 'completed':
+      case 'refund':
         return 'status--success';
       case 'pending':
         return 'status--pending';
@@ -46,6 +47,7 @@ export class TransactionsLayoutComponent {
   getStatusIcon(status: string): string {
     switch (status) {
       case 'completed':
+      case 'refund':
         return 'assets/icon_success.png';
       case 'pending':
         return 'assets/icon_pending.png';

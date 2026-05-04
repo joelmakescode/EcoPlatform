@@ -33,5 +33,5 @@ export interface TransactionPagination {
   has_more: boolean;
 }
 
-export type TransactionStatus = 'pending' | 'completed' | 'rejected' | 'cancelled';
-export type TransactionType = 'request' | 'send' | 'refund';
+export type TransactionStatus = 'pending' | 'completed' | 'rejected' | 'cancelled' | 'refund' ;
+export type TransactionType = 'request' | 'send';
