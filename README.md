@@ -3,8 +3,8 @@
 Dieses Repository enthält drei Hauptkomponenten:
 
 - **Bot** – Discord-Bot/Node.js Discord.js
-- **API** – GoLang Backend
-- **Frontend** - HTML Website
+- **Backend** – GoLang Backend
+- **Frontend** - HTML Website/TypeScript Angular Framework
 
 Alle Komponenten liegen in separaten Unterordnern, aber teilen sich das gleiche Repository.
 
@@ -16,42 +16,56 @@ Alle Komponenten liegen in separaten Unterordnern, aber teilen sich das gleiche 
 ecoplatform/
 ├─ bot/          # Discord-Bot
 ├─ backend/      # API - GoLang
-├─ frontend/     # HTML Website
+├─ frontend/     # HTML Website / Angular Framework
 ├─ README.md
 ├─ .gitignore
 └─ docker-compose.yml  
-
-# Commit mit klarer Nachricht
-git commit -m "feat(api): add new endpoint for stock history"
-
 ```
 
-## BRUNO 🐶
+## 🔧 Vorgehensweise im Projekt
 
-### HTTP REQUESTS
-
-#### User Requests
+Das Projekt basiert auf der iterativen Erstellung von Issues in GitHub.
 
 ```text
-POST - http://localhost:8080/api/users
------
-GET - http://localhost:8080/api/users/{id}
-GET - http://localhost:8080/api/users/balance/{id}
------
-PUT - http://localhost:8080/api/users/balance/{id}
+Bevor ein Default Workflow getriggert wird, muss eine Besprechung
+der Wünsche stattgefunden haben.
+
+Default Workflow:
+
+- Es wird ein Issue erstellt. Das Issue soll alle zu erwartenden 
+  Anforderungen beschreiben. Eine Anforderung wird als Work-Item
+  beschrieben. Ein Issue ist erst beendet, wenn alle Anforderungen
+  erfüllt sind.
+  
+Bug Workflow:
+
+- Sofern ein Bug vorliegt, wird dieser mit einem Issue beschrieben.
+  Das Issue soll alle Fehler des Bugs enthalten und eine Lösung zur
+  Behebung des Bugs beinhalten. Ein Bug Issue ist erst abgeschlossen,
+  wenn die volle Funktionalität der Komponenten wieder hergestellt ist.
 ```
 
-#### Login (API)
+Ein Issue wird folgendermaßen erstellt:
+
 ```text
-POST - http://localhost:8080/api/login
+[BACKEND / BOT / FRONTEND] ISSUE TITLE
 ```
 
-#### Login (Discord)
+## Branch Struktur
+
+Branches werden folgendermaßen erstellt:
+
+Default Workflow:
+
 ```text
-POST - http://localhost:8080/api/discord-users/login
+git checkout -b feature/[ISSUE-NUMBER]-[ISSUE-TITLE]
 ```
 
-#### Discord User Requests
+Bug Workflow:
 ```text
-POST - http://localhost:8080/api/discord-users
+git checkout -b hotfix/[ISSUE-NUMBER]-[ISSUE-TITLE]
 ```
+
+## Reviews
+Reviews sind grundsätzlich nicht nötig, werden jedoch erwünscht.
+Wichtig zu beachten ist, dass Anforderungen nicht vernachlässigt werden.
