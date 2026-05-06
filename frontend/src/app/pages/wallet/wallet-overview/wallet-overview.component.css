@@ -9,3 +9,11 @@
   margin-left: 236px;
   padding: 32px;
 }
+
+.content-wallet-overview-transaction-tile {
+  display: flex;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 130px;
+}
