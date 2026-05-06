@@ -1,5 +1,15 @@
 <main class="content-wallet-overview">
-  <app-tile title="Transactions" icon="assets/icons-tiles/wallet/icon_transactions.png" route="/wallet/transactions"></app-tile>
+  <app-tile title="Transactions" icon="assets/icons-tiles/wallet/icon_transactions.png" route="/wallet/transactions">
+    <ng-container *ngIf="!loading; else loadingTemplate">
+      <div class="content-wallet-overview-transaction-tile" *ngIf="openTransactions !== 0">
+        You have {{ openTransactions }} pending transactions.
+      </div>
+    </ng-container>
+
+    <ng-template #loadingTemplate>
+      <div class="content-wallet-overview-transaction-tile">Loading...</div>
+    </ng-template>
+  </app-tile>
   <app-tile title="Send Money" icon="assets/icons-tiles/wallet/icon_send_money.png" route="/wallet/send-money"></app-tile>
   <app-tile title="Request Money" icon="assets/icons-tiles/wallet/icon_request_money.png" route="/wallet/request-money"></app-tile>
 </main>
