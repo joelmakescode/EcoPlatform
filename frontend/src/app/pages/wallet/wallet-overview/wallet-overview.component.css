@@ -15,5 +15,45 @@
   justify-content: center;
   font-weight: 600;
   font-size: 16px;
-  margin-top: 130px;
+  margin-top: 40px;
 }
+
+.wallet-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 13px;
+  padding: 8px 8px;
+  border-radius: 6px;
+
+  background: rgba(255,255,255,0.04);
+}
+
+.label {
+  color: rgba(255,255,255,0.6);
+}
+
+.value {
+  font-weight: 600;
+}
+
+.value.positive {
+  color: #4cd964;
+}
+
+.value.negative {
+  color: #ff5c5c;
+}
+
+.value.neutral {
+  color: #ffffff;
+}
+

@@ -13,6 +13,6 @@ export class AmountPipe implements PipeTransform {
 
     value = value / 100;
 
-    return `${sign} ${value.toFixed(2)}$`
+    return `${sign} $${value.toFixed(2)}`
   }
 }

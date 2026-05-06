@@ -1,15 +1,65 @@
 <main class="content-wallet-overview">
-  <app-tile title="Transactions" icon="assets/icons-tiles/wallet/icon_transactions.png" route="/wallet/transactions">
-    <ng-container *ngIf="!loading; else loadingTemplate">
-      <div class="content-wallet-overview-transaction-tile" *ngIf="openTransactions !== 0">
-        You have {{ openTransactions }} pending transactions.
-      </div>
-    </ng-container>
 
-    <ng-template #loadingTemplate>
-      <div class="content-wallet-overview-transaction-tile">Loading...</div>
-    </ng-template>
+  <app-tile title="Transactions" icon="assets/icons-tiles/wallet/icon_transactions.png" route="/wallet/transactions">
+
+    <div class="wallet-stats">
+      <div class="stat-row">
+        <span class="label">30d Made</span>
+        <span class="value positive">${{ overallMoneyMadeLast30Days | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="label">30d Lost</span>
+        <span class="value negative">${{ overallMoneyLostLast30Days | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="label">Total Transactions</span>
+        <span class="value neutral">{{ totalTransactions }}</span>
+      </div>
+    </div>
+
+    <div class="content-wallet-overview-transaction-tile" *ngIf="openTransactions !== 0">
+      You have {{ openTransactions }} pending transactions.
+    </div>
   </app-tile>
-  <app-tile title="Send Money" icon="assets/icons-tiles/wallet/icon_send_money.png" route="/wallet/send-money"></app-tile>
-  <app-tile title="Request Money" icon="assets/icons-tiles/wallet/icon_request_money.png" route="/wallet/request-money"></app-tile>
+
+  <app-tile title="Send Money" icon="assets/icons-tiles/wallet/icon_send_money.png" route="/wallet/send-money">
+
+    <div class="wallet-stats">
+      <div class="stat-row">
+        <span class="label">30d Transactions</span>
+        <span class="value neutral">{{ moneySentCountLast30Days }}</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="label">Total Transactions</span>
+        <span class="value neutral">{{ moneySentCountOverall }}</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="label">Total Money Sent</span>
+        <span class="value negative">${{ moneySentOverall | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+  </app-tile>
+  <app-tile title="Request Money" icon="assets/icons-tiles/wallet/icon_request_money.png" route="/wallet/request-money">
+    <div class="wallet-stats">
+      <div class="stat-row">
+        <span class="label">30d Transactions</span>
+        <span class="value neutral">{{ requestsSentCountLast30Days }}</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="label">Total Transactions</span>
+        <span class="value neutral">{{ requestsSentCountOverall }}</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="label">Total Money Received</span>
+        <span class="value positive">${{ moneyMadeThroughRequests | number:'1.2-2' }}</span>
+      </div>
+    </div>
+  </app-tile>
 </main>
