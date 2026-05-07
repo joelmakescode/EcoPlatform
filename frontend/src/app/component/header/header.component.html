@@ -3,18 +3,18 @@
     <img src="assets/icon.png" alt="icon" class="icon"/>
   </a>
 
-  <div class="header-right" *ngIf="vm$ | async as vm">
-    <div class="user-menu" *ngIf="vm.identity" [class.open]="isDropDownOpen" (click)="$event.stopPropagation()">
+  <div class="header-right">
+    <div class="user-menu" [class.open]="isDropDownOpen" (click)="$event.stopPropagation()">
 
       <button class="user-button" type="button" (click)="toggleDropDown($event)">
 
         <img src="assets/icons-header/icon_user.png" alt="user_icon" class="user-icon"/>
 
         <div class="user-text">
-          <span class="username"> {{vm.identity.username}} </span>
+          <span class="username"> {{ username }} </span>
 
-          <span class="balance" *ngIf="vm.balance !== null">
-          ${{ vm.balance  }}
+          <span class="balance">
+          ${{ balance }}
         </span>
         </div>
 

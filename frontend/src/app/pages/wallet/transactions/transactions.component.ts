@@ -1,13 +1,13 @@
-import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {Transaction} from '../../../client/models/transactions/transaction.model';
 import {TransactionService} from '../../../services/transactions/transaction.service';
 import {AuthTokenService} from '../../../services/auth-token/auth-token.service';
-import {filter, interval, switchMap} from 'rxjs';
 import {ContentBoxComponent} from '../../../component/content-box/content-box.component';
 import {BackLinkComponent} from '../../../component/shared/back-link/back-link.component';
 import {
   TransactionsLayoutComponent
 } from '../../../component/shared/layouts/transactions-layout/transactions-layout.component';
+import {WebSocketService} from '../../../services/websocket/websocket.service';
 
 @Component({
   selector: 'app-transactions',
@@ -20,38 +20,30 @@ import {
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.css',
 })
-export class TransactionsComponent implements OnInit {
-  private tokenService = inject(AuthTokenService);
-  private transactionService = inject(TransactionService);
-  private cdr = inject(ChangeDetectorRef);
+export class TransactionsComponent implements OnInit, OnDestroy {
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+  private tokenService: AuthTokenService = inject(AuthTokenService);
+  private transactionService: TransactionService = inject(TransactionService);
+  private webSocketService: WebSocketService = inject(WebSocketService);
 
   transactions: Transaction[] = [];
-
-  userId = this.tokenService.getUserId();
-  limit = 20;
-
+  userId: number | null = this.tokenService.getUserId();
+  limit: number = 20;
   nextCursor: string | null = null;
   cursorStack: (string | null)[] = [null];
-
   isLoading = false;
 
   ngOnInit() {
     this.loadTransactions();
 
-    interval(2000)
-      .pipe(
-        filter(() => !this.isLoading && this.isFirstPage),
-        switchMap(() =>
-          this.transactionService.getTransactions(this.userId, this.limit)
-        )
-      )
-      .subscribe(res => {
-        if (!res?.transactions) return;
+    this.webSocketService.connect();
+    window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+  }
 
-        this.transactions = res.transactions;
-        this.nextCursor = res.pagination.next_cursor;
-        this.cdr.detectChanges();
-      });
+  ngOnDestroy() {
+    window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+    this.webSocketService.disconnect();
   }
 
   loadTransactions(cursor: string | null = null) {
@@ -89,5 +81,9 @@ export class TransactionsComponent implements OnInit {
 
   get isLastPage(): boolean {
     return !this.nextCursor;
+  }
+
+  private handleWebSocketRefresh(): void {
+    this.loadTransactions();
   }
 }

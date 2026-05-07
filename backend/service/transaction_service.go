@@ -3,6 +3,7 @@ package service
 import (
 	"backend/repository"
 	"backend/repository/model"
+	"backend/websocket"
 	"context"
 	"encoding/base64"
 	"time"
@@ -12,12 +13,17 @@ import (
 )
 
 type TransactionService struct {
-	repo     *repository.TransactionRepository
-	userRepo *repository.UserRepository
+	repo      *repository.TransactionRepository
+	userRepo  *repository.UserRepository
+	wsHandler *websocket.Handler
 }
 
 func NewTransactionService(repo *repository.TransactionRepository, userRepo *repository.UserRepository) *TransactionService {
 	return &TransactionService{repo: repo, userRepo: userRepo}
+}
+
+func (s *TransactionService) SetWebSocketHandler(wsHandler *websocket.Handler) {
+	s.wsHandler = wsHandler
 }
 
 func (s *TransactionService) CreateTransaction(ctx context.Context, senderId uint64, receiverId uint64, amount float64, txType string) (*model.Transaction, error) {
@@ -80,6 +86,14 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderId uin
 
 	if err := s.repo.Create(ctx, tx); err != nil {
 		return nil, err
+	}
+
+	if s.wsHandler != nil {
+		s.wsHandler.NotifyUserToRefresh(int64(receiverId))
+
+		if senderId != receiverId {
+			s.wsHandler.NotifyUserToRefresh(int64(senderId))
+		}
 	}
 
 	return tx, nil
@@ -181,6 +195,14 @@ func (s *TransactionService) unrollTransaction(ctx context.Context, transactionI
 
 	if err := s.repo.CompleteTransaction(ctx, transactionID, status); err != nil {
 		return ErrTransactionNotCompleted
+	}
+
+	if s.wsHandler != nil {
+		s.wsHandler.NotifyUserToRefresh(receiver)
+
+		if sender != receiver {
+			s.wsHandler.NotifyUserToRefresh(sender)
+		}
 	}
 
 	return nil
