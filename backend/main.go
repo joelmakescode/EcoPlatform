@@ -6,6 +6,7 @@ import (
 	"backend/middleware"
 	"backend/repository"
 	"backend/service"
+	"backend/websocket"
 	"context"
 	"fmt"
 	"log"
@@ -21,18 +22,26 @@ import (
 func main() {
 	db := connectDB()
 
-	handlers := initDependencies(db)
+	hub := websocket.NewHub()
+	go hub.Run()
+
+	handlers := initDependencies(db, hub)
 
 	server, err := api.NewServer(handlers, api.WithPathPrefix("/api"), api.WithErrorHandler(errorHandler))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	wrapped := middleware.BotAuthMiddleware(server)
-	wrapped = middleware.AuthMiddleware(wrapped)
-	wrapped = middleware.CORS(wrapped)
+	wsHandler := websocket.NewHandler(hub, []byte("ecoplatform"))
+
+	mux := http.NewServeMux()
+	mux.Handle("/api/", middleware.CORS(middleware.AuthMiddleware(middleware.BotAuthMiddleware(server))))
+	mux.HandleFunc("/ws", wsHandler.ServeHTTP)
+
+	wrapped := middleware.CORS(mux)
 
 	log.Println("API listening on :8080")
+	log.Println("WebSocket endpoint available at ws://localhost:8080/ws")
 	log.Fatal(http.ListenAndServe(":8080", wrapped))
 }
 
@@ -74,7 +83,7 @@ func connectDB() *gorm.DB {
 	return nil
 }
 
-func initDependencies(gormDB *gorm.DB) api.Handler {
+func initDependencies(gormDB *gorm.DB, hub *websocket.Hub) api.Handler {
 	discordUserRepository := repository.NewDiscordUserRepository(gormDB)
 	transactionRepository := repository.NewTransactionRepository(gormDB)
 	userRepository := repository.NewUserRepository(gormDB)
@@ -83,6 +92,9 @@ func initDependencies(gormDB *gorm.DB) api.Handler {
 	discordUserService := service.NewDiscordUserService(discordUserRepository)
 	transactionService := service.NewTransactionService(transactionRepository, userRepository)
 	userService := service.NewUserService(userRepository)
+
+	wsHandler := websocket.NewHandler(hub, []byte("ecoplatform"))
+	transactionService.SetWebSocketHandler(wsHandler)
 
 	authHandler := handler.NewAuthHandler(authService)
 	discordUserHandler := handler.NewDiscordUserHandler(discordUserService)

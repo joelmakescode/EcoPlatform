@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {ContentBoxComponent} from '../../../component/content-box/content-box.component';
 import {BackLinkComponent} from '../../../component/shared/back-link/back-link.component';
 import {
@@ -10,9 +10,9 @@ import {
 import {AuthTokenService} from '../../../services/auth-token/auth-token.service';
 import {TransactionService} from '../../../services/transactions/transaction.service';
 import {Transaction, TransactionResponse} from '../../../client/models/transactions/transaction.model';
-import {interval, switchMap} from 'rxjs';
 import {SuccessService} from '../../../services/messages/success/success.service';
 import {ErrorService} from '../../../services/messages/error/error.service';
+import {WebSocketService} from '../../../services/websocket/websocket.service';
 
 @Component({
   selector: 'app-request-money',
@@ -26,32 +26,29 @@ import {ErrorService} from '../../../services/messages/error/error.service';
   templateUrl: './request-money.component.html',
   styleUrl: './request-money.component.css',
 })
-export class RequestMoneyComponent implements OnInit {
-  private tokenService = inject(AuthTokenService);
-  private transactionService = inject(TransactionService);
-  private cdr = inject(ChangeDetectorRef);
-  private successService = inject(SuccessService);
-  private errorService = inject(ErrorService);
+export class RequestMoneyComponent implements OnInit, OnDestroy {
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private errorService: ErrorService = inject(ErrorService);
+  private successService: SuccessService = inject(SuccessService);
+  private tokenService: AuthTokenService = inject(AuthTokenService);
+  private transactionService: TransactionService = inject(TransactionService);
+  private webSocketService: WebSocketService = inject(WebSocketService);
 
   transactions: Transaction[] = [];
-  userId = this.tokenService.getUserId();
-  limit = 20;
-  isLoading = false;
+  userId: number | null = this.tokenService.getUserId();
+  limit: number = 20;
+  isLoading: boolean = false;
 
   ngOnInit() {
     this.loadTransactions();
 
-    interval(2000)
-      .pipe(
-        switchMap(() =>
-          this.transactionService.getTransactions(this.userId, this.limit, undefined)
-        )
-      )
-    .subscribe(response => {
-      this.transactions = filterTransactions(response, this.userId);
+    this.webSocketService.connect();
+    window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+  }
 
-      this.cdr.detectChanges();
-    })
+  ngOnDestroy() {
+    this.webSocketService.disconnect();
+    window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
   }
 
   loadTransactions() {
@@ -62,7 +59,6 @@ export class RequestMoneyComponent implements OnInit {
       .subscribe(response => {
         this.isLoading = false;
         this.transactions = filterTransactions(response, this.userId);
-
         this.cdr.detectChanges();
       })
   }
@@ -77,6 +73,10 @@ export class RequestMoneyComponent implements OnInit {
           this.errorService.showApiError(err.error?.message, err.status);
         }
       })
+  }
+
+  private handleWebSocketRefresh() {
+    this.loadTransactions();
   }
 }
 

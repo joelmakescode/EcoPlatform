@@ -1,31 +1,52 @@
-import {ChangeDetectorRef, Component, HostListener, inject, OnInit} from '@angular/core';
-import {UserBalanceState} from '../../client/states/user-balance.state';
-import {UserIdentityState} from '../../client/states/user-identity.state';
-import {combineLatest, interval} from 'rxjs';
-import {AsyncPipe, DecimalPipe, NgIf} from '@angular/common';
+import {ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit} from '@angular/core';
 import {AuthFacadeService} from '../../services/auth-facade/auth-facade.service';
+import {Balance, User, UserService} from '../../services/user/user.service';
+import {WebSocketService} from '../../services/websocket/websocket.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    NgIf,
-    AsyncPipe
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderComponent {
-  private balanceState = inject(UserBalanceState);
-  private userState = inject(UserIdentityState);
+export class HeaderComponent implements OnInit, OnDestroy {
+  private authFacadeService: AuthFacadeService = inject(AuthFacadeService);
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private userService: UserService = inject(UserService);
+  private webSocketService: WebSocketService = inject(WebSocketService);
 
-  private authFacadeService = inject(AuthFacadeService);
-  private cdr = inject(ChangeDetectorRef);
+  username: string = '';
+  balance: number = 0;
 
-  vm$ = combineLatest({
-    identity: this.userState.user$,
-    balance: this.balanceState.balance$,
-  })
+  ngOnInit() {
+    this.authFacadeService.isLoggedIn$.subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        this.loadUser();
+      }
+    });
+
+    this.webSocketService.connect();
+    window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+  }
+
+  ngOnDestroy() {
+    this.webSocketService.disconnect();
+    window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+  }
+
+  loadUser() {
+    this.userService.getUser().subscribe((response: User) => {
+      this.username = response.username;
+      this.cdr.detectChanges();
+    })
+
+    this.userService.getBalance().subscribe((response: Balance) => {
+      this.balance = response.balance / 100;
+      this.cdr.detectChanges();
+    })
+  }
 
   isDropDownOpen: boolean = false;
 
@@ -51,5 +72,9 @@ export class HeaderComponent {
 
   logout() {
     this.authFacadeService.logout();
+  }
+
+  private handleWebSocketRefresh(): void {
+    this.loadUser();
   }
 }

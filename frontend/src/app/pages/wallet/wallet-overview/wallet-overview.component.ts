@@ -1,8 +1,9 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {TileComponent} from '../../../component/shared/tile/tile.component';
 import {DecimalPipe, NgIf} from '@angular/common';
 import {TransactionService} from '../../../services/transactions/transaction.service';
 import {AuthTokenService} from '../../../services/auth-token/auth-token.service';
+import {WebSocketService} from '../../../services/websocket/websocket.service';
 import {Transaction, TransactionResponse} from '../../../client/models/transactions/transaction.model';
 
 @Component({
@@ -15,9 +16,11 @@ import {Transaction, TransactionResponse} from '../../../client/models/transacti
   templateUrl: './wallet-overview.component.html',
   styleUrl: './wallet-overview.component.css',
 })
-export class WalletOverviewComponent implements OnInit {
+export class WalletOverviewComponent implements OnInit, OnDestroy {
   private authTokenService = inject(AuthTokenService);
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private transactionService = inject(TransactionService);
+  private webSocketService = inject(WebSocketService);
 
   openTransactions: number = 0;
   transactions: Transaction[] = [];
@@ -41,6 +44,14 @@ export class WalletOverviewComponent implements OnInit {
 
   ngOnInit() {
     this.loadTransactions();
+
+    this.webSocketService.connect();
+    window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+    this.webSocketService.disconnect();
   }
 
   loadTransactions() {
@@ -54,11 +65,12 @@ export class WalletOverviewComponent implements OnInit {
       ).length;
       this.loading = false;
 
-      this.calculateForTileDisplay(response)
+      this.calculateForTileDisplay(response);
+      this.cdr.detectChanges();
     })
   }
 
-  calculateForTileDisplay(response: TransactionResponse): void {
+  private calculateForTileDisplay(response: TransactionResponse): void {
 
     this.overallMoneyMadeLast30Days = response.transactions.filter((t: Transaction): boolean =>
       t.receiver_id === this.userId && t.status === 'completed' && isWithinLast30Days(t.created_at)
@@ -93,6 +105,10 @@ export class WalletOverviewComponent implements OnInit {
     this.moneyMadeThroughRequests = response.transactions.filter((t: Transaction): boolean =>
       t.receiver_id === this.userId && t.type === 'request' && t.status === 'completed'
     ).reduce((sum: number, t: Transaction): number => sum + t.amount, 0) / 100;
+  }
+
+  private handleWebSocketRefresh() {
+    this.loadTransactions();
   }
 }
 
