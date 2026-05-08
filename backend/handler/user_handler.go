@@ -17,11 +17,35 @@ func NewUserHandler(service *service.UserService) *UserHandler {
 	return &UserHandler{service: service}
 }
 
+func (h *UserHandler) ClaimDailyBalance(ctx context.Context, param api.ClaimDailyBalanceParams) (api.ClaimDailyBalanceRes, error) {
+	if err := authz.Self(ctx, uint(param.ID)); err != nil {
+		return &api.ClaimDailyBalanceForbidden{Message: api.NewOptString(err.Error())}, nil
+	}
+
+	if err := h.service.ClaimDaily(param.ID); err != nil {
+		switch {
+
+		case errors.Is(err, service.ErrUserNotFound):
+			return &api.ClaimDailyBalanceNotFound{Message: api.NewOptString(err.Error())}, nil
+
+		case errors.Is(err, service.ErrDailyAlreadyClaimed):
+			return &api.ClaimDailyBalanceConflict{Message: api.NewOptString(err.Error())}, nil
+
+		default:
+			return &api.ClaimDailyBalanceInternalServerError{Message: api.NewOptString(err.Error())}, nil
+
+		}
+	}
+
+	return &api.ClaimDailyBalanceNoContent{}, nil
+}
+
 func (h *UserHandler) CreateUser(ctx context.Context, req *api.CreateUserData) (api.CreateUserRes, error) {
 	created, err := h.service.CreateUser(req)
 
 	if err != nil {
 		switch {
+
 		case errors.Is(err, service.ErrInvalidPassword) ||
 			errors.Is(err, service.ErrPasswordNotHashed) ||
 			errors.Is(err, service.ErrUserCreateEmptyFields):
@@ -32,10 +56,31 @@ func (h *UserHandler) CreateUser(ctx context.Context, req *api.CreateUserData) (
 
 		default:
 			return &api.CreateUserInternalServerError{Message: api.NewOptString(err.Error())}, nil
+
 		}
 	}
 
 	return created, nil
+}
+
+func (h *UserHandler) GetDailyClaimStatus(ctx context.Context, param api.GetDailyClaimStatusParams) (api.GetDailyClaimStatusRes, error) {
+	ok, err := h.service.GetDailyClaimStatus(param.ID)
+	if err != nil {
+		switch {
+
+		case errors.Is(err, service.ErrNoUserID):
+			return &api.GetDailyClaimStatusBadRequest{Message: api.NewOptString(err.Error())}, nil
+
+		case errors.Is(err, service.ErrUserNotFound):
+			return &api.GetDailyClaimStatusNotFound{Message: api.NewOptString(err.Error())}, nil
+
+		default:
+			return &api.GetDailyClaimStatusInternalServerError{Message: api.NewOptString(err.Error())}, nil
+
+		}
+	}
+
+	return &api.GetDailyClaimStatusOK{CanClaim: ok}, nil
 }
 
 func (h *UserHandler) GetUserById(ctx context.Context, params api.GetUserByIdParams) (api.GetUserByIdRes, error) {

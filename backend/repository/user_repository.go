@@ -3,6 +3,7 @@ package repository
 import (
 	"backend/repository/model"
 	"context"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -15,6 +16,16 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
+func (r *UserRepository) ClaimDaily(userId uint) error {
+	var account model.Account
+	err := r.db.First(&account, "id = ?", userId).Update("daily_claim", time.Now()).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *UserRepository) GetIdByUsername(ctx context.Context, username string) (uint, error) {
 	var user model.User
 	err := r.db.WithContext(ctx).Where("username = ?", username).First(&user).Error
@@ -23,6 +34,16 @@ func (r *UserRepository) GetIdByUsername(ctx context.Context, username string) (
 	}
 
 	return user.ID, nil
+}
+
+func (r *UserRepository) GetUserAccount(userId int) (*model.Account, error) {
+	var account model.Account
+	err := r.db.Where("id = ?", userId).First(&account).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &account, nil
 }
 
 func (r *UserRepository) GetUserByEmail(email string) (*model.User, error) {
@@ -78,6 +99,7 @@ func (r *UserRepository) UpdateUserBalanceById(userId uint, delta int64) (*model
 func (r *UserRepository) SaveUser(user *model.User) (*model.User, error) {
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		var account model.Account
+		account.DailyClaim = time.Now()
 		if err := tx.Create(&account).Error; err != nil {
 			return err
 		}

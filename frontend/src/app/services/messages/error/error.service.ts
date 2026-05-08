@@ -29,7 +29,4 @@ export class ErrorService {
     })
   }
 
-  showError = (message: string, status?: number) => {
-    this.errorSubject.next({ message, status });
-  }
 }

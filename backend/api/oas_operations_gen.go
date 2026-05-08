@@ -8,11 +8,13 @@ type OperationName = string
 const (
 	AcceptTransactionOperation             OperationName = "AcceptTransaction"
 	CancelTransactionOperation             OperationName = "CancelTransaction"
+	ClaimDailyBalanceOperation             OperationName = "ClaimDailyBalance"
 	CreateDiscordUserOperation             OperationName = "CreateDiscordUser"
 	CreateLinkAccountCodeOperation         OperationName = "CreateLinkAccountCode"
 	CreateTransactionOperation             OperationName = "CreateTransaction"
 	CreateUserOperation                    OperationName = "CreateUser"
 	GetAccountLinkByIdOperation            OperationName = "GetAccountLinkById"
+	GetDailyClaimStatusOperation           OperationName = "GetDailyClaimStatus"
 	GetDiscordUserAutofillByIdOperation    OperationName = "GetDiscordUserAutofillById"
 	GetDiscordUserLanguageByIdOperation    OperationName = "GetDiscordUserLanguageById"
 	GetIdByUsernameOperation               OperationName = "GetIdByUsername"

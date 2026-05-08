@@ -4,6 +4,10 @@
   </a>
 
   <div class="header-right">
+    <div class="present-button" *ngIf="dailyClaim" (click)="claimDaily()">
+      <img class="present-icon" src="assets/icons-header/icon_present.png" alt="icon_present"/>
+    </div>
+
     <div class="user-menu" [class.open]="isDropDownOpen" (click)="$event.stopPropagation()">
 
       <button class="user-button" type="button" (click)="toggleDropDown($event)">

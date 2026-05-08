@@ -9,6 +9,10 @@ type CancelTransactionRes interface {
 	cancelTransactionRes()
 }
 
+type ClaimDailyBalanceRes interface {
+	claimDailyBalanceRes()
+}
+
 type CreateDiscordUserRes interface {
 	createDiscordUserRes()
 }
@@ -27,6 +31,10 @@ type CreateUserRes interface {
 
 type GetAccountLinkByIdRes interface {
 	getAccountLinkByIdRes()
+}
+
+type GetDailyClaimStatusRes interface {
+	getDailyClaimStatusRes()
 }
 
 type GetDiscordUserAutofillByIdRes interface {

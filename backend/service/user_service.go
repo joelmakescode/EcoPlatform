@@ -4,6 +4,7 @@ import (
 	"backend/api"
 	"backend/repository"
 	"backend/repository/model"
+	"backend/websocket"
 	"context"
 	"crypto/rand"
 	"fmt"
@@ -17,11 +18,47 @@ import (
 )
 
 type UserService struct {
-	repo *repository.UserRepository
+	repo             *repository.UserRepository
+	webSocketHandler *websocket.Handler
 }
 
 func NewUserService(repo *repository.UserRepository) *UserService {
 	return &UserService{repo: repo}
+}
+
+func (s *UserService) SetWebSocketHandler(wsHandler *websocket.Handler) {
+	s.webSocketHandler = wsHandler
+}
+
+func (s *UserService) ClaimDaily(userId int) error {
+	if userId <= 0 {
+		return ErrNoUserID
+	}
+
+	ok, err := s.GetDailyClaimStatus(userId)
+	if err != nil {
+		return err
+	}
+
+	if !ok {
+		return ErrDailyAlreadyClaimed
+	}
+
+	_, err = s.UpdateUserBalanceById(uint(userId), int64(5000))
+	if err != nil {
+		return err
+	}
+
+	err = s.repo.ClaimDaily(uint(userId))
+	if err != nil {
+		return err
+	}
+
+	if s.webSocketHandler != nil {
+		s.webSocketHandler.NotifyUserToRefresh(int64(userId))
+	}
+
+	return nil
 }
 
 func (s *UserService) CreateUser(newUser *api.CreateUserData) (*api.User, error) {
@@ -59,6 +96,26 @@ func (s *UserService) CreateUser(newUser *api.CreateUserData) (*api.User, error)
 	}
 
 	return s.MapModelToApiUser(createdUser), nil
+}
+
+func (s *UserService) GetDailyClaimStatus(userId int) (bool, error) {
+	account, err := s.repo.GetUserAccount(userId)
+	if err != nil {
+		if recordNotFound(err) {
+			return false, ErrUserNotFound
+		}
+
+		return false, err
+	}
+
+	next := account.DailyClaim.Add(24 * time.Hour)
+	remaining := time.Until(next)
+
+	if remaining > 0 {
+		return false, nil
+	}
+
+	return true, nil
 }
 
 func (s *UserService) GetUserById(userId uint) (*api.User, error) {

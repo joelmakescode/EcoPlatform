@@ -143,6 +143,12 @@ type TransactionsInvoker interface {
 //
 // x-gen-operation-group: Users
 type UsersInvoker interface {
+	// ClaimDailyBalance invokes claimDailyBalance operation.
+	//
+	// Claim Daily Balance.
+	//
+	// POST /users/daily-claim/{id}
+	ClaimDailyBalance(ctx context.Context, params ClaimDailyBalanceParams) (ClaimDailyBalanceRes, error)
 	// CreateLinkAccountCode invokes createLinkAccountCode operation.
 	//
 	// Link User Account with Discord User.
@@ -155,6 +161,12 @@ type UsersInvoker interface {
 	//
 	// POST /users
 	CreateUser(ctx context.Context, request *CreateUserData) (CreateUserRes, error)
+	// GetDailyClaimStatus invokes getDailyClaimStatus operation.
+	//
+	// Get Daily Claim Status.
+	//
+	// GET /users/daily-claim/{id}
+	GetDailyClaimStatus(ctx context.Context, params GetDailyClaimStatusParams) (GetDailyClaimStatusRes, error)
 	// GetIdByUsername invokes getIdByUsername operation.
 	//
 	// Get id by username.
@@ -399,6 +411,98 @@ func (c *Client) sendCancelTransaction(ctx context.Context, params CancelTransac
 
 	stage = "DecodeResponse"
 	result, err := decodeCancelTransactionResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// ClaimDailyBalance invokes claimDailyBalance operation.
+//
+// Claim Daily Balance.
+//
+// POST /users/daily-claim/{id}
+func (c *Client) ClaimDailyBalance(ctx context.Context, params ClaimDailyBalanceParams) (ClaimDailyBalanceRes, error) {
+	res, err := c.sendClaimDailyBalance(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendClaimDailyBalance(ctx context.Context, params ClaimDailyBalanceParams) (res ClaimDailyBalanceRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("claimDailyBalance"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.URLTemplateKey.String("/users/daily-claim/{id}"),
+	}
+	otelAttrs = append(otelAttrs, c.cfg.Attributes...)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, ClaimDailyBalanceOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/users/daily-claim/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeClaimDailyBalanceResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -814,6 +918,98 @@ func (c *Client) sendGetAccountLinkById(ctx context.Context, params GetAccountLi
 
 	stage = "DecodeResponse"
 	result, err := decodeGetAccountLinkByIdResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// GetDailyClaimStatus invokes getDailyClaimStatus operation.
+//
+// Get Daily Claim Status.
+//
+// GET /users/daily-claim/{id}
+func (c *Client) GetDailyClaimStatus(ctx context.Context, params GetDailyClaimStatusParams) (GetDailyClaimStatusRes, error) {
+	res, err := c.sendGetDailyClaimStatus(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendGetDailyClaimStatus(ctx context.Context, params GetDailyClaimStatusParams) (res GetDailyClaimStatusRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getDailyClaimStatus"),
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.URLTemplateKey.String("/users/daily-claim/{id}"),
+	}
+	otelAttrs = append(otelAttrs, c.cfg.Attributes...)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, GetDailyClaimStatusOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/users/daily-claim/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetDailyClaimStatusResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

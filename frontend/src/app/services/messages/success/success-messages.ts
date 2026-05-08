@@ -1,6 +1,7 @@
 export const SUCCESS_MESSAGES: Record<string, string> = {
   "ACCEPT_TRANSACTION_SUCCESSFUL": "Successfully accepted transaction.",
   "CANCEL_TRANSACTION_SUCCESSFUL": "Successfully cancelled transaction.",
+  "DAILY_CLAIM_SUCCESSFUL": "Successfully claimed daily money.",
   "LOGIN_SUCCESSFUL": "Login successful.",
   "LOGOUT_SUCCESSFUL": "Logout successful.",
   // RENAME TO REGISTRATION_SUCCESSFUL

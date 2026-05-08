@@ -524,6 +524,61 @@ paths:
         500:
           $ref: '#/components/responses/InternalServerError'
 
+  /users/daily-claim/{id}:
+    x-ogen-operation-group: Users
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: integer
+    get:
+      operationId: getDailyClaimStatus
+      summary: Get Daily Claim Status
+      responses:
+        200:
+          description: Daily claim status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                    - can_claim
+                properties:
+                  can_claim:
+                    type: boolean
+                    description: Indicates if the user can claim their daily balance
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      operationId: claimDailyBalance
+      summary: Claim Daily Balance
+      responses:
+        204:
+          description: Daily balance claimed successfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+            $ref: '#/components/responses/Conflict'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
   /users/link-account-code/{id}:
     parameters:
       - name: id
