@@ -1294,7 +1294,7 @@ func decodeGetDailyClaimStatusResponse(resp *http.Response) (res GetDailyClaimSt
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response GetDailyClaimStatusOK
+			var response DailyClaimStatus
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err

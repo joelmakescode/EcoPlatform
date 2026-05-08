@@ -314,6 +314,24 @@ type CreateUserInternalServerError Error
 
 func (*CreateUserInternalServerError) createUserRes() {}
 
+// Ref: #/components/schemas/DailyClaimStatus
+type DailyClaimStatus struct {
+	// Indicates if the user can claim their daily balance.
+	CanClaim bool `json:"can_claim"`
+}
+
+// GetCanClaim returns the value of CanClaim.
+func (s *DailyClaimStatus) GetCanClaim() bool {
+	return s.CanClaim
+}
+
+// SetCanClaim sets the value of CanClaim.
+func (s *DailyClaimStatus) SetCanClaim(val bool) {
+	s.CanClaim = val
+}
+
+func (*DailyClaimStatus) getDailyClaimStatusRes() {}
+
 // Merged schema.
 // Ref: #/components/schemas/DiscordUser
 type DiscordUser struct {
@@ -491,23 +509,6 @@ func (*GetDailyClaimStatusInternalServerError) getDailyClaimStatusRes() {}
 type GetDailyClaimStatusNotFound Error
 
 func (*GetDailyClaimStatusNotFound) getDailyClaimStatusRes() {}
-
-type GetDailyClaimStatusOK struct {
-	// Indicates if the user can claim their daily balance.
-	CanClaim bool `json:"can_claim"`
-}
-
-// GetCanClaim returns the value of CanClaim.
-func (s *GetDailyClaimStatusOK) GetCanClaim() bool {
-	return s.CanClaim
-}
-
-// SetCanClaim sets the value of CanClaim.
-func (s *GetDailyClaimStatusOK) SetCanClaim(val bool) {
-	s.CanClaim = val
-}
-
-func (*GetDailyClaimStatusOK) getDailyClaimStatusRes() {}
 
 type GetDailyClaimStatusUnauthorized Error
 

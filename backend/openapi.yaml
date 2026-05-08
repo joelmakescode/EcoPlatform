@@ -542,13 +542,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                    - can_claim
-                properties:
-                  can_claim:
-                    type: boolean
-                    description: Indicates if the user can claim their daily balance
+                $ref: '#/components/schemas/DailyClaimStatus'
+
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -625,6 +620,15 @@ components:
       properties:
         id:
           type: integer
+
+    DailyClaimStatus:
+      type: object
+      required:
+        - can_claim
+      properties:
+        can_claim:
+          type: boolean
+          description: Indicates if the user can claim their daily balance
 
     DiscordUserAutofill:
       type: object

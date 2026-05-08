@@ -80,7 +80,7 @@ func (h *UserHandler) GetDailyClaimStatus(ctx context.Context, param api.GetDail
 		}
 	}
 
-	return &api.GetDailyClaimStatusOK{CanClaim: ok}, nil
+	return &api.DailyClaimStatus{CanClaim: ok}, nil
 }
 
 func (h *UserHandler) GetUserById(ctx context.Context, params api.GetUserByIdParams) (api.GetUserByIdRes, error) {
