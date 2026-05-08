@@ -78,6 +78,35 @@ type CancelTransactionNotFound Error
 
 func (*CancelTransactionNotFound) cancelTransactionRes() {}
 
+type ClaimDailyBalanceBadRequest Error
+
+func (*ClaimDailyBalanceBadRequest) claimDailyBalanceRes() {}
+
+type ClaimDailyBalanceConflict Error
+
+func (*ClaimDailyBalanceConflict) claimDailyBalanceRes() {}
+
+type ClaimDailyBalanceForbidden Error
+
+func (*ClaimDailyBalanceForbidden) claimDailyBalanceRes() {}
+
+type ClaimDailyBalanceInternalServerError Error
+
+func (*ClaimDailyBalanceInternalServerError) claimDailyBalanceRes() {}
+
+// ClaimDailyBalanceNoContent is response for ClaimDailyBalance operation.
+type ClaimDailyBalanceNoContent struct{}
+
+func (*ClaimDailyBalanceNoContent) claimDailyBalanceRes() {}
+
+type ClaimDailyBalanceNotFound Error
+
+func (*ClaimDailyBalanceNotFound) claimDailyBalanceRes() {}
+
+type ClaimDailyBalanceUnauthorized Error
+
+func (*ClaimDailyBalanceUnauthorized) claimDailyBalanceRes() {}
+
 type CreateDiscordUserBadRequest Error
 
 func (*CreateDiscordUserBadRequest) createDiscordUserRes() {}
@@ -446,6 +475,43 @@ func (*GetAccountLinkByIdInternalServerError) getAccountLinkByIdRes() {}
 type GetAccountLinkByIdNotFound Error
 
 func (*GetAccountLinkByIdNotFound) getAccountLinkByIdRes() {}
+
+type GetDailyClaimStatusBadRequest Error
+
+func (*GetDailyClaimStatusBadRequest) getDailyClaimStatusRes() {}
+
+type GetDailyClaimStatusForbidden Error
+
+func (*GetDailyClaimStatusForbidden) getDailyClaimStatusRes() {}
+
+type GetDailyClaimStatusInternalServerError Error
+
+func (*GetDailyClaimStatusInternalServerError) getDailyClaimStatusRes() {}
+
+type GetDailyClaimStatusNotFound Error
+
+func (*GetDailyClaimStatusNotFound) getDailyClaimStatusRes() {}
+
+type GetDailyClaimStatusOK struct {
+	// Indicates if the user can claim their daily balance.
+	CanClaim bool `json:"can_claim"`
+}
+
+// GetCanClaim returns the value of CanClaim.
+func (s *GetDailyClaimStatusOK) GetCanClaim() bool {
+	return s.CanClaim
+}
+
+// SetCanClaim sets the value of CanClaim.
+func (s *GetDailyClaimStatusOK) SetCanClaim(val bool) {
+	s.CanClaim = val
+}
+
+func (*GetDailyClaimStatusOK) getDailyClaimStatusRes() {}
+
+type GetDailyClaimStatusUnauthorized Error
+
+func (*GetDailyClaimStatusUnauthorized) getDailyClaimStatusRes() {}
 
 type GetDiscordUserAutofillByIdBadRequest Error
 

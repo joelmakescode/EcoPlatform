@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {UserContextService} from './usercontext.service';
 import {environment} from '../../../environment/environment';
+import {DailyClaimStatus} from '../../client/models/header/dailyClaim.model';
 
 export interface Balance {
   balance: number;
@@ -20,6 +21,10 @@ export class UserService {
   private userCtx = inject(UserContextService);
   private readonly baseUrl = environment.apiBaseUrl;
 
+  getDailyClaim(): Observable<DailyClaimStatus> {
+    return this.http.get<DailyClaimStatus>(`${this.baseUrl}/users/daily-claim/${this.userCtx.UserId}`);
+  }
+
   getUser() {
     return this.http.get<User>(`${this.baseUrl}/users/${this.userCtx.UserId}`);
   }
@@ -30,5 +35,9 @@ export class UserService {
 
   getBalance(): Observable<Balance> {
     return this.http.get<Balance>(`${this.baseUrl}/users/balance/${this.userCtx.UserId}`);
+  }
+
+  postDailyClaim(): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/users/daily-claim/${this.userCtx.UserId}`, {});
   }
 }

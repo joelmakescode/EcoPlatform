@@ -31,6 +31,15 @@ func (UnimplementedHandler) CancelTransaction(ctx context.Context, params Cancel
 	return r, ht.ErrNotImplemented
 }
 
+// ClaimDailyBalance implements claimDailyBalance operation.
+//
+// Claim Daily Balance.
+//
+// POST /users/daily-claim/{id}
+func (UnimplementedHandler) ClaimDailyBalance(ctx context.Context, params ClaimDailyBalanceParams) (r ClaimDailyBalanceRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // CreateDiscordUser implements createDiscordUser operation.
 //
 // Create a new Discord User.
@@ -73,6 +82,15 @@ func (UnimplementedHandler) CreateUser(ctx context.Context, req *CreateUserData)
 //
 // GET /discord-users/link-account/{id}
 func (UnimplementedHandler) GetAccountLinkById(ctx context.Context, params GetAccountLinkByIdParams) (r GetAccountLinkByIdRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetDailyClaimStatus implements getDailyClaimStatus operation.
+//
+// Get Daily Claim Status.
+//
+// GET /users/daily-claim/{id}
+func (UnimplementedHandler) GetDailyClaimStatus(ctx context.Context, params GetDailyClaimStatusParams) (r GetDailyClaimStatusRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

@@ -34,6 +34,30 @@
   color: #ffffff;
 }
 
+.present-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 12px;
+  border-radius: 10px;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.present-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.present-button img {
+  width: 32px;
+  height: 32px;
+}
+
 .balance {
   font-size: 12px;
   font-weight: 500;

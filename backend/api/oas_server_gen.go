@@ -124,6 +124,12 @@ type TransactionsHandler interface {
 //
 // x-ogen-operation-group: Users
 type UsersHandler interface {
+	// ClaimDailyBalance implements claimDailyBalance operation.
+	//
+	// Claim Daily Balance.
+	//
+	// POST /users/daily-claim/{id}
+	ClaimDailyBalance(ctx context.Context, params ClaimDailyBalanceParams) (ClaimDailyBalanceRes, error)
 	// CreateLinkAccountCode implements createLinkAccountCode operation.
 	//
 	// Link User Account with Discord User.
@@ -136,6 +142,12 @@ type UsersHandler interface {
 	//
 	// POST /users
 	CreateUser(ctx context.Context, req *CreateUserData) (CreateUserRes, error)
+	// GetDailyClaimStatus implements getDailyClaimStatus operation.
+	//
+	// Get Daily Claim Status.
+	//
+	// GET /users/daily-claim/{id}
+	GetDailyClaimStatus(ctx context.Context, params GetDailyClaimStatusParams) (GetDailyClaimStatusRes, error)
 	// GetIdByUsername implements getIdByUsername operation.
 	//
 	// Get id by username.

@@ -35,6 +35,7 @@ var (
 	ErrNoUserID                   = errors.New("no user id given")
 	ErrInvalidUUID                = errors.New("invalid uuid")
 	ErrTransactionNotCompleted    = errors.New("transaction couldn't be completed")
+	ErrDailyAlreadyClaimed        = errors.New("daily already claimed")
 )
 
 func HashPassword(password string) ([]byte, error) {
@@ -66,4 +67,8 @@ func isUniqueConstraintError(err error) bool {
 	msg := strings.ToLower(err.Error())
 
 	return strings.Contains(msg, "unique") || strings.Contains(msg, "duplicate key") || strings.Contains(msg, "duplicate entry")
+}
+
+func recordNotFound(err error) bool {
+	return errors.Is(err, gorm.ErrRecordNotFound)
 }

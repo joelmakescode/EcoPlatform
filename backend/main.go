@@ -94,6 +94,7 @@ func initDependencies(gormDB *gorm.DB, hub *websocket.Hub) api.Handler {
 	userService := service.NewUserService(userRepository)
 
 	wsHandler := websocket.NewHandler(hub, []byte("ecoplatform"))
+	userService.SetWebSocketHandler(wsHandler)
 	transactionService.SetWebSocketHandler(wsHandler)
 
 	authHandler := handler.NewAuthHandler(authService)

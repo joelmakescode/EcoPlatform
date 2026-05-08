@@ -9,7 +9,8 @@ import (
 
 type Account struct {
 	gorm.Model
-	Balance int64 `gorm:"column:balance"`
+	Balance    int64     `gorm:"column:balance"`
+	DailyClaim time.Time `gorm:"column:daily_claim"`
 }
 
 type AccountDiscordLink struct {
