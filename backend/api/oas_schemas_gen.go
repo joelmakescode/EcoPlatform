@@ -197,6 +197,10 @@ type CreateTransactionConflict Error
 
 func (*CreateTransactionConflict) createTransactionRes() {}
 
+type CreateTransactionForbidden Error
+
+func (*CreateTransactionForbidden) createTransactionRes() {}
+
 type CreateTransactionInternalServerError Error
 
 func (*CreateTransactionInternalServerError) createTransactionRes() {}
@@ -524,6 +528,10 @@ func (*GetDiscordUserLanguageByIdNotFound) getDiscordUserLanguageByIdRes() {}
 type GetTransactionsBadRequest Error
 
 func (*GetTransactionsBadRequest) getTransactionsRes() {}
+
+type GetTransactionsForbidden Error
+
+func (*GetTransactionsForbidden) getTransactionsRes() {}
 
 type GetTransactionsInternalServerError Error
 

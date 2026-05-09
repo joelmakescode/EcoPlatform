@@ -2,6 +2,7 @@ package handler
 
 import (
 	"backend/api"
+	"backend/handler/authz"
 	"backend/repository/model"
 	"backend/service"
 	"context"
@@ -25,8 +26,12 @@ func (h *TransactionHandler) CreateTransaction(ctx context.Context, req *api.Cre
 		switch {
 		case errors.Is(err, service.ErrSameUser),
 			errors.Is(err, service.ErrInsufficientBalance),
-			errors.Is(err, service.ErrInvalidTransactionType):
+			errors.Is(err, service.ErrInvalidTransactionType),
+			errors.Is(err, service.ErrNoUsername):
 			return &api.CreateTransactionBadRequest{Message: api.NewOptString(err.Error())}, nil
+
+		case errors.Is(err, authz.ErrForbidden):
+			return &api.CreateTransactionForbidden{Message: api.NewOptString(err.Error())}, nil
 
 		case errors.Is(err, service.ErrUserNotFound):
 			return &api.CreateTransactionNotFound{Message: api.NewOptString(err.Error())}, nil
@@ -55,6 +60,8 @@ func (h *TransactionHandler) GetTransactions(ctx context.Context, params api.Get
 		switch {
 		case errors.Is(err, service.ErrNoUserID):
 			return &api.GetTransactionsBadRequest{Message: api.NewOptString(err.Error())}, nil
+		case errors.Is(err, authz.ErrForbidden):
+			return &api.GetTransactionsForbidden{Message: api.NewOptString(err.Error())}, nil
 		case errors.Is(err, service.ErrUserNotFound):
 			return &api.GetTransactionsNotFound{Message: api.NewOptString(err.Error())}, nil
 		default:

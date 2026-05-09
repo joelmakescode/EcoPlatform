@@ -1,6 +1,7 @@
 package service
 
 import (
+	"backend/handler/authz"
 	"backend/repository"
 	"backend/repository/model"
 	"backend/websocket"
@@ -31,9 +32,16 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderUserna
 		return nil, ErrSameUser
 	}
 
+	if senderUsername == "" || receiverUsername == "" {
+		return nil, ErrNoUsername
+	}
+
 	senderId, err := s.userRepo.GetIdByUsername(ctx, senderUsername)
 	if err != nil {
 		return nil, ErrUserNotFound
+	}
+	if err := authz.Self(ctx, senderId); err != nil {
+		return nil, authz.ErrForbidden
 	}
 
 	receiverId, err := s.userRepo.GetIdByUsername(ctx, receiverUsername)

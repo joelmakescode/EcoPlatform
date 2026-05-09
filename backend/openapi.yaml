@@ -250,6 +250,8 @@ paths:
                 $ref: '#/components/schemas/Transaction'
         400:
           $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/NotFound'
         409:
@@ -384,6 +386,8 @@ paths:
                 $ref: '#/components/schemas/Transactions'
         400:
           $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/NotFound'
         500:

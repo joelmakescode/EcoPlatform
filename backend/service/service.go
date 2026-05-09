@@ -36,6 +36,7 @@ var (
 	ErrInvalidUUID                = errors.New("invalid uuid")
 	ErrTransactionNotCompleted    = errors.New("transaction couldn't be completed")
 	ErrDailyAlreadyClaimed        = errors.New("daily already claimed")
+	ErrNoUsername                 = errors.New("username cannot be empty")
 )
 
 func HashPassword(password string) ([]byte, error) {
