@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AuthService} from '../../services/auth/auth.service';
@@ -16,7 +16,6 @@ import {SuccessService} from '../../services/messages/success/success.service';
 
 export class LoginComponent {
   private authService: AuthService = inject(AuthService);
-  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private errorService: ErrorService = inject(ErrorService);
   private successService: SuccessService = inject(SuccessService);
   private router: Router = inject(Router);
@@ -35,12 +34,12 @@ export class LoginComponent {
     this.loading = true;
 
     this.authService.login(this.email, this.password).subscribe({
-      next: () => {
+      next: (): void => {
         this.loading = false;
         this.successService.showApiSuccess("LOGIN_SUCCESSFUL");
         this.router.navigate(['/home']).then();
       },
-      error: (err: any) => {
+      error: (err: any): void => {
         this.loading = false;
         this.errorService.showApiError(err.error?.message, err.status);
       }

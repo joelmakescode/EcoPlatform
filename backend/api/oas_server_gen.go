@@ -148,12 +148,6 @@ type UsersHandler interface {
 	//
 	// GET /users/daily-claim/{id}
 	GetDailyClaimStatus(ctx context.Context, params GetDailyClaimStatusParams) (GetDailyClaimStatusRes, error)
-	// GetIdByUsername implements getIdByUsername operation.
-	//
-	// Get id by username.
-	//
-	// GET /users
-	GetIdByUsername(ctx context.Context, params GetIdByUsernameParams) (GetIdByUsernameRes, error)
 	// GetUserBalanceById implements getUserBalanceById operation.
 	//
 	// Get User Balance By Id.

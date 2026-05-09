@@ -10,17 +10,6 @@ export interface Transaction {
   created_at: string;
 }
 
-export interface DetailedTransactionAttributes {
-  totalTransactions: number;
-  totalAmountMoved: number;
-}
-
-export interface TransactionRequest {
-  receiver_id: number;
-  type: TransactionType;
-  status: TransactionStatus;
-}
-
 export interface TransactionResponse {
   id: number;
   transactions: Transaction[];

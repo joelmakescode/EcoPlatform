@@ -4,7 +4,7 @@ import {AuthFacadeService} from '../auth-facade/auth-facade.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuardService implements CanActivate {
-  private authFacadeService = inject(AuthFacadeService);
+  private authFacadeService: AuthFacadeService = inject(AuthFacadeService);
   private router = inject(Router);
 
   canActivate(): boolean {

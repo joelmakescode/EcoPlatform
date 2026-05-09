@@ -17,10 +17,10 @@ import {Transaction, TransactionResponse} from '../../../client/models/transacti
   styleUrl: './wallet-overview.component.css',
 })
 export class WalletOverviewComponent implements OnInit, OnDestroy {
-  private authTokenService = inject(AuthTokenService);
+  private authTokenService: AuthTokenService = inject(AuthTokenService);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
-  private transactionService = inject(TransactionService);
-  private webSocketService = inject(WebSocketService);
+  private transactionService: TransactionService = inject(TransactionService);
+  private webSocketService: WebSocketService = inject(WebSocketService);
 
   openTransactions: number = 0;
   transactions: Transaction[] = [];
@@ -37,24 +37,24 @@ export class WalletOverviewComponent implements OnInit, OnDestroy {
   requestsSentCountOverall: number = 0;
   moneyMadeThroughRequests: number = 0;
 
-  userId = this.authTokenService.getUserId();
+  userId: number | null = this.authTokenService.getUserId();
   limit: number = 50;
   nextCursor: string | null = null;
   loading: boolean = false;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadTransactions();
 
     this.webSocketService.connect();
     window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
     this.webSocketService.disconnect();
   }
 
-  loadTransactions() {
+  loadTransactions(): void {
     this.loading = true;
 
     this.transactionService.getTransactions(this.userId, this.limit, this.nextCursor ?? undefined).subscribe(response => {
@@ -82,11 +82,11 @@ export class WalletOverviewComponent implements OnInit, OnDestroy {
 
     this.totalTransactions = response.transactions.filter((t: Transaction): boolean => t.status !== 'pending').length;
 
-    this.moneySentCountLast30Days = response.transactions.filter(t =>
+    this.moneySentCountLast30Days = response.transactions.filter((t: Transaction): boolean =>
       t.sender_id === this.userId && t.type === 'send' && isWithinLast30Days(t.created_at)
     ).length;
 
-    this.moneySentCountOverall = response.transactions.filter(t =>
+    this.moneySentCountOverall = response.transactions.filter((t: Transaction): boolean =>
       t.sender_id === this.userId && t.type === 'send'
     ).length;
 
@@ -107,16 +107,16 @@ export class WalletOverviewComponent implements OnInit, OnDestroy {
     ).reduce((sum: number, t: Transaction): number => sum + t.amount, 0) / 100;
   }
 
-  private handleWebSocketRefresh() {
+  private handleWebSocketRefresh(): void {
     this.loadTransactions();
   }
 }
 
 function isWithinLast30Days(date: string | Date): boolean {
-  const transactionDate = new Date(date).getTime();
-  const now = Date.now();
+  const transactionDate: number = new Date(date).getTime();
+  const now: number = Date.now();
 
-  const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+  const thirtyDaysInMs: number = 30 * 24 * 60 * 60 * 1000;
 
   return now - transactionDate <= thirtyDaysInMs;
 }

@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ToastService {
-  private top$ = new BehaviorSubject<number>(80);
+  private top$: BehaviorSubject<number> = new BehaviorSubject<number>(80);
 
-  topPosition$ = this.top$.asObservable();
+  topPosition$: Observable<number> = this.top$.asObservable();
 
-  setTopPosition(position: number) {
+  setTopPosition(position: number): void {
     this.top$.next(position);
   }
 }

@@ -3,34 +3,21 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {UserContextService} from './usercontext.service';
 import {environment} from '../../../environment/environment';
-import {DailyClaimStatus} from '../../client/models/header/dailyClaim.model';
-
-export interface Balance {
-  balance: number;
-}
-
-export interface User {
-  id: number;
-  email: string;
-  username: string;
-}
+import {Balance, DailyClaimStatus, User} from '../../client/models/user/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private http = inject(HttpClient);
-  private userCtx = inject(UserContextService);
-  private readonly baseUrl = environment.apiBaseUrl;
+  private http: HttpClient = inject(HttpClient);
+  private userCtx: UserContextService = inject(UserContextService);
+
+  private readonly baseUrl: string = environment.apiBaseUrl;
 
   getDailyClaim(): Observable<DailyClaimStatus> {
     return this.http.get<DailyClaimStatus>(`${this.baseUrl}/users/daily-claim/${this.userCtx.UserId}`);
   }
 
-  getUser() {
+  getUser(): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}/users/${this.userCtx.UserId}`);
-  }
-
-  getIdByUsername(username: string) {
-    return this.http.get<{ id: number }>(`${this.baseUrl}/users?username=${username}`);
   }
 
   getBalance(): Observable<Balance> {

@@ -44,23 +44,6 @@ func (s *Balance) SetBalance(val int64) {
 func (*Balance) getUserBalanceByIdRes()    {}
 func (*Balance) updateUserBalanceByIdRes() {}
 
-// Ref: #/components/schemas/BaseEntity
-type BaseEntity struct {
-	ID int `json:"id"`
-}
-
-// GetID returns the value of ID.
-func (s *BaseEntity) GetID() int {
-	return s.ID
-}
-
-// SetID sets the value of ID.
-func (s *BaseEntity) SetID(val int) {
-	s.ID = val
-}
-
-func (*BaseEntity) getIdByUsernameRes() {}
-
 type CancelTransactionBadRequest Error
 
 func (*CancelTransactionBadRequest) cancelTransactionRes() {}
@@ -160,20 +143,20 @@ func (*CreateLinkAccountCodeNotFound) createLinkAccountCodeRes() {}
 
 // Ref: #/components/schemas/CreateTransaction
 type CreateTransaction struct {
-	SenderID   int64                 `json:"sender_id"`
-	ReceiverID int64                 `json:"receiver_id"`
-	Amount     float64               `json:"amount"`
-	Type       CreateTransactionType `json:"type"`
+	SenderUsername   string                `json:"sender_username"`
+	ReceiverUsername string                `json:"receiver_username"`
+	Amount           float64               `json:"amount"`
+	Type             CreateTransactionType `json:"type"`
 }
 
-// GetSenderID returns the value of SenderID.
-func (s *CreateTransaction) GetSenderID() int64 {
-	return s.SenderID
+// GetSenderUsername returns the value of SenderUsername.
+func (s *CreateTransaction) GetSenderUsername() string {
+	return s.SenderUsername
 }
 
-// GetReceiverID returns the value of ReceiverID.
-func (s *CreateTransaction) GetReceiverID() int64 {
-	return s.ReceiverID
+// GetReceiverUsername returns the value of ReceiverUsername.
+func (s *CreateTransaction) GetReceiverUsername() string {
+	return s.ReceiverUsername
 }
 
 // GetAmount returns the value of Amount.
@@ -186,14 +169,14 @@ func (s *CreateTransaction) GetType() CreateTransactionType {
 	return s.Type
 }
 
-// SetSenderID sets the value of SenderID.
-func (s *CreateTransaction) SetSenderID(val int64) {
-	s.SenderID = val
+// SetSenderUsername sets the value of SenderUsername.
+func (s *CreateTransaction) SetSenderUsername(val string) {
+	s.SenderUsername = val
 }
 
-// SetReceiverID sets the value of ReceiverID.
-func (s *CreateTransaction) SetReceiverID(val int64) {
-	s.ReceiverID = val
+// SetReceiverUsername sets the value of ReceiverUsername.
+func (s *CreateTransaction) SetReceiverUsername(val string) {
+	s.ReceiverUsername = val
 }
 
 // SetAmount sets the value of Amount.
@@ -537,18 +520,6 @@ func (*GetDiscordUserLanguageByIdInternalServerError) getDiscordUserLanguageById
 type GetDiscordUserLanguageByIdNotFound Error
 
 func (*GetDiscordUserLanguageByIdNotFound) getDiscordUserLanguageByIdRes() {}
-
-type GetIdByUsernameBadRequest Error
-
-func (*GetIdByUsernameBadRequest) getIdByUsernameRes() {}
-
-type GetIdByUsernameInternalServerError Error
-
-func (*GetIdByUsernameInternalServerError) getIdByUsernameRes() {}
-
-type GetIdByUsernameNotFound Error
-
-func (*GetIdByUsernameNotFound) getIdByUsernameRes() {}
 
 type GetTransactionsBadRequest Error
 

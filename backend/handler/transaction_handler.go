@@ -20,7 +20,7 @@ func NewTransactionHandler(service *service.TransactionService) *TransactionHand
 }
 
 func (h *TransactionHandler) CreateTransaction(ctx context.Context, req *api.CreateTransaction) (api.CreateTransactionRes, error) {
-	tx, err := h.service.CreateTransaction(ctx, uint64(req.SenderID), uint64(req.ReceiverID), req.Amount, string(req.Type))
+	tx, err := h.service.CreateTransaction(ctx, req.SenderUsername, req.ReceiverUsername, req.Amount, string(req.Type))
 	if err != nil {
 		switch {
 		case errors.Is(err, service.ErrSameUser),

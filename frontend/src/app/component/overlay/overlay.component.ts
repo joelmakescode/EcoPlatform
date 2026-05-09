@@ -6,7 +6,7 @@ import {TransactionModalService} from '../../services/transactions/transaction-m
 import {RefreshService} from '../../services/refresh/refresh.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {ToastService} from '../shared/toasts/toastservice/toast.service';
-import {filter} from 'rxjs';
+import {filter, Observable} from 'rxjs';
 import {Transaction} from '../../client/models/transactions/transaction.model';
 import {
   TransactionDetailComponent
@@ -26,8 +26,8 @@ import {
   styleUrl: './overlay.component.css',
 })
 export class OverlayComponent {
-  private transactionModalService = inject(TransactionModalService);
-  transaction$ = this.transactionModalService.transaction$;
+  private transactionModalService: TransactionModalService = inject(TransactionModalService);
+  transaction$: Observable<Transaction | null> = this.transactionModalService.transaction$;
 
   constructor(refresh: RefreshService, router: Router, toastService: ToastService) {
     refresh.init();
@@ -41,27 +41,27 @@ export class OverlayComponent {
     })
   }
 
-  onAccept(transaction: Transaction) {
+  onAccept(transaction: Transaction): void {
     this.transactionModalService.acceptTransaction(transaction);
     this.closeModal();
   }
 
-  onCancel(transaction: Transaction) {
+  onCancel(transaction: Transaction): void {
     this.transactionModalService.cancelTransaction(transaction);
     this.closeModal();
   }
 
-  onRefund(transaction: Transaction) {
+  onRefund(transaction: Transaction): void {
     this.transactionModalService.refundTransaction(transaction);
     this.closeModal();
   }
 
-  onReject(transaction: Transaction) {
+  onReject(transaction: Transaction): void {
     this.transactionModalService.rejectTransaction(transaction);
     this.closeModal();
   }
 
-  closeModal() {
+  closeModal(): void {
     this.transactionModalService.close();
   }
 }
