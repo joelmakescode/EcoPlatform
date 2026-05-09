@@ -20,7 +20,7 @@ export class TransactionsInputLayoutComponent {
   @Input() infoMessage!: string;
   @Input() buttonMessage!: string;
 
-  @Output() submit = new EventEmitter<{
+  @Output() submit: EventEmitter<{ username: string, amount: number }> = new EventEmitter<{
     username: string;
     amount: number;
   }>();
@@ -29,7 +29,7 @@ export class TransactionsInputLayoutComponent {
   amount: number = 0;
   sendConfirmed: boolean = false;
 
-  onSubmit() {
+  onSubmit(): void {
     if (!this.sendConfirmed) {
       return;
     }

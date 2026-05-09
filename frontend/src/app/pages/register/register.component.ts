@@ -36,11 +36,11 @@ export class RegisterComponent {
     this.loading = true;
 
     this.auth.register(this.email, this.username, this.password).subscribe({
-      next: () => {
+      next: (): void => {
         this.loading = false;
         this.successService.showApiSuccess("SUCCESSFUL_REGISTERED");
       },
-      error: (err) => {
+      error: (err: any): void => {
         this.loading = false;
         this.errorService.showApiError(err.error?.message, err.status);
       }

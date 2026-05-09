@@ -1,11 +1,11 @@
 import {ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit} from '@angular/core';
 import {AuthFacadeService} from '../../services/auth-facade/auth-facade.service';
-import {Balance, User, UserService} from '../../services/user/user.service';
+import {UserService} from '../../services/user/user.service';
 import {WebSocketService} from '../../services/websocket/websocket.service';
 import {NgIf} from '@angular/common';
 import {ErrorService} from '../../services/messages/error/error.service';
 import {SuccessService} from '../../services/messages/success/success.service';
-import {DailyClaimStatus} from '../../client/models/header/dailyClaim.model';
+import {Balance, DailyClaimStatus, User} from '../../client/models/user/user.model';
 
 @Component({
   selector: 'app-header',
@@ -28,8 +28,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   balance: number = 0;
   dailyClaim: boolean = false;
 
-  ngOnInit() {
-    this.authFacadeService.isLoggedIn$.subscribe(isLoggedIn => {
+  ngOnInit(): void {
+    this.authFacadeService.isLoggedIn$.subscribe((isLoggedIn: boolean): void => {
       if (isLoggedIn) {
         this.loadUser();
         this.loadDailyClaim();
@@ -40,44 +40,43 @@ export class HeaderComponent implements OnInit, OnDestroy {
     window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.webSocketService.disconnect();
     window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
   }
 
-  loadUser() {
-    this.userService.getUser().subscribe((response: User) => {
+  loadUser(): void {
+    this.userService.getUser().subscribe((response: User): void => {
       this.username = response.username;
       this.cdr.detectChanges();
     })
 
-    this.userService.getBalance().subscribe((response: Balance) => {
+    this.userService.getBalance().subscribe((response: Balance): void => {
       this.balance = response.balance / 100;
       this.cdr.detectChanges();
     })
   }
 
-  loadDailyClaim() {
+  loadDailyClaim(): void {
     this.userService.getDailyClaim().subscribe({
-      next: (response: DailyClaimStatus) => {
-        console.log(response.can_claim);
+      next: (response: DailyClaimStatus): void => {
         this.dailyClaim = response.can_claim;
         this.cdr.detectChanges();
       },
-      error: err => {
+      error: (err: any): void => {
         this.errorService.showApiError(err.error?.message, err.status);
       }
     })
   }
 
-  claimDaily() {
+  claimDaily(): void {
     this.userService.postDailyClaim().subscribe({
-      next: () => {
+      next: (): void => {
         this.dailyClaim = false;
         this.successService.showApiSuccess("DAILY_CLAIM_SUCCESSFUL");
         this.cdr.detectChanges();
       },
-      error: err => {
+      error: (err: any): void => {
         this.errorService.showApiError(err.error?.message, err.status);
       }
     })
@@ -105,7 +104,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.closeDropDown();
   }
 
-  logout() {
+  logout(): void {
     this.authFacadeService.logout();
   }
 

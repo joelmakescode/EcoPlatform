@@ -24,46 +24,46 @@ import {AuthTokenService} from '../../../../services/auth-token/auth-token.servi
   styleUrl: './transaction-detail.component.css',
 })
 export class TransactionDetailComponent {
-  @Output() close = new EventEmitter<void>();
+  @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   @Input() transaction: Transaction | null = null;
 
-  @Output() accept = new EventEmitter<Transaction>();
-  @Output() cancel = new EventEmitter<Transaction>();
-  @Output() refund = new EventEmitter<Transaction>();
-  @Output() reject = new EventEmitter<Transaction>();
+  @Output() accept: EventEmitter<Transaction> = new EventEmitter<Transaction>();
+  @Output() cancel: EventEmitter<Transaction>  = new EventEmitter<Transaction>();
+  @Output() refund: EventEmitter<Transaction>  = new EventEmitter<Transaction>();
+  @Output() reject: EventEmitter<Transaction>  = new EventEmitter<Transaction>();
 
-  private authTokenService = inject(AuthTokenService);
-  userId = this.authTokenService.getUserId();
+  private authTokenService: AuthTokenService = inject(AuthTokenService);
+  userId: number | null = this.authTokenService.getUserId();
 
   get CanAcceptOrReject(): boolean {
-    const tx = this.transaction;
+    const tx: Transaction | null = this.transaction;
     return !!tx && tx.type === 'request' && tx.status === 'pending' && tx.sender_id === this.userId;
   }
 
   get CanCancel(): boolean {
-    const tx = this.transaction;
+    const tx: Transaction | null = this.transaction;
     return !!tx && tx.type === 'request' && tx.status === 'pending' && tx.receiver_id === this.userId;
   }
 
   get CanRefund(): boolean {
-    const tx = this.transaction;
+    const tx: Transaction | null = this.transaction;
     if (!tx) return false;
 
     if (tx.status === 'refund' || tx.type !== 'send' || tx.receiver_id === this.userId) {
       return false;
     }
 
-    const createdAt = new Date(tx.created_at).getTime();
-    const now = Date.now();
+    const createdAt: number = new Date(tx.created_at).getTime();
+    const now: number = Date.now();
 
-    const secondsPassed = 24 * 60 * 60 * 1000;
+    const secondsPassed: number = 24 * 60 * 60 * 1000;
 
     return now - createdAt <= secondsPassed;
   }
 
   get ShowAcceptedSenderInfoText(): boolean {
-    const notRefunded = !this.CanRefund
+    const notRefunded: boolean = !this.CanRefund
     return notRefunded &&
       this.transaction?.status === 'completed'
       && this.transaction?.type === 'request' &&
@@ -83,9 +83,9 @@ export class TransactionDetailComponent {
   }
 
   get ShowRefundNotAvailableInfoText(): boolean {
-    const valid = this.CanRefund;
-    const notRefunded = this.ShowRefundedSenderInfoText;
-    const notAccepted = this.ShowAcceptedSenderInfoText;
+    const valid: boolean = this.CanRefund;
+    const notRefunded: boolean = this.ShowRefundedSenderInfoText;
+    const notAccepted: boolean = this.ShowAcceptedSenderInfoText;
     return !valid && !notRefunded
       && !notAccepted
       && this.transaction?.type === 'send'

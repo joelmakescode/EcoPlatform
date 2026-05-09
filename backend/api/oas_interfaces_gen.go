@@ -45,10 +45,6 @@ type GetDiscordUserLanguageByIdRes interface {
 	getDiscordUserLanguageByIdRes()
 }
 
-type GetIdByUsernameRes interface {
-	getIdByUsernameRes()
-}
-
 type GetTransactionsRes interface {
 	getTransactionsRes()
 }

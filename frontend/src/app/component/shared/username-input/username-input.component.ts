@@ -18,27 +18,25 @@ export class UsernameInputComponent {
   @Input() disabled: boolean = false;
   @Input() suggestions: UserSuggestion[] = [];
 
-  @Output() search = new EventEmitter<string>();
-  @Output() userSelected = new EventEmitter<UserSuggestion>();
-  @Output() valueChange = new EventEmitter<string>();
+  @Output() search: EventEmitter<string> = new EventEmitter<string>();
+  @Output() userSelected: EventEmitter<UserSuggestion> = new EventEmitter<UserSuggestion>();
+  @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
 
-  value = '';
+  value: string = '';
   showSuggestions: boolean = false;
 
-  onInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  onInput(event: Event): void {
+    const value: string = (event.target as HTMLInputElement).value;
     this.value = value
     this.showSuggestions = value.length > 0;
     this.search.emit(value);
     this.valueChange.emit(value);
   }
 
-  selectUser(user: UserSuggestion) {
+  selectUser(user: UserSuggestion): void {
     this.value = user.username;
     this.showSuggestions = false;
     this.userSelected.emit(user);
     this.valueChange.emit(user.username);
   }
-
-  protected readonly HTMLInputElement = HTMLInputElement;
 }

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class AuthTokenService {
-  setToken(token: string) {
+  setToken(token: string): void {
     localStorage.setItem('jwt_token', token)
   }
 
@@ -10,15 +10,15 @@ export class AuthTokenService {
     return localStorage.getItem('jwt_token');
   }
 
-  clear() {
+  clear(): void {
     localStorage.removeItem('jwt_token');
   }
 
   getPayload(): any | null {
-    const token = this.getToken();
+    const token: string | null = this.getToken();
     if (!token) { return null; }
 
-    const parts = token.split('.');
+    const parts: string[] = token.split('.');
     if (parts.length !== 3) {
       return null;
     }
@@ -35,13 +35,13 @@ export class AuthTokenService {
   }
 
   isValid(): boolean {
-    const payload = this.getPayload();
+    const payload: any = this.getPayload();
 
     if (!payload || typeof payload.exp !== 'number') {
       return false;
     }
 
-    const now = Math.floor(Date.now() / 1000);
+    const now: number = Math.floor(Date.now() / 1000);
     return payload.exp > now;
   }
 

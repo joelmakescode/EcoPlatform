@@ -6,7 +6,7 @@ import { AuthTokenService } from '../auth-token/auth-token.service';
 })
 export class WebSocketService {
   private socket: WebSocket | null = null;
-  private authTokenService = inject(AuthTokenService);
+  private authTokenService: AuthTokenService = inject(AuthTokenService);
 
   connect(): void {
 
@@ -14,7 +14,7 @@ export class WebSocketService {
       return;
     }
 
-    const token = this.authTokenService.getToken();
+    const token: string | null = this.authTokenService.getToken();
     if (!token) {
       return;
     }
@@ -22,7 +22,7 @@ export class WebSocketService {
     const wsUrl = `ws://localhost:8080/ws?token=${token}`;
     this.socket = new WebSocket(wsUrl);
 
-    this.socket.onmessage = (event) => {
+    this.socket.onmessage = (event: MessageEvent<any>): void => {
       try {
         const message = JSON.parse(event.data);
 
@@ -36,11 +36,12 @@ export class WebSocketService {
       }
     };
 
-    this.socket.onclose = () => {
-      setTimeout(() => this.connect(), 3000);
+    this.socket.onclose = (): void => {
+      setTimeout((): void => this.connect(), 3000);
     };
 
-    this.socket.onerror = (error) => {
+    // LEAVE LIKE THIS AT FIRST
+    this.socket.onerror = (error: Event): void => {
     };
   }
 

@@ -23,9 +23,9 @@ export class TransactionsLayoutComponent {
   @Input() transactions!: Transaction[];
   @Input({transform: numberAttribute}) userId!: number;
 
-  private transactionModalService = inject(TransactionModalService);
+  private transactionModalService: TransactionModalService = inject(TransactionModalService);
 
-  trackByTxId(_: number, tx: Transaction) {
+  trackByTxId(_: number, tx: Transaction): string {
     return tx.id;
   }
 
@@ -59,7 +59,7 @@ export class TransactionsLayoutComponent {
     }
   }
 
-  openTransaction(transaction: Transaction) {
+  openTransaction(transaction: Transaction): void {
     this.transactionModalService.open(transaction);
   }
 }

@@ -2,8 +2,8 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({ name: 'amount' })
 export class AmountPipe implements PipeTransform {
-  transform(value: number, senderId: number, receiverId: number, currentId: number | null): string {
-    let sign = '';
+  transform(value: number, senderId: number, currentId: number | null): string {
+    let sign: string = '';
 
     if (currentId === senderId) {
       sign = '-';

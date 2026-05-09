@@ -250,6 +250,8 @@ paths:
                 $ref: '#/components/schemas/Transaction'
         400:
           $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/NotFound'
         409:
@@ -384,6 +386,8 @@ paths:
                 $ref: '#/components/schemas/Transactions'
         400:
           $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
         404:
           $ref: '#/components/responses/NotFound'
         500:
@@ -391,29 +395,6 @@ paths:
 
   /users:
     x-ogen-operation-group: Users
-    get:
-      operationId: getIdByUsername
-      summary: Get id by username
-      parameters:
-        - name: username
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: User sent successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BaseEntity'
-        400:
-          $ref: '#/components/responses/BadRequest'
-        404:
-          $ref: '#/components/responses/NotFound'
-        500:
-          $ref: '#/components/responses/InternalServerError'
-
     post:
       operationId: createUser
       summary: Create a new user
@@ -542,13 +523,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                    - can_claim
-                properties:
-                  can_claim:
-                    type: boolean
-                    description: Indicates if the user can claim their daily balance
+                $ref: '#/components/schemas/DailyClaimStatus'
+
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -625,6 +601,15 @@ components:
       properties:
         id:
           type: integer
+
+    DailyClaimStatus:
+      type: object
+      required:
+        - can_claim
+      properties:
+        can_claim:
+          type: boolean
+          description: Indicates if the user can claim their daily balance
 
     DiscordUserAutofill:
       type: object
@@ -846,18 +831,16 @@ components:
     CreateTransaction:
       type: object
       required:
-        - sender_id
-        - receiver_id
+        - sender_username
+        - receiver_username
         - amount
         - type
       properties:
-        sender_id:
-          type: integer
-          format: int64
+        sender_username:
+          type: string
 
-        receiver_id:
-          type: integer
-          format: int64
+        receiver_username:
+          type: string
 
         amount:
           type: number

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"backend/handler/authz"
 	"backend/repository"
 	"backend/repository/model"
 	"backend/websocket"
@@ -26,17 +27,24 @@ func (s *TransactionService) SetWebSocketHandler(wsHandler *websocket.Handler) {
 	s.wsHandler = wsHandler
 }
 
-func (s *TransactionService) CreateTransaction(ctx context.Context, senderId uint64, receiverId uint64, amount float64, txType string) (*model.Transaction, error) {
-	if senderId == receiverId {
+func (s *TransactionService) CreateTransaction(ctx context.Context, senderUsername string, receiverUsername string, amount float64, txType string) (*model.Transaction, error) {
+	if senderUsername == receiverUsername {
 		return nil, ErrSameUser
 	}
 
-	senderUsername, err := s.userRepo.GetUsernameById(uint(senderId))
+	if senderUsername == "" || receiverUsername == "" {
+		return nil, ErrNoUsername
+	}
+
+	senderId, err := s.userRepo.GetIdByUsername(ctx, senderUsername)
 	if err != nil {
 		return nil, ErrUserNotFound
 	}
+	if err := authz.Self(ctx, senderId); err != nil {
+		return nil, authz.ErrForbidden
+	}
 
-	receiverUsername, err := s.userRepo.GetUsernameById(uint(receiverId))
+	receiverId, err := s.userRepo.GetIdByUsername(ctx, receiverUsername)
 	if err != nil {
 		return nil, ErrUserNotFound
 	}
@@ -49,7 +57,7 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderId uin
 	switch txType {
 	case "send":
 
-		if account, err := s.userRepo.GetUserBalanceById(uint(senderId)); err != nil {
+		if account, err := s.userRepo.GetUserBalanceById(senderId); err != nil {
 			return nil, err
 		} else if float64(account.Balance) < amount {
 			return nil, ErrInsufficientBalance
@@ -57,11 +65,11 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderId uin
 
 		status = "completed"
 		completedAt = &now
-		_, err := s.userRepo.UpdateUserBalanceById(uint(senderId), int64(-amount))
+		_, err := s.userRepo.UpdateUserBalanceById(senderId, int64(-amount))
 		if err != nil {
 			return nil, ErrMoneyNotSend
 		}
-		_, err = s.userRepo.UpdateUserBalanceById(uint(receiverId), int64(amount))
+		_, err = s.userRepo.UpdateUserBalanceById(receiverId, int64(amount))
 		if err != nil {
 			return nil, ErrMoneyNotSend
 		}

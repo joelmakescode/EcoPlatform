@@ -1,28 +1,41 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {tap} from 'rxjs';
+import {Observable, tap} from 'rxjs';
 import {environment} from '../../../environment/environment';
 import {AuthTokenService} from '../auth-token/auth-token.service';
+import {UserService} from '../user/user.service';
+import {UserContextService} from '../user/usercontext.service';
+import {User} from '../../client/models/user/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private authTokenService = inject(AuthTokenService);
-  private http = inject(HttpClient)
-  private readonly baseUrl = environment.apiBaseUrl;
+  private authTokenService: AuthTokenService = inject(AuthTokenService);
+  private http: HttpClient = inject(HttpClient);
+  private userContextService: UserContextService = inject(UserContextService);
+  private userService: UserService = inject(UserService);
 
-  login(email: string, password: string) {
+  private readonly baseUrl: string = environment.apiBaseUrl;
+
+  login(email: string, password: string): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(this.baseUrl + "/login", {
       email,
       password,
-      }).pipe(tap(response => {
+      }).pipe(tap((response: { token: string }): void => {
         this.authTokenService.setToken(response.token);
+
+        const userId: number | null = this.authTokenService.getUserId();
+        if (userId) {
+          this.userService.getUser().subscribe((response: User): void => {
+            this.userContextService.setUsername(response.username);
+          });
+        }
       }
     ));
   }
 
-  register(email: string, username:string, password: string) {
+  register(email: string, username:string, password: string): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(this.baseUrl + "/users", {
       email,
       username,

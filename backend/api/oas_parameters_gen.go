@@ -542,63 +542,6 @@ func decodeGetDiscordUserLanguageByIdParams(args [1]string, argsEscaped bool, r 
 	return params, nil
 }
 
-// GetIdByUsernameParams is parameters of getIdByUsername operation.
-type GetIdByUsernameParams struct {
-	Username string
-}
-
-func unpackGetIdByUsernameParams(packed middleware.Parameters) (params GetIdByUsernameParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "username",
-			In:   "query",
-		}
-		params.Username = packed[key].(string)
-	}
-	return params
-}
-
-func decodeGetIdByUsernameParams(args [0]string, argsEscaped bool, r *http.Request) (params GetIdByUsernameParams, _ error) {
-	q := uri.NewQueryDecoder(r.URL.Query())
-	// Decode query: username.
-	if err := func() error {
-		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "username",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.HasParam(cfg); err == nil {
-			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToString(val)
-				if err != nil {
-					return err
-				}
-
-				params.Username = c
-				return nil
-			}); err != nil {
-				return err
-			}
-		} else {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "username",
-			In:   "query",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
 // GetTransactionsParams is parameters of getTransactions operation.
 type GetTransactionsParams struct {
 	// Maximum number of transactions to return.

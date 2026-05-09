@@ -39,49 +39,49 @@ export class RequestMoneyComponent implements OnInit, OnDestroy {
   limit: number = 20;
   isLoading: boolean = false;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadTransactions();
 
     this.webSocketService.connect();
     window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.webSocketService.disconnect();
     window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
   }
 
-  loadTransactions() {
+  loadTransactions(): void {
     this.isLoading = true;
 
     this.transactionService
       .getTransactions(this.userId, this.limit, undefined)
-      .subscribe(response => {
+      .subscribe((response: TransactionResponse): void => {
         this.isLoading = false;
         this.transactions = filterTransactions(response, this.userId);
         this.cdr.detectChanges();
       })
   }
 
-  requestMoneyTransaction(event: { username: string, amount: number }) {
+  requestMoneyTransaction(event: { username: string, amount: number }): void {
     this.transactionService.requestMoneyTransaction(event.username, event.amount)
       .subscribe({
-        next: tx => {
+        next: (): void => {
           this.successService.showApiSuccess("REQUEST_SENT_SUCCESSFUL");
         },
-        error: err => {
+        error: (err: any): void => {
           this.errorService.showApiError(err.error?.message, err.status);
         }
       })
   }
 
-  private handleWebSocketRefresh() {
+  private handleWebSocketRefresh(): void {
     this.loadTransactions();
   }
 }
 
 function filterTransactions(response: TransactionResponse, userId: number | null): Transaction[] {
-  return response.transactions.filter((transaction: Transaction) =>
+  return response.transactions.filter((transaction: Transaction): boolean =>
     transaction.receiver_id === userId && transaction.type === "request"
   );
 }

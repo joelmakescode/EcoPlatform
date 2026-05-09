@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, inject, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {Transaction} from '../../../client/models/transactions/transaction.model';
+import {Transaction, TransactionResponse} from '../../../client/models/transactions/transaction.model';
 import {TransactionService} from '../../../services/transactions/transaction.service';
 import {AuthTokenService} from '../../../services/auth-token/auth-token.service';
 import {ContentBoxComponent} from '../../../component/content-box/content-box.component';
@@ -32,26 +32,26 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   limit: number = 20;
   nextCursor: string | null = null;
   cursorStack: (string | null)[] = [null];
-  isLoading = false;
+  isLoading: boolean = false;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadTransactions();
 
     this.webSocketService.connect();
     window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
     this.webSocketService.disconnect();
   }
 
-  loadTransactions(cursor: string | null = null) {
+  loadTransactions(cursor: string | null = null): void {
     this.isLoading = true;
 
     this.transactionService
       .getTransactions(this.userId, this.limit, cursor ?? undefined)
-      .subscribe(response => {
+      .subscribe((response: TransactionResponse): void => {
         this.transactions = response.transactions;
         this.nextCursor = response.pagination.next_cursor;
         this.isLoading = false;
@@ -60,18 +60,18 @@ export class TransactionsComponent implements OnInit, OnDestroy {
       });
   }
 
-  nextPage() {
+  nextPage(): void {
     if (!this.nextCursor) return;
 
     this.cursorStack.push(this.nextCursor);
     this.loadTransactions(this.nextCursor);
   }
 
-  previousPage() {
+  previousPage(): void {
     if (this.cursorStack.length <= 1) return;
 
     this.cursorStack.pop();
-    const previousCursor = this.cursorStack[this.cursorStack.length - 1];
+    const previousCursor: string | null = this.cursorStack[this.cursorStack.length - 1];
     this.loadTransactions(previousCursor);
   }
 

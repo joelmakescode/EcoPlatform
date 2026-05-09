@@ -64,6 +64,10 @@ func (h *UserHandler) CreateUser(ctx context.Context, req *api.CreateUserData) (
 }
 
 func (h *UserHandler) GetDailyClaimStatus(ctx context.Context, param api.GetDailyClaimStatusParams) (api.GetDailyClaimStatusRes, error) {
+	if err := authz.Self(ctx, uint(param.ID)); err != nil {
+		return &api.GetDailyClaimStatusForbidden{Message: api.NewOptString(err.Error())}, nil
+	}
+
 	ok, err := h.service.GetDailyClaimStatus(param.ID)
 	if err != nil {
 		switch {
@@ -80,7 +84,7 @@ func (h *UserHandler) GetDailyClaimStatus(ctx context.Context, param api.GetDail
 		}
 	}
 
-	return &api.GetDailyClaimStatusOK{CanClaim: ok}, nil
+	return &api.DailyClaimStatus{CanClaim: ok}, nil
 }
 
 func (h *UserHandler) GetUserById(ctx context.Context, params api.GetUserByIdParams) (api.GetUserByIdRes, error) {
@@ -99,20 +103,6 @@ func (h *UserHandler) GetUserById(ctx context.Context, params api.GetUserByIdPar
 	}
 
 	return user, nil
-}
-
-func (h *UserHandler) GetIdByUsername(ctx context.Context, params api.GetIdByUsernameParams) (api.GetIdByUsernameRes, error) {
-	id, err := h.service.GetIdByUsername(ctx, params.Username)
-	if err != nil {
-		switch {
-		case errors.Is(err, service.ErrUserNotFound):
-			return &api.GetIdByUsernameNotFound{Message: api.NewOptString(err.Error())}, nil
-		default:
-			return &api.GetIdByUsernameInternalServerError{Message: api.NewOptString(err.Error())}, nil
-		}
-	}
-
-	return &api.BaseEntity{ID: int(id)}, nil
 }
 
 func (h *UserHandler) GetUserBalanceById(ctx context.Context, params api.GetUserBalanceByIdParams) (api.GetUserBalanceByIdRes, error) {

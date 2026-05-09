@@ -9,10 +9,10 @@ import {Component, EventEmitter, Output} from '@angular/core';
 export class NumberInputComponent {
   value: number = 0;
 
-  @Output() valueChange = new EventEmitter<number>();
+  @Output() valueChange: EventEmitter<number> = new EventEmitter<number>();
 
   onInput(event: Event): void {
-    const value = Number((event.target as HTMLInputElement).value);
+    const value: number = Number((event.target as HTMLInputElement).value);
     this.value = value;
     this.valueChange.emit(value);
   }

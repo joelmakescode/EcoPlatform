@@ -2,6 +2,7 @@ package handler
 
 import (
 	"backend/api"
+	"backend/handler/authz"
 	"backend/repository/model"
 	"backend/service"
 	"context"
@@ -20,13 +21,17 @@ func NewTransactionHandler(service *service.TransactionService) *TransactionHand
 }
 
 func (h *TransactionHandler) CreateTransaction(ctx context.Context, req *api.CreateTransaction) (api.CreateTransactionRes, error) {
-	tx, err := h.service.CreateTransaction(ctx, uint64(req.SenderID), uint64(req.ReceiverID), req.Amount, string(req.Type))
+	tx, err := h.service.CreateTransaction(ctx, req.SenderUsername, req.ReceiverUsername, req.Amount, string(req.Type))
 	if err != nil {
 		switch {
 		case errors.Is(err, service.ErrSameUser),
 			errors.Is(err, service.ErrInsufficientBalance),
-			errors.Is(err, service.ErrInvalidTransactionType):
+			errors.Is(err, service.ErrInvalidTransactionType),
+			errors.Is(err, service.ErrNoUsername):
 			return &api.CreateTransactionBadRequest{Message: api.NewOptString(err.Error())}, nil
+
+		case errors.Is(err, authz.ErrForbidden):
+			return &api.CreateTransactionForbidden{Message: api.NewOptString(err.Error())}, nil
 
 		case errors.Is(err, service.ErrUserNotFound):
 			return &api.CreateTransactionNotFound{Message: api.NewOptString(err.Error())}, nil
@@ -55,6 +60,8 @@ func (h *TransactionHandler) GetTransactions(ctx context.Context, params api.Get
 		switch {
 		case errors.Is(err, service.ErrNoUserID):
 			return &api.GetTransactionsBadRequest{Message: api.NewOptString(err.Error())}, nil
+		case errors.Is(err, authz.ErrForbidden):
+			return &api.GetTransactionsForbidden{Message: api.NewOptString(err.Error())}, nil
 		case errors.Is(err, service.ErrUserNotFound):
 			return &api.GetTransactionsNotFound{Message: api.NewOptString(err.Error())}, nil
 		default:

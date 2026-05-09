@@ -3,7 +3,7 @@ import {AuthFacadeService} from '../auth-facade/auth-facade.service';
 
 @Injectable({ providedIn: 'root' })
 export class RefreshService {
-  private authFacadeService = inject(AuthFacadeService);
+  private authFacadeService: AuthFacadeService = inject(AuthFacadeService);
 
   init(): void {
     if (!this.authFacadeService.isLoggedIn()) {
