@@ -37,6 +37,9 @@ var (
 	ErrTransactionNotCompleted    = errors.New("transaction couldn't be completed")
 	ErrDailyAlreadyClaimed        = errors.New("daily already claimed")
 	ErrNoUsername                 = errors.New("username cannot be empty")
+	ErrInvalidStake               = errors.New("invalid stake")
+	ErrStakeOptionDoesntExist     = errors.New("stake option doesnt exist")
+	ErrInvalidAmount              = errors.New("invalid amount")
 )
 
 func HashPassword(password string) ([]byte, error) {

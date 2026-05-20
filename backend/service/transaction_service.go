@@ -1,10 +1,10 @@
 package service
 
 import (
+	"backend/events"
 	"backend/handler/authz"
 	"backend/repository"
 	"backend/repository/model"
-	"backend/websocket"
 	"context"
 	"encoding/base64"
 	"time"
@@ -14,17 +14,17 @@ import (
 )
 
 type TransactionService struct {
-	repo      *repository.TransactionRepository
-	userRepo  *repository.UserRepository
-	wsHandler *websocket.Handler
+	notifier events.Notifier
+	repo     *repository.TransactionRepository
+	userRepo *repository.UserRepository
 }
 
 func NewTransactionService(repo *repository.TransactionRepository, userRepo *repository.UserRepository) *TransactionService {
 	return &TransactionService{repo: repo, userRepo: userRepo}
 }
 
-func (s *TransactionService) SetWebSocketHandler(wsHandler *websocket.Handler) {
-	s.wsHandler = wsHandler
+func (s *TransactionService) SetNotifier(notifier events.Notifier) {
+	s.notifier = notifier
 }
 
 func (s *TransactionService) CreateTransaction(ctx context.Context, senderUsername string, receiverUsername string, amount float64, txType string) (*model.Transaction, error) {
@@ -40,7 +40,7 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderUserna
 	if err != nil {
 		return nil, ErrUserNotFound
 	}
-	if err := authz.Self(ctx, senderId); err != nil {
+	if err := authz.Self(ctx, uint(senderId)); err != nil {
 		return nil, authz.ErrForbidden
 	}
 
@@ -57,7 +57,7 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderUserna
 	switch txType {
 	case "send":
 
-		if account, err := s.userRepo.GetUserBalanceById(senderId); err != nil {
+		if account, err := s.userRepo.GetUserBalanceById(uint(senderId)); err != nil {
 			return nil, err
 		} else if float64(account.Balance) < amount {
 			return nil, ErrInsufficientBalance
@@ -65,11 +65,11 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderUserna
 
 		status = "completed"
 		completedAt = &now
-		_, err := s.userRepo.UpdateUserBalanceById(senderId, int64(-amount))
+		_, err := s.userRepo.UpdateUserBalanceById(uint(senderId), int64(-amount))
 		if err != nil {
 			return nil, ErrMoneyNotSend
 		}
-		_, err = s.userRepo.UpdateUserBalanceById(receiverId, int64(amount))
+		_, err = s.userRepo.UpdateUserBalanceById(uint(receiverId), int64(amount))
 		if err != nil {
 			return nil, ErrMoneyNotSend
 		}
@@ -82,9 +82,9 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderUserna
 	}
 
 	tx := &model.Transaction{
-		SenderID:         int64(senderId),
+		SenderID:         senderId,
 		SenderUsername:   senderUsername,
-		ReceiverID:       int64(receiverId),
+		ReceiverID:       receiverId,
 		ReceiverUsername: receiverUsername,
 		Amount:           amount,
 		Type:             txType,
@@ -95,14 +95,8 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderUserna
 	if err := s.repo.Create(ctx, tx); err != nil {
 		return nil, err
 	}
-
-	if s.wsHandler != nil {
-		s.wsHandler.NotifyUserToRefresh(int64(receiverId))
-
-		if senderId != receiverId {
-			s.wsHandler.NotifyUserToRefresh(int64(senderId))
-		}
-	}
+	var usersToRefresh = []uint{uint(senderId), uint(receiverId)}
+	s.notifier.NotifyUsersRefresh(usersToRefresh)
 
 	return tx, nil
 }
@@ -204,14 +198,8 @@ func (s *TransactionService) unrollTransaction(ctx context.Context, transactionI
 	if err := s.repo.CompleteTransaction(ctx, transactionID, status); err != nil {
 		return ErrTransactionNotCompleted
 	}
-
-	if s.wsHandler != nil {
-		s.wsHandler.NotifyUserToRefresh(receiver)
-
-		if sender != receiver {
-			s.wsHandler.NotifyUserToRefresh(sender)
-		}
-	}
+	var usersToRefresh = []uint{uint(sender), uint(receiver)}
+	s.notifier.NotifyUsersRefresh(usersToRefresh)
 
 	return nil
 }

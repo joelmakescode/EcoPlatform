@@ -7,6 +7,153 @@ servers:
     description: API Server.
 
 paths:
+  /casino/balance/{id}:
+    x-ogen-operation-group: Casino
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: integer
+    get:
+      operationId: getCasinoBalance
+      summary: Get the current casino balance
+      responses:
+        200:
+          description: Current casino balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      operationId: updateCasinoBalance
+      summary: Update the casino balance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance'
+      responses:
+        204:
+          description: Casino balance updated successfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/Conflict'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /casino/balance/cashout/{id}:
+    x-ogen-operation-group: Casino
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: integer
+    post:
+      operationId: cashoutCasinoBalance
+      summary: Cashes out money
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance'
+      responses:
+        204:
+          description: Cashout successful
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/Conflict'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+          
+  /casino/balance/deposit/{id}:
+    x-ogen-operation-group: Casino
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: integer
+    post:
+      operationId: depositCasinoBalance
+      summary: Deposit money
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance'
+      responses:
+        204:
+          description: Cashout successful
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/Conflict'
+        500:
+          $ref: '#/components/responses/InternalServerError'      
+
+  /casino/roll-a-dice/{id}:
+    x-ogen-operation-group: Casino
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: integer
+    post:
+      operationId: createBetRollADice
+      summary: Create a new bet for rolling a dice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BetRollADice'
+      responses:
+        204:
+          description: Bet created successfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/Conflict'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
   /discord-users:
     x-ogen-operation-group: DiscordUsers
     post:
@@ -602,6 +749,17 @@ components:
         id:
           type: integer
 
+    BetRollADice:
+      type: object
+      required:
+        - bets
+      properties:
+        bets:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+
     DailyClaimStatus:
       type: object
       required:
@@ -850,7 +1008,7 @@ components:
         type:
           type: string
           enum: [send, request]
-          
+
     CreateUserData:
       allOf:
         - $ref: '#/components/schemas/UserData'

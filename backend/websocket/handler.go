@@ -19,6 +19,8 @@ var upgrader = websocket.Upgrader{
 type Handler struct {
 	hub       *Hub
 	jwtSecret []byte
+
+	onConnect func(*Client)
 }
 
 func NewHandler(hub *Hub, jwtSecret []byte) *Handler {
@@ -26,6 +28,10 @@ func NewHandler(hub *Hub, jwtSecret []byte) *Handler {
 		hub:       hub,
 		jwtSecret: jwtSecret,
 	}
+}
+
+func (h *Handler) Connect(fn func(*Client)) {
+	h.onConnect = fn
 }
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -71,14 +77,18 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := NewClient(h.hub, conn, userID)
+	client := NewClient(h.hub, conn, uint(userID))
 	h.hub.register <- client
+
+	if h.onConnect != nil {
+		go h.onConnect(client)
+	}
 
 	go client.writePump()
 	go client.readPump()
 }
 
-func (h *Handler) SendEventToUser(eventType EventType, userID int64, data interface{}, priority string) error {
+func (h *Handler) SendEventToUser(eventType EventType, userID uint, data interface{}, priority string) error {
 	event := Event{
 		Type:      eventType,
 		UserID:    userID,
@@ -99,11 +109,11 @@ func (h *Handler) SendEventToUser(eventType EventType, userID int64, data interf
 		return err
 	}
 
-	h.hub.BroadcastToUser(userID, eventJSON)
+	h.hub.BroadcastToUser(uint(userID), eventJSON)
 	return nil
 }
 
-func (h *Handler) SendEventToUsers(eventType EventType, userIDs []int64, data interface{}, priority string) error {
+func (h *Handler) SendEventToUsers(eventType EventType, userIDs []uint, data interface{}, priority string) error {
 	event := Event{
 		Type:      eventType,
 		Timestamp: time.Now().Format(time.RFC3339),
@@ -151,7 +161,11 @@ func (h *Handler) SendEventToAll(eventType EventType, data interface{}, priority
 	return nil
 }
 
-func (h *Handler) NotifyUserToRefresh(userID int64) error {
+func (h *Handler) NotifyUserRefresh(userId uint) error {
+	return h.NotifyUserToRefresh(userId)
+}
+
+func (h *Handler) NotifyUserToRefresh(userID uint) error {
 	event := Event{
 		Type:      "refresh",
 		UserID:    userID,
@@ -168,7 +182,7 @@ func (h *Handler) NotifyUserToRefresh(userID int64) error {
 	return nil
 }
 
-func (h *Handler) NotifyUsersToRefresh(userIDs []int64) error {
+func (h *Handler) NotifyUsersToRefresh(userIDs []uint) error {
 	event := Event{
 		Type:      "refresh",
 		Timestamp: time.Now().Format(time.RFC3339),
@@ -182,4 +196,8 @@ func (h *Handler) NotifyUsersToRefresh(userIDs []int64) error {
 
 	h.hub.BroadcastToUsers(userIDs, eventJSON)
 	return nil
+}
+
+func (h *Handler) NotifyUsersRefresh(userIds []uint) error {
+	return h.NotifyUsersToRefresh(userIds)
 }

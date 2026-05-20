@@ -9,8 +9,16 @@ type CancelTransactionRes interface {
 	cancelTransactionRes()
 }
 
+type CashoutCasinoBalanceRes interface {
+	cashoutCasinoBalanceRes()
+}
+
 type ClaimDailyBalanceRes interface {
 	claimDailyBalanceRes()
+}
+
+type CreateBetRollADiceRes interface {
+	createBetRollADiceRes()
 }
 
 type CreateDiscordUserRes interface {
@@ -29,8 +37,16 @@ type CreateUserRes interface {
 	createUserRes()
 }
 
+type DepositCasinoBalanceRes interface {
+	depositCasinoBalanceRes()
+}
+
 type GetAccountLinkByIdRes interface {
 	getAccountLinkByIdRes()
+}
+
+type GetCasinoBalanceRes interface {
+	getCasinoBalanceRes()
 }
 
 type GetDailyClaimStatusRes interface {
@@ -75,6 +91,10 @@ type RefundTransactionRes interface {
 
 type RejectTransactionRes interface {
 	rejectTransactionRes()
+}
+
+type UpdateCasinoBalanceRes interface {
+	updateCasinoBalanceRes()
 }
 
 type UpdateDiscordUserAutofillByIdRes interface {

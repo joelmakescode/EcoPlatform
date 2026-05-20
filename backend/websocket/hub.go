@@ -22,11 +22,21 @@ const (
 
 	// Benachrichtigungs-Events
 	EventTypeNotification EventType = "notification"
+
+	// Casino-Events
+	EventTypeRoundStart  EventType = "round_start"
+	EventTypeRoundTimer  EventType = "round_timer"
+	EventTypeRoundLock   EventType = "round_lock"
+	EventTypeRoundResult EventType = "round_result"
+	EventTypeGameState   EventType = "game_state"
+
+	EventTypeCasinoBalanceUpdated EventType = "casino_balance_updated"
+	EventTypeCasinoWin            EventType = "casino_win"
 )
 
 type Event struct {
 	Type      EventType       `json:"type"`
-	UserID    int64           `json:"user_id,omitempty"`
+	UserID    uint            `json:"user_id,omitempty"`
 	Data      json.RawMessage `json:"data,omitempty"`
 	Timestamp string          `json:"timestamp"`
 	Priority  string          `json:"priority,omitempty"`
@@ -44,7 +54,7 @@ type Client struct {
 	hub    *Hub
 	conn   *websocket.Conn
 	send   chan []byte
-	userID int64
+	UserID uint
 }
 
 func NewHub() *Hub {
@@ -87,12 +97,12 @@ func (h *Hub) Run() {
 	}
 }
 
-func (h *Hub) BroadcastToUser(userID int64, event []byte) {
+func (h *Hub) BroadcastToUser(userID uint, event []byte) {
 	h.mutex.RLock()
 	defer h.mutex.RUnlock()
 
 	for client := range h.clients {
-		if client.userID == userID {
+		if client.UserID == userID {
 			select {
 			case client.send <- event:
 			default:
@@ -103,13 +113,13 @@ func (h *Hub) BroadcastToUser(userID int64, event []byte) {
 	}
 }
 
-func (h *Hub) BroadcastToUsers(userIDs []int64, event []byte) {
+func (h *Hub) BroadcastToUsers(userIDs []uint, event []byte) {
 	h.mutex.RLock()
 	defer h.mutex.RUnlock()
 
 	for client := range h.clients {
 		for _, userID := range userIDs {
-			if client.userID == userID {
+			if client.UserID == userID {
 				select {
 				case client.send <- event:
 				default:
@@ -136,12 +146,12 @@ func (h *Hub) BroadcastToAll(event []byte) {
 	}
 }
 
-func NewClient(hub *Hub, conn *websocket.Conn, userID int64) *Client {
+func NewClient(hub *Hub, conn *websocket.Conn, userID uint) *Client {
 	return &Client{
 		hub:    hub,
 		conn:   conn,
 		send:   make(chan []byte, 256),
-		userID: userID,
+		UserID: userID,
 	}
 }
 
@@ -159,7 +169,7 @@ func (c *Client) writePump() {
 			}
 
 			if err := c.conn.WriteMessage(websocket.TextMessage, message); err != nil {
-				log.Printf("WebSocket write error for user %d: %v", c.userID, err)
+				log.Printf("WebSocket write error for user %d: %v", c.UserID, err)
 				return
 			}
 		}
@@ -183,7 +193,7 @@ func (c *Client) readPump() {
 		_, _, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("WebSocket read error for user %d: %v", c.userID, err)
+				log.Printf("WebSocket read error for user %d: %v", c.UserID, err)
 			}
 			break
 		}

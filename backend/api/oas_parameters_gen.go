@@ -146,6 +146,72 @@ func decodeCancelTransactionParams(args [1]string, argsEscaped bool, r *http.Req
 	return params, nil
 }
 
+// CashoutCasinoBalanceParams is parameters of cashoutCasinoBalance operation.
+type CashoutCasinoBalanceParams struct {
+	// ID of the user.
+	ID int
+}
+
+func unpackCashoutCasinoBalanceParams(packed middleware.Parameters) (params CashoutCasinoBalanceParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(int)
+	}
+	return params
+}
+
+func decodeCashoutCasinoBalanceParams(args [1]string, argsEscaped bool, r *http.Request) (params CashoutCasinoBalanceParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // ClaimDailyBalanceParams is parameters of claimDailyBalance operation.
 type ClaimDailyBalanceParams struct {
 	// ID of the user.
@@ -164,6 +230,72 @@ func unpackClaimDailyBalanceParams(packed middleware.Parameters) (params ClaimDa
 }
 
 func decodeClaimDailyBalanceParams(args [1]string, argsEscaped bool, r *http.Request) (params ClaimDailyBalanceParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// CreateBetRollADiceParams is parameters of createBetRollADice operation.
+type CreateBetRollADiceParams struct {
+	// ID of the user.
+	ID int
+}
+
+func unpackCreateBetRollADiceParams(packed middleware.Parameters) (params CreateBetRollADiceParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(int)
+	}
+	return params
+}
+
+func decodeCreateBetRollADiceParams(args [1]string, argsEscaped bool, r *http.Request) (params CreateBetRollADiceParams, _ error) {
 	// Decode path: id.
 	if err := func() error {
 		param := args[0]
@@ -278,6 +410,72 @@ func decodeCreateLinkAccountCodeParams(args [1]string, argsEscaped bool, r *http
 	return params, nil
 }
 
+// DepositCasinoBalanceParams is parameters of depositCasinoBalance operation.
+type DepositCasinoBalanceParams struct {
+	// ID of the user.
+	ID int
+}
+
+func unpackDepositCasinoBalanceParams(packed middleware.Parameters) (params DepositCasinoBalanceParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(int)
+	}
+	return params
+}
+
+func decodeDepositCasinoBalanceParams(args [1]string, argsEscaped bool, r *http.Request) (params DepositCasinoBalanceParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // GetAccountLinkByIdParams is parameters of getAccountLinkById operation.
 type GetAccountLinkByIdParams struct {
 	// Discord ID of the user.
@@ -321,6 +519,72 @@ func decodeGetAccountLinkByIdParams(args [1]string, argsEscaped bool, r *http.Re
 				}
 
 				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetCasinoBalanceParams is parameters of getCasinoBalance operation.
+type GetCasinoBalanceParams struct {
+	// ID of the user.
+	ID int
+}
+
+func unpackGetCasinoBalanceParams(packed middleware.Parameters) (params GetCasinoBalanceParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(int)
+	}
+	return params
+}
+
+func decodeGetCasinoBalanceParams(args [1]string, argsEscaped bool, r *http.Request) (params GetCasinoBalanceParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
 				if err != nil {
 					return err
 				}
@@ -1058,6 +1322,72 @@ func decodeRejectTransactionParams(args [1]string, argsEscaped bool, r *http.Req
 				}
 
 				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// UpdateCasinoBalanceParams is parameters of updateCasinoBalance operation.
+type UpdateCasinoBalanceParams struct {
+	// ID of the user.
+	ID int
+}
+
+func unpackUpdateCasinoBalanceParams(packed middleware.Parameters) (params UpdateCasinoBalanceParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(int)
+	}
+	return params
+}
+
+func decodeUpdateCasinoBalanceParams(args [1]string, argsEscaped bool, r *http.Request) (params UpdateCasinoBalanceParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
 				if err != nil {
 					return err
 				}

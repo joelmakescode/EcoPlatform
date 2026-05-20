@@ -26,6 +26,30 @@ func (AccountDiscordLink) TableName() string {
 	return "account_discord_links"
 }
 
+type CasinoAccount struct {
+	gorm.Model
+	ID        uint `gorm:"column:id;primaryKey"`
+	AccountID uint `gorm:"column:account_id"`
+	Balance   int64
+}
+
+type DiceBet struct {
+	ID      int64 `gorm:"column:id;primaryKey"`
+	UserID  uint  `gorm:"column:user_id"`
+	RoundID int64 `gorm:"column:round_id"`
+
+	BetKey    string    `gorm:"column:bet_key"`
+	Amount    int64     `gorm:"column:amount"`
+	CreatedAt time.Time `gorm:"column:created_at"`
+}
+
+type DiceRound struct {
+	ID        int64     `gorm:"column:id;primaryKey"`
+	Dice1     int       `gorm:"column:dice1"`
+	Dice2     int       `gorm:"column:dice2"`
+	CreatedAt time.Time `gorm:"column:created_at"`
+}
+
 type DiscordUser struct {
 	gorm.Model
 	DiscordId    string  `gorm:"column:discord_id;size:255"`
@@ -74,6 +98,6 @@ type User struct {
 	Username     string `gorm:"column:username;size:255"`
 	PasswordHash string `gorm:"column:password_hash;size:255"`
 
-	AccountID uint
+	AccountID int64
 	Account   Account
 }

@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { AuthTokenService } from '../auth-token/auth-token.service';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,9 @@ import { AuthTokenService } from '../auth-token/auth-token.service';
 export class WebSocketService {
   private socket: WebSocket | null = null;
   private authTokenService: AuthTokenService = inject(AuthTokenService);
+
+  private messageSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  public message$: Observable<any> = this.messageSubject.asObservable();
 
   connect(): void {
 
@@ -24,13 +28,9 @@ export class WebSocketService {
 
     this.socket.onmessage = (event: MessageEvent<any>): void => {
       try {
-        const message = JSON.parse(event.data);
+        const message: any = JSON.parse(event.data);
 
-        if (message.type === 'refresh') {
-          window.dispatchEvent(new CustomEvent('websocket-refresh', {
-            detail: message
-          }));
-        }
+        this.messageSubject.next(message);
       } catch (error) {
 
       }

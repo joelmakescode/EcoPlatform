@@ -1,0 +1,13 @@
+<app-detail-box [title]="title" (close)="onClose()">
+  <div class="casino-transfer-money-detail-box">
+    <app-number-input (valueChange)="onValueChange($event)"></app-number-input>
+
+    <button class="confirm-button" (click)="onConfirm()" [disabled]="value <= 0">
+      Confirm
+    </button>
+  </div>
+
+  <div class="casino-transfer-money-detail-box-info-text">
+    <app-info-text [infoMessage]="infoText"></app-info-text>
+  </div>
+</app-detail-box>

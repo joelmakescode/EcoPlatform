@@ -27,10 +27,47 @@ func trimTrailingSlashes(u *url.URL) {
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
+	CasinoInvoker
 	DiscordUsersInvoker
 	LoginInvoker
 	TransactionsInvoker
 	UsersInvoker
+}
+
+// CasinoInvoker invokes operations described by OpenAPI v3 specification.
+//
+// x-gen-operation-group: Casino
+type CasinoInvoker interface {
+	// CashoutCasinoBalance invokes cashoutCasinoBalance operation.
+	//
+	// Cashes out money.
+	//
+	// POST /casino/balance/cashout/{id}
+	CashoutCasinoBalance(ctx context.Context, request *Balance, params CashoutCasinoBalanceParams) (CashoutCasinoBalanceRes, error)
+	// CreateBetRollADice invokes createBetRollADice operation.
+	//
+	// Create a new bet for rolling a dice.
+	//
+	// POST /casino/roll-a-dice/{id}
+	CreateBetRollADice(ctx context.Context, request *BetRollADice, params CreateBetRollADiceParams) (CreateBetRollADiceRes, error)
+	// DepositCasinoBalance invokes depositCasinoBalance operation.
+	//
+	// Deposit money.
+	//
+	// POST /casino/balance/deposit/{id}
+	DepositCasinoBalance(ctx context.Context, request *Balance, params DepositCasinoBalanceParams) (DepositCasinoBalanceRes, error)
+	// GetCasinoBalance invokes getCasinoBalance operation.
+	//
+	// Get the current casino balance.
+	//
+	// GET /casino/balance/{id}
+	GetCasinoBalance(ctx context.Context, params GetCasinoBalanceParams) (GetCasinoBalanceRes, error)
+	// UpdateCasinoBalance invokes updateCasinoBalance operation.
+	//
+	// Update the casino balance.
+	//
+	// POST /casino/balance/{id}
+	UpdateCasinoBalance(ctx context.Context, request *Balance, params UpdateCasinoBalanceParams) (UpdateCasinoBalanceRes, error)
 }
 
 // DiscordUsersInvoker invokes operations described by OpenAPI v3 specification.
@@ -412,6 +449,101 @@ func (c *Client) sendCancelTransaction(ctx context.Context, params CancelTransac
 	return result, nil
 }
 
+// CashoutCasinoBalance invokes cashoutCasinoBalance operation.
+//
+// Cashes out money.
+//
+// POST /casino/balance/cashout/{id}
+func (c *Client) CashoutCasinoBalance(ctx context.Context, request *Balance, params CashoutCasinoBalanceParams) (CashoutCasinoBalanceRes, error) {
+	res, err := c.sendCashoutCasinoBalance(ctx, request, params)
+	return res, err
+}
+
+func (c *Client) sendCashoutCasinoBalance(ctx context.Context, request *Balance, params CashoutCasinoBalanceParams) (res CashoutCasinoBalanceRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("cashoutCasinoBalance"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.URLTemplateKey.String("/casino/balance/cashout/{id}"),
+	}
+	otelAttrs = append(otelAttrs, c.cfg.Attributes...)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, CashoutCasinoBalanceOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/casino/balance/cashout/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCashoutCasinoBalanceRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCashoutCasinoBalanceResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // ClaimDailyBalance invokes claimDailyBalance operation.
 //
 // Claim Daily Balance.
@@ -497,6 +629,101 @@ func (c *Client) sendClaimDailyBalance(ctx context.Context, params ClaimDailyBal
 
 	stage = "DecodeResponse"
 	result, err := decodeClaimDailyBalanceResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// CreateBetRollADice invokes createBetRollADice operation.
+//
+// Create a new bet for rolling a dice.
+//
+// POST /casino/roll-a-dice/{id}
+func (c *Client) CreateBetRollADice(ctx context.Context, request *BetRollADice, params CreateBetRollADiceParams) (CreateBetRollADiceRes, error) {
+	res, err := c.sendCreateBetRollADice(ctx, request, params)
+	return res, err
+}
+
+func (c *Client) sendCreateBetRollADice(ctx context.Context, request *BetRollADice, params CreateBetRollADiceParams) (res CreateBetRollADiceRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("createBetRollADice"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.URLTemplateKey.String("/casino/roll-a-dice/{id}"),
+	}
+	otelAttrs = append(otelAttrs, c.cfg.Attributes...)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, CreateBetRollADiceOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/casino/roll-a-dice/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCreateBetRollADiceRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCreateBetRollADiceResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -827,6 +1054,101 @@ func (c *Client) sendCreateUser(ctx context.Context, request *CreateUserData) (r
 	return result, nil
 }
 
+// DepositCasinoBalance invokes depositCasinoBalance operation.
+//
+// Deposit money.
+//
+// POST /casino/balance/deposit/{id}
+func (c *Client) DepositCasinoBalance(ctx context.Context, request *Balance, params DepositCasinoBalanceParams) (DepositCasinoBalanceRes, error) {
+	res, err := c.sendDepositCasinoBalance(ctx, request, params)
+	return res, err
+}
+
+func (c *Client) sendDepositCasinoBalance(ctx context.Context, request *Balance, params DepositCasinoBalanceParams) (res DepositCasinoBalanceRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("depositCasinoBalance"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.URLTemplateKey.String("/casino/balance/deposit/{id}"),
+	}
+	otelAttrs = append(otelAttrs, c.cfg.Attributes...)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, DepositCasinoBalanceOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/casino/balance/deposit/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeDepositCasinoBalanceRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeDepositCasinoBalanceResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // GetAccountLinkById invokes getAccountLinkById operation.
 //
 // Get Discord User Account Link By Id.
@@ -912,6 +1234,98 @@ func (c *Client) sendGetAccountLinkById(ctx context.Context, params GetAccountLi
 
 	stage = "DecodeResponse"
 	result, err := decodeGetAccountLinkByIdResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// GetCasinoBalance invokes getCasinoBalance operation.
+//
+// Get the current casino balance.
+//
+// GET /casino/balance/{id}
+func (c *Client) GetCasinoBalance(ctx context.Context, params GetCasinoBalanceParams) (GetCasinoBalanceRes, error) {
+	res, err := c.sendGetCasinoBalance(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendGetCasinoBalance(ctx context.Context, params GetCasinoBalanceParams) (res GetCasinoBalanceRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getCasinoBalance"),
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.URLTemplateKey.String("/casino/balance/{id}"),
+	}
+	otelAttrs = append(otelAttrs, c.cfg.Attributes...)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, GetCasinoBalanceOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/casino/balance/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetCasinoBalanceResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1935,6 +2349,101 @@ func (c *Client) sendRejectTransaction(ctx context.Context, params RejectTransac
 
 	stage = "DecodeResponse"
 	result, err := decodeRejectTransactionResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// UpdateCasinoBalance invokes updateCasinoBalance operation.
+//
+// Update the casino balance.
+//
+// POST /casino/balance/{id}
+func (c *Client) UpdateCasinoBalance(ctx context.Context, request *Balance, params UpdateCasinoBalanceParams) (UpdateCasinoBalanceRes, error) {
+	res, err := c.sendUpdateCasinoBalance(ctx, request, params)
+	return res, err
+}
+
+func (c *Client) sendUpdateCasinoBalance(ctx context.Context, request *Balance, params UpdateCasinoBalanceParams) (res UpdateCasinoBalanceRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("updateCasinoBalance"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.URLTemplateKey.String("/casino/balance/{id}"),
+	}
+	otelAttrs = append(otelAttrs, c.cfg.Attributes...)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, UpdateCasinoBalanceOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/casino/balance/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeUpdateCasinoBalanceRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeUpdateCasinoBalanceResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

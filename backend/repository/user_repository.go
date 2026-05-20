@@ -26,17 +26,17 @@ func (r *UserRepository) ClaimDaily(userId uint) error {
 	return nil
 }
 
-func (r *UserRepository) GetIdByUsername(ctx context.Context, username string) (uint, error) {
+func (r *UserRepository) GetIdByUsername(ctx context.Context, username string) (int64, error) {
 	var user model.User
 	err := r.db.WithContext(ctx).Where("username = ?", username).First(&user).Error
 	if err != nil {
 		return 0, err
 	}
 
-	return user.ID, nil
+	return int64(user.ID), nil
 }
 
-func (r *UserRepository) GetUserAccount(userId int) (*model.Account, error) {
+func (r *UserRepository) GetUserAccount(userId uint) (*model.Account, error) {
 	var account model.Account
 	err := r.db.Where("id = ?", userId).First(&account).Error
 	if err != nil {
@@ -64,7 +64,7 @@ func (r *UserRepository) GetUserById(userId uint) (*model.User, error) {
 	return &user, nil
 }
 
-func (r *UserRepository) GetUsernameById(userId uint) (string, error) {
+func (r *UserRepository) GetUsernameById(userId int64) (string, error) {
 	var username string
 	err := r.db.Model(&model.User{}).Select("username").Where("id = ?", userId).Scan(&username).Error
 	if err != nil {
@@ -98,13 +98,24 @@ func (r *UserRepository) UpdateUserBalanceById(userId uint, delta int64) (*model
 
 func (r *UserRepository) SaveUser(user *model.User) (*model.User, error) {
 	err := r.db.Transaction(func(tx *gorm.DB) error {
-		var account model.Account
-		account.DailyClaim = time.Now()
+		account := model.Account{
+			DailyClaim: time.Now(),
+			Balance:    1000,
+		}
 		if err := tx.Create(&account).Error; err != nil {
 			return err
 		}
 
-		user.AccountID = account.ID
+		casinoAccount := model.CasinoAccount{
+			AccountID: account.ID,
+			Balance:   0,
+		}
+
+		if err := tx.Create(&casinoAccount).Error; err != nil {
+			return err
+		}
+
+		user.AccountID = int64(account.ID)
 		if err := tx.Create(user).Error; err != nil {
 			return err
 		}

@@ -10,6 +10,34 @@ import (
 	ht "github.com/ogen-go/ogen/http"
 )
 
+func encodeCashoutCasinoBalanceRequest(
+	req *Balance,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeCreateBetRollADiceRequest(
+	req *BetRollADice,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeCreateDiscordUserRequest(
 	req *CreateDiscordUserData,
 	r *http.Request,
@@ -52,6 +80,20 @@ func encodeCreateUserRequest(
 	return nil
 }
 
+func encodeDepositCasinoBalanceRequest(
+	req *Balance,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeLinkAccountRequest(
 	req *LinkCode,
 	r *http.Request,
@@ -82,6 +124,20 @@ func encodeLoginDiscordUserRequest(
 
 func encodeLoginUserRequest(
 	req *LoginData,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeUpdateCasinoBalanceRequest(
+	req *Balance,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"

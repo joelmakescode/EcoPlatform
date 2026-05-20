@@ -22,7 +22,7 @@ func (h *UserHandler) ClaimDailyBalance(ctx context.Context, param api.ClaimDail
 		return &api.ClaimDailyBalanceForbidden{Message: api.NewOptString(err.Error())}, nil
 	}
 
-	if err := h.service.ClaimDaily(param.ID); err != nil {
+	if err := h.service.ClaimDaily(uint(param.ID)); err != nil {
 		switch {
 
 		case errors.Is(err, service.ErrUserNotFound):
@@ -68,7 +68,7 @@ func (h *UserHandler) GetDailyClaimStatus(ctx context.Context, param api.GetDail
 		return &api.GetDailyClaimStatusForbidden{Message: api.NewOptString(err.Error())}, nil
 	}
 
-	ok, err := h.service.GetDailyClaimStatus(param.ID)
+	ok, err := h.service.GetDailyClaimStatus(uint(param.ID))
 	if err != nil {
 		switch {
 

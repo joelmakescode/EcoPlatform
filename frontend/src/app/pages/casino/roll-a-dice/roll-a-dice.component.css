@@ -1,0 +1,380 @@
+.content-roll-a-dice-box {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 13px;
+  width: 100%;
+  height: 40%;
+  border-radius: 6px;
+
+  background: rgba(255,255,255,0.04);
+}
+
+.dice-container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.casino-balance {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: rgba(27, 34, 53, 0.9);
+
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+
+  padding: 6px 8px;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.4),
+    0 0 10px rgba(78, 124, 255, 0.15);
+}
+
+.balance-text {
+  font-size: 15px;
+  font-weight: bold;
+  color: #22c55e;
+}
+
+.deposit-btn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+
+  border: none;
+  border-radius: 8px;
+
+  padding: 6px 10px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.4);
+}
+
+.deposit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.6);
+}
+
+.dice-area {
+  display: flex;
+  gap: 30px;
+}
+
+.dice-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  color: white;
+}
+
+.timer {
+  font-size: 28px;
+  font-weight: bold;
+
+  color: #4e7cff;
+}
+
+.status {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.status.locked {
+  font-size: 28px;
+  font-weight: bold;
+  animation: pulse 0.6s ease;
+  color: #ff4d4d;
+}
+
+.dice {
+  width: 80px;
+  height: 80px;
+
+  background: linear-gradient(145deg, #ffffff, #dcdcdc);
+  border-radius: 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 32px;
+  font-weight: bold;
+  color: #000;
+
+  box-shadow:
+    inset -4px -4px 8px rgba(0,0,0,0.2),
+    0 6px 20px rgba(0,0,0,0.4);
+
+  transition: transform 0.2s;
+}
+
+.dice.rolling {
+  animation: rollDice 0.8s ease;
+}
+
+@keyframes rollDice {
+  0%   { transform: rotate(0deg) scale(1); }
+  20%  { transform: rotate(90deg) scale(1.2); }
+  40%  { transform: rotate(180deg) scale(0.9); }
+  60%  { transform: rotate(270deg) scale(1.1); }
+  80%  { transform: rotate(360deg) scale(1); }
+  100% { transform: rotate(360deg); }
+}
+
+.dice.final {
+  animation: glow 0.5s ease;
+}
+
+@keyframes glow {
+  0%   { box-shadow: 0 0 0px #4e7cff; }
+  50%  { box-shadow: 0 0 20px #4e7cff; }
+  100% { box-shadow: 0 0 0px #4e7cff; }
+}
+
+@keyframes bounceEnd {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.dice.final {
+  animation: bounceEnd 0.3s;
+}
+
+.win-text {
+  font-size: 32px;
+  font-weight: bold;
+  color: #22c55e;
+
+  animation: fadeInOut 2s ease;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(10px); }
+  20% { opacity: 1; transform: translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+.bet-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.bet-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.bet-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 90px));
+  justify-content: center;
+  gap: 15px;
+}
+
+h3 {
+  color: #9bb3ff;
+  font-size: 13px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.bet-button {
+  background: #1b2235;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+
+  transition: all 0.2s ease;
+}
+
+.bet-button span {
+  font-size: 11px;
+  color: #8fa3ff;
+  margin-top: 4px;
+}
+
+.bet-button:hover {
+  background: #283052;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.bet-button:active {
+  background: #4e7cff;
+  border-color: #6ea3ff;
+}
+
+.stake-container {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+
+  display: flex;
+  align-items: center;
+}
+
+#stake-toggle {
+  display: none;
+}
+
+.stake-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: #1b2235;
+  color: white;
+  padding: 8px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.stake-display button:disabled {
+  background: #1a1a1a;
+  color: #666;
+  cursor: not-allowed;
+
+  opacity: 0.5;
+  filter: grayscale(100%);
+
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.arrow {
+  transition: transform 0.3s;
+}
+
+#stake-toggle:checked + .stake-display .arrow {
+  transform: rotate(180deg);
+}
+
+.stake-options {
+  display: flex;
+  gap: 8px;
+
+  margin-left: 10px;
+
+  max-width: 0;
+  overflow: hidden;
+
+  transition: all 0.3s ease;
+}
+
+#stake-toggle:checked + .stake-display + .stake-options {
+  max-width: 600px;
+}
+
+.stake-options button {
+  background: #283052;
+  color: white;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.stake-options button:hover {
+  background: #4e7cff;
+}
+
+.stake-options button.active {
+  background: #ff7a18 !important;
+}
+
+.stake-options button:disabled {
+  background: #1a1a1a;
+  color: #666;
+  cursor: not-allowed;
+
+  opacity: 0.5;
+  filter: grayscale(100%);
+
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.bet-amount {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+
+  background: #4e7cff;
+  color: white;
+
+  padding: 4px 6px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+
+  border: 2px solid #0e1116;
+}
+
+.clear-bar {
+  position: absolute;
+  color: white;
+  bottom: 50px;
+  right: 0;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.clear-bar button {
+  background: #a83232;
+  color: white;
+
+  padding: 10px 10px;
+  border-radius: 8px;
+  border: none;
+
+  cursor: pointer;
+}
+
+.clear-bar button:hover {
+  background: #d94a4a;
+}
+
+
+
+
+
