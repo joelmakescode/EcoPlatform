@@ -31,12 +31,30 @@ func (UnimplementedHandler) CancelTransaction(ctx context.Context, params Cancel
 	return r, ht.ErrNotImplemented
 }
 
+// CashoutCasinoBalance implements cashoutCasinoBalance operation.
+//
+// Cashes out money.
+//
+// POST /casino/balance/cashout/{id}
+func (UnimplementedHandler) CashoutCasinoBalance(ctx context.Context, req *Balance, params CashoutCasinoBalanceParams) (r CashoutCasinoBalanceRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // ClaimDailyBalance implements claimDailyBalance operation.
 //
 // Claim Daily Balance.
 //
 // POST /users/daily-claim/{id}
 func (UnimplementedHandler) ClaimDailyBalance(ctx context.Context, params ClaimDailyBalanceParams) (r ClaimDailyBalanceRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CreateBetRollADice implements createBetRollADice operation.
+//
+// Create a new bet for rolling a dice.
+//
+// POST /casino/roll-a-dice/{id}
+func (UnimplementedHandler) CreateBetRollADice(ctx context.Context, req *BetRollADice, params CreateBetRollADiceParams) (r CreateBetRollADiceRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -76,12 +94,30 @@ func (UnimplementedHandler) CreateUser(ctx context.Context, req *CreateUserData)
 	return r, ht.ErrNotImplemented
 }
 
+// DepositCasinoBalance implements depositCasinoBalance operation.
+//
+// Deposit money.
+//
+// POST /casino/balance/deposit/{id}
+func (UnimplementedHandler) DepositCasinoBalance(ctx context.Context, req *Balance, params DepositCasinoBalanceParams) (r DepositCasinoBalanceRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // GetAccountLinkById implements getAccountLinkById operation.
 //
 // Get Discord User Account Link By Id.
 //
 // GET /discord-users/link-account/{id}
 func (UnimplementedHandler) GetAccountLinkById(ctx context.Context, params GetAccountLinkByIdParams) (r GetAccountLinkByIdRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetCasinoBalance implements getCasinoBalance operation.
+//
+// Get the current casino balance.
+//
+// GET /casino/balance/{id}
+func (UnimplementedHandler) GetCasinoBalance(ctx context.Context, params GetCasinoBalanceParams) (r GetCasinoBalanceRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -179,6 +215,15 @@ func (UnimplementedHandler) RefundTransaction(ctx context.Context, params Refund
 //
 // POST /transactions/{id}/reject
 func (UnimplementedHandler) RejectTransaction(ctx context.Context, params RejectTransactionParams) (r RejectTransactionRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// UpdateCasinoBalance implements updateCasinoBalance operation.
+//
+// Update the casino balance.
+//
+// POST /casino/balance/{id}
+func (UnimplementedHandler) UpdateCasinoBalance(ctx context.Context, req *Balance, params UpdateCasinoBalanceParams) (r UpdateCasinoBalanceRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

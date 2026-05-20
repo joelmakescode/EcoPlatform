@@ -1,0 +1,8 @@
+USE ecoplatform;
+
+CREATE TABLE IF NOT EXISTS dice_rounds (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    dice1 INT NOT NULL,
+    dice2 INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

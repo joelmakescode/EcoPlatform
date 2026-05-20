@@ -41,8 +41,35 @@ func (s *Balance) SetBalance(val int64) {
 	s.Balance = val
 }
 
+func (*Balance) getCasinoBalanceRes()      {}
 func (*Balance) getUserBalanceByIdRes()    {}
 func (*Balance) updateUserBalanceByIdRes() {}
+
+// Ref: #/components/schemas/BetRollADice
+type BetRollADice struct {
+	Bets BetRollADiceBets `json:"bets"`
+}
+
+// GetBets returns the value of Bets.
+func (s *BetRollADice) GetBets() BetRollADiceBets {
+	return s.Bets
+}
+
+// SetBets sets the value of Bets.
+func (s *BetRollADice) SetBets(val BetRollADiceBets) {
+	s.Bets = val
+}
+
+type BetRollADiceBets map[string]int64
+
+func (s *BetRollADiceBets) init() BetRollADiceBets {
+	m := *s
+	if m == nil {
+		m = map[string]int64{}
+		*s = m
+	}
+	return m
+}
 
 type CancelTransactionBadRequest Error
 
@@ -60,6 +87,31 @@ func (*CancelTransactionNoContent) cancelTransactionRes() {}
 type CancelTransactionNotFound Error
 
 func (*CancelTransactionNotFound) cancelTransactionRes() {}
+
+type CashoutCasinoBalanceBadRequest Error
+
+func (*CashoutCasinoBalanceBadRequest) cashoutCasinoBalanceRes() {}
+
+type CashoutCasinoBalanceConflict Error
+
+func (*CashoutCasinoBalanceConflict) cashoutCasinoBalanceRes() {}
+
+type CashoutCasinoBalanceForbidden Error
+
+func (*CashoutCasinoBalanceForbidden) cashoutCasinoBalanceRes() {}
+
+type CashoutCasinoBalanceInternalServerError Error
+
+func (*CashoutCasinoBalanceInternalServerError) cashoutCasinoBalanceRes() {}
+
+// CashoutCasinoBalanceNoContent is response for CashoutCasinoBalance operation.
+type CashoutCasinoBalanceNoContent struct{}
+
+func (*CashoutCasinoBalanceNoContent) cashoutCasinoBalanceRes() {}
+
+type CashoutCasinoBalanceNotFound Error
+
+func (*CashoutCasinoBalanceNotFound) cashoutCasinoBalanceRes() {}
 
 type ClaimDailyBalanceBadRequest Error
 
@@ -89,6 +141,31 @@ func (*ClaimDailyBalanceNotFound) claimDailyBalanceRes() {}
 type ClaimDailyBalanceUnauthorized Error
 
 func (*ClaimDailyBalanceUnauthorized) claimDailyBalanceRes() {}
+
+type CreateBetRollADiceBadRequest Error
+
+func (*CreateBetRollADiceBadRequest) createBetRollADiceRes() {}
+
+type CreateBetRollADiceConflict Error
+
+func (*CreateBetRollADiceConflict) createBetRollADiceRes() {}
+
+type CreateBetRollADiceForbidden Error
+
+func (*CreateBetRollADiceForbidden) createBetRollADiceRes() {}
+
+type CreateBetRollADiceInternalServerError Error
+
+func (*CreateBetRollADiceInternalServerError) createBetRollADiceRes() {}
+
+// CreateBetRollADiceNoContent is response for CreateBetRollADice operation.
+type CreateBetRollADiceNoContent struct{}
+
+func (*CreateBetRollADiceNoContent) createBetRollADiceRes() {}
+
+type CreateBetRollADiceNotFound Error
+
+func (*CreateBetRollADiceNotFound) createBetRollADiceRes() {}
 
 type CreateDiscordUserBadRequest Error
 
@@ -319,6 +396,31 @@ func (s *DailyClaimStatus) SetCanClaim(val bool) {
 
 func (*DailyClaimStatus) getDailyClaimStatusRes() {}
 
+type DepositCasinoBalanceBadRequest Error
+
+func (*DepositCasinoBalanceBadRequest) depositCasinoBalanceRes() {}
+
+type DepositCasinoBalanceConflict Error
+
+func (*DepositCasinoBalanceConflict) depositCasinoBalanceRes() {}
+
+type DepositCasinoBalanceForbidden Error
+
+func (*DepositCasinoBalanceForbidden) depositCasinoBalanceRes() {}
+
+type DepositCasinoBalanceInternalServerError Error
+
+func (*DepositCasinoBalanceInternalServerError) depositCasinoBalanceRes() {}
+
+// DepositCasinoBalanceNoContent is response for DepositCasinoBalance operation.
+type DepositCasinoBalanceNoContent struct{}
+
+func (*DepositCasinoBalanceNoContent) depositCasinoBalanceRes() {}
+
+type DepositCasinoBalanceNotFound Error
+
+func (*DepositCasinoBalanceNotFound) depositCasinoBalanceRes() {}
+
 // Merged schema.
 // Ref: #/components/schemas/DiscordUser
 type DiscordUser struct {
@@ -480,6 +582,22 @@ func (*GetAccountLinkByIdInternalServerError) getAccountLinkByIdRes() {}
 type GetAccountLinkByIdNotFound Error
 
 func (*GetAccountLinkByIdNotFound) getAccountLinkByIdRes() {}
+
+type GetCasinoBalanceBadRequest Error
+
+func (*GetCasinoBalanceBadRequest) getCasinoBalanceRes() {}
+
+type GetCasinoBalanceForbidden Error
+
+func (*GetCasinoBalanceForbidden) getCasinoBalanceRes() {}
+
+type GetCasinoBalanceInternalServerError Error
+
+func (*GetCasinoBalanceInternalServerError) getCasinoBalanceRes() {}
+
+type GetCasinoBalanceNotFound Error
+
+func (*GetCasinoBalanceNotFound) getCasinoBalanceRes() {}
 
 type GetDailyClaimStatusBadRequest Error
 
@@ -1265,6 +1383,31 @@ func (s *Transactions) SetPagination(val TransactionPagination) {
 }
 
 func (*Transactions) getTransactionsRes() {}
+
+type UpdateCasinoBalanceBadRequest Error
+
+func (*UpdateCasinoBalanceBadRequest) updateCasinoBalanceRes() {}
+
+type UpdateCasinoBalanceConflict Error
+
+func (*UpdateCasinoBalanceConflict) updateCasinoBalanceRes() {}
+
+type UpdateCasinoBalanceForbidden Error
+
+func (*UpdateCasinoBalanceForbidden) updateCasinoBalanceRes() {}
+
+type UpdateCasinoBalanceInternalServerError Error
+
+func (*UpdateCasinoBalanceInternalServerError) updateCasinoBalanceRes() {}
+
+// UpdateCasinoBalanceNoContent is response for UpdateCasinoBalance operation.
+type UpdateCasinoBalanceNoContent struct{}
+
+func (*UpdateCasinoBalanceNoContent) updateCasinoBalanceRes() {}
+
+type UpdateCasinoBalanceNotFound Error
+
+func (*UpdateCasinoBalanceNotFound) updateCasinoBalanceRes() {}
 
 type UpdateDiscordUserAutofillByIdBadRequest Error
 

@@ -14,6 +14,7 @@ import {InfoTextComponent} from '../info-text/info-text.component';
   styleUrl: './detail-box.component.css',
 })
 export class DetailBoxComponent {
+  @Input() title!: string;
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   onClose(): void {

@@ -8,10 +8,47 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
+	CasinoHandler
 	DiscordUsersHandler
 	LoginHandler
 	TransactionsHandler
 	UsersHandler
+}
+
+// CasinoHandler handles operations described by OpenAPI v3 specification.
+//
+// x-ogen-operation-group: Casino
+type CasinoHandler interface {
+	// CashoutCasinoBalance implements cashoutCasinoBalance operation.
+	//
+	// Cashes out money.
+	//
+	// POST /casino/balance/cashout/{id}
+	CashoutCasinoBalance(ctx context.Context, req *Balance, params CashoutCasinoBalanceParams) (CashoutCasinoBalanceRes, error)
+	// CreateBetRollADice implements createBetRollADice operation.
+	//
+	// Create a new bet for rolling a dice.
+	//
+	// POST /casino/roll-a-dice/{id}
+	CreateBetRollADice(ctx context.Context, req *BetRollADice, params CreateBetRollADiceParams) (CreateBetRollADiceRes, error)
+	// DepositCasinoBalance implements depositCasinoBalance operation.
+	//
+	// Deposit money.
+	//
+	// POST /casino/balance/deposit/{id}
+	DepositCasinoBalance(ctx context.Context, req *Balance, params DepositCasinoBalanceParams) (DepositCasinoBalanceRes, error)
+	// GetCasinoBalance implements getCasinoBalance operation.
+	//
+	// Get the current casino balance.
+	//
+	// GET /casino/balance/{id}
+	GetCasinoBalance(ctx context.Context, params GetCasinoBalanceParams) (GetCasinoBalanceRes, error)
+	// UpdateCasinoBalance implements updateCasinoBalance operation.
+	//
+	// Update the casino balance.
+	//
+	// POST /casino/balance/{id}
+	UpdateCasinoBalance(ctx context.Context, req *Balance, params UpdateCasinoBalanceParams) (UpdateCasinoBalanceRes, error)
 }
 
 // DiscordUsersHandler handles operations described by OpenAPI v3 specification.

@@ -2,9 +2,9 @@ package service
 
 import (
 	"backend/api"
+	"backend/events"
 	"backend/repository"
 	"backend/repository/model"
-	"backend/websocket"
 	"crypto/rand"
 	"fmt"
 	"math/big"
@@ -17,19 +17,19 @@ import (
 )
 
 type UserService struct {
-	repo             *repository.UserRepository
-	webSocketHandler *websocket.Handler
+	repo     *repository.UserRepository
+	notifier events.Notifier
 }
 
 func NewUserService(repo *repository.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (s *UserService) SetWebSocketHandler(wsHandler *websocket.Handler) {
-	s.webSocketHandler = wsHandler
+func (s *UserService) SetNotifier(notifier events.Notifier) {
+	s.notifier = notifier
 }
 
-func (s *UserService) ClaimDaily(userId int) error {
+func (s *UserService) ClaimDaily(userId uint) error {
 	if userId <= 0 {
 		return ErrNoUserID
 	}
@@ -43,18 +43,18 @@ func (s *UserService) ClaimDaily(userId int) error {
 		return ErrDailyAlreadyClaimed
 	}
 
-	_, err = s.UpdateUserBalanceById(uint(userId), int64(5000))
+	_, err = s.UpdateUserBalanceById(userId, int64(50))
 	if err != nil {
 		return err
 	}
 
-	err = s.repo.ClaimDaily(uint(userId))
+	err = s.repo.ClaimDaily(userId)
 	if err != nil {
 		return err
 	}
 
-	if s.webSocketHandler != nil {
-		s.webSocketHandler.NotifyUserToRefresh(int64(userId))
+	if s.notifier != nil {
+		s.notifier.NotifyUserRefresh(userId)
 	}
 
 	return nil
@@ -97,7 +97,7 @@ func (s *UserService) CreateUser(newUser *api.CreateUserData) (*api.User, error)
 	return s.MapModelToApiUser(createdUser), nil
 }
 
-func (s *UserService) GetDailyClaimStatus(userId int) (bool, error) {
+func (s *UserService) GetDailyClaimStatus(userId uint) (bool, error) {
 	account, err := s.repo.GetUserAccount(userId)
 	if err != nil {
 		if recordNotFound(err) {
@@ -148,6 +148,10 @@ func (s *UserService) UpdateUserBalanceById(userId uint, delta int64) (*api.Bala
 		}
 
 		return nil, err
+	}
+
+	if s.notifier != nil {
+		s.notifier.NotifyUserRefresh(userId)
 	}
 
 	return s.MapAccountToBalance(account), nil
@@ -201,7 +205,7 @@ func (s *UserService) MapUserToModel(newUser *api.CreateUserData) *model.User {
 
 func (s *UserService) MapModelToApiUser(model *model.User) *api.User {
 	return &api.User{
-		ID:       int(model.ID),
+		ID:       int(model.AccountID),
 		Email:    model.Email,
 		Username: model.Username,
 	}

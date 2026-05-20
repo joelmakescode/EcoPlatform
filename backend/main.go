@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/api"
+	"backend/game/rolladice"
 	"backend/handler"
 	"backend/middleware"
 	"backend/repository"
@@ -25,14 +26,41 @@ func main() {
 	hub := websocket.NewHub()
 	go hub.Run()
 
-	handlers := initDependencies(db, hub)
+	casinoRepository := repository.NewCasinoRepository(db)
+	discordUserRepository := repository.NewDiscordUserRepository(db)
+	transactionRepository := repository.NewTransactionRepository(db)
+	userRepository := repository.NewUserRepository(db)
+
+	authService := service.NewAuthService(userRepository)
+	casinoService := service.NewCasinoService(casinoRepository, userRepository)
+	discordUserService := service.NewDiscordUserService(discordUserRepository)
+	transactionService := service.NewTransactionService(transactionRepository, userRepository)
+	userService := service.NewUserService(userRepository)
+
+	wsHandler := websocket.NewHandler(hub, []byte("ecoplatform"))
+	userService.SetNotifier(wsHandler)
+	transactionService.SetNotifier(wsHandler)
+	casinoService.SetNotifier(wsHandler)
+
+	handlers := handler.NewHandler(
+		handler.NewCasinoHandler(casinoService),
+		handler.NewDiscordUserHandler(discordUserService),
+		handler.NewAuthHandler(authService),
+		handler.NewTransactionHandler(transactionService),
+		handler.NewUserHandler(userService),
+	)
 
 	server, err := api.NewServer(handlers, api.WithPathPrefix("/api"), api.WithErrorHandler(errorHandler))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	wsHandler := websocket.NewHandler(hub, []byte("ecoplatform"))
+	game := rolladice.NewRollADiceHandler(casinoRepository, wsHandler)
+	casinoService.SetGame(game)
+	wsHandler.Connect(func(client *websocket.Client) {
+		game.SendCurrentGameState(client)
+	})
+	go game.Start()
 
 	mux := http.NewServeMux()
 	mux.Handle("/api/", middleware.CORS(middleware.AuthMiddleware(middleware.BotAuthMiddleware(server))))
@@ -81,26 +109,4 @@ func connectDB() *gorm.DB {
 
 	log.Fatalf("Failed to connect to Database after retries: %v", err)
 	return nil
-}
-
-func initDependencies(gormDB *gorm.DB, hub *websocket.Hub) api.Handler {
-	discordUserRepository := repository.NewDiscordUserRepository(gormDB)
-	transactionRepository := repository.NewTransactionRepository(gormDB)
-	userRepository := repository.NewUserRepository(gormDB)
-
-	authService := service.NewAuthService(userRepository)
-	discordUserService := service.NewDiscordUserService(discordUserRepository)
-	transactionService := service.NewTransactionService(transactionRepository, userRepository)
-	userService := service.NewUserService(userRepository)
-
-	wsHandler := websocket.NewHandler(hub, []byte("ecoplatform"))
-	userService.SetWebSocketHandler(wsHandler)
-	transactionService.SetWebSocketHandler(wsHandler)
-
-	authHandler := handler.NewAuthHandler(authService)
-	discordUserHandler := handler.NewDiscordUserHandler(discordUserService)
-	transactionHandler := handler.NewTransactionHandler(transactionService)
-	userHandler := handler.NewUserHandler(userService)
-
-	return handler.NewHandler(discordUserHandler, authHandler, transactionHandler, userHandler)
 }

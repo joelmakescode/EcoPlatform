@@ -1,6 +1,4 @@
-<app-detail-box *ngIf="transaction as tx" (close)="onClose()">
-  <h2>Transaction Details</h2>
-
+<app-detail-box *ngIf="transaction as tx" (close)="onClose()" title="Transaction Details">
   <div class="details-grid">
     <div class="detail-item">
       <span class="label">Sender</span>
