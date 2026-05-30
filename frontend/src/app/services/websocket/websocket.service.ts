@@ -12,6 +12,9 @@ export class WebSocketService {
   private messageSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public message$: Observable<any> = this.messageSubject.asObservable();
 
+  private refreshSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  public refresh$: Observable<any> = this.refreshSubject.asObservable();
+
   connect(): void {
 
     if (this.socket?.readyState === WebSocket.OPEN) {
@@ -29,11 +32,12 @@ export class WebSocketService {
     this.socket.onmessage = (event: MessageEvent<any>): void => {
       try {
         const message: any = JSON.parse(event.data);
-
         this.messageSubject.next(message);
-      } catch (error) {
 
-      }
+        if (message.type === 'refresh') {
+          this.refreshSubject.next(message);
+        }
+      } catch (error) {}
     };
 
     this.socket.onclose = (): void => {

@@ -6,6 +6,7 @@ import {NgIf} from '@angular/common';
 import {ErrorService} from '../../services/messages/error/error.service';
 import {SuccessService} from '../../services/messages/success/success.service';
 import {Balance, DailyClaimStatus, User} from '../../client/models/user/user.model';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -24,6 +25,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private userService: UserService = inject(UserService);
   private webSocketService: WebSocketService = inject(WebSocketService);
 
+  private websocketSubscription!: Subscription;
+
   username: string = '';
   balance: number = 0;
   dailyClaim: boolean = false;
@@ -33,27 +36,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if (isLoggedIn) {
         this.loadUser();
         this.loadDailyClaim();
+        this.cdr.detectChanges();
       }
     });
 
     this.webSocketService.connect();
-    window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+    this.websocketSubscription = this.webSocketService.refresh$.subscribe((): void => {
+      this.loadUser();
+      this.cdr.detectChanges();
+    })
   }
 
   ngOnDestroy(): void {
     this.webSocketService.disconnect();
-    window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+    this.websocketSubscription.unsubscribe();
   }
 
   loadUser(): void {
     this.userService.getUser().subscribe((response: User): void => {
       this.username = response.username;
-      this.cdr.detectChanges();
     })
 
     this.userService.getBalance().subscribe((response: Balance): void => {
       this.balance = response.balance / 100;
-      this.cdr.detectChanges();
     })
   }
 
@@ -61,7 +66,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userService.getDailyClaim().subscribe({
       next: (response: DailyClaimStatus): void => {
         this.dailyClaim = response.can_claim;
-        this.cdr.detectChanges();
       },
       error: (err: any): void => {
         this.errorService.showApiError(err.error?.message, err.status);
@@ -106,9 +110,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authFacadeService.logout();
-  }
-
-  private handleWebSocketRefresh(): void {
-    this.loadUser();
   }
 }

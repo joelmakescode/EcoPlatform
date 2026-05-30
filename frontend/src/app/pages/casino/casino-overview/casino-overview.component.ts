@@ -32,7 +32,6 @@ export class CasinoOverviewComponent implements OnInit, OnDestroy {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private errorService: ErrorService = inject(ErrorService);
   private successService: SuccessService = inject(SuccessService);
-  private webSocketService: WebSocketService = inject(WebSocketService);
 
   casinoBalance: number = 0;
   isInfoModalOpen: boolean = false;
@@ -45,14 +44,15 @@ export class CasinoOverviewComponent implements OnInit, OnDestroy {
   depositMoneyInfoText: string = CasinoOverviewTransferMoneyInfoMessages[this.depositMoney];
   cashOutMoneyInfoText: string = CasinoOverviewTransferMoneyInfoMessages[this.cashOutMoney]
 
+  private bindWebSocketRefresh: () => void = this.handleWebSocketRefresh.bind(this);
+
   ngOnInit() {
     this.loadBalance();
-    this.webSocketService.connect();
-    window.addEventListener("websocket-refresh", this.handleWebSocketRefresh.bind(this));
+    window.addEventListener("websocket-refresh", this.bindWebSocketRefresh);
   }
 
   ngOnDestroy() {
-    this.webSocketService.disconnect();
+    window.removeEventListener('websocket-refresh', this.bindWebSocketRefresh);
   }
 
   loadBalance(): void {

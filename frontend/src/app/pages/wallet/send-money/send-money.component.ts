@@ -14,6 +14,7 @@ import {TransactionResponse} from '../../../client/models/transactions/transacti
 import {ErrorService} from '../../../services/messages/error/error.service';
 import {SuccessService} from '../../../services/messages/success/success.service';
 import {WebSocketService} from '../../../services/websocket/websocket.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-send-money',
@@ -40,15 +41,20 @@ export class SendMoneyComponent implements OnInit, OnDestroy {
   limit: number = 20;
   isLoading: boolean = false;
 
+  private websocketSubscription!: Subscription;
+
   ngOnInit(): void {
     this.loadTransactions();
-    this.websocketService.connect();
-    window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+
+    this.websocketSubscription = this.websocketService.message$.subscribe((message: any): void => {
+      if (message.type === 'refresh') {
+        this.handleWebSocketRefresh();
+      }
+    })
   }
 
   ngOnDestroy(): void {
-    this.websocketService.disconnect();
-    window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+    this.websocketSubscription.unsubscribe();
   }
 
   loadTransactions(): void {
@@ -78,6 +84,7 @@ export class SendMoneyComponent implements OnInit, OnDestroy {
 
   private handleWebSocketRefresh(): void {
     this.loadTransactions();
+    this.cdr.detectChanges();
   }
 }
 
