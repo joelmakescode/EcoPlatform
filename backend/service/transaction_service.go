@@ -40,9 +40,6 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderUserna
 	if err != nil {
 		return nil, ErrUserNotFound
 	}
-	if err := authz.Self(ctx, uint(senderId)); err != nil {
-		return nil, authz.ErrForbidden
-	}
 
 	receiverId, err := s.userRepo.GetIdByUsername(ctx, receiverUsername)
 	if err != nil {
@@ -56,6 +53,9 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, senderUserna
 
 	switch txType {
 	case "send":
+		if err = authz.Self(ctx, uint(senderId)); err != nil {
+			return nil, authz.ErrForbidden
+		}
 
 		if account, err := s.userRepo.GetUserBalanceById(uint(senderId)); err != nil {
 			return nil, err
