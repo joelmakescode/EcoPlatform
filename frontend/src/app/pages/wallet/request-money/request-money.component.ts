@@ -10,10 +10,9 @@ import {
 import {AuthTokenService} from '../../../services/auth-token/auth-token.service';
 import {TransactionService} from '../../../services/transactions/transaction.service';
 import {Transaction, TransactionResponse} from '../../../client/models/transactions/transaction.model';
-import {SuccessService} from '../../../services/messages/success/success.service';
-import {ErrorService} from '../../../services/messages/error/error.service';
 import {WebSocketService} from '../../../services/websocket/websocket.service';
 import {Subscription} from 'rxjs';
+import {MessageService} from '../../../services/messages/message.service';
 
 @Component({
   selector: 'app-request-money',
@@ -29,8 +28,7 @@ import {Subscription} from 'rxjs';
 })
 export class RequestMoneyComponent implements OnInit, OnDestroy {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
-  private errorService: ErrorService = inject(ErrorService);
-  private successService: SuccessService = inject(SuccessService);
+  private messageService: MessageService = inject(MessageService);
   private tokenService: AuthTokenService = inject(AuthTokenService);
   private transactionService: TransactionService = inject(TransactionService);
   private webSocketService: WebSocketService = inject(WebSocketService);
@@ -69,10 +67,11 @@ export class RequestMoneyComponent implements OnInit, OnDestroy {
     this.transactionService.requestMoneyTransaction(event.username, event.amount)
       .subscribe({
         next: (): void => {
-          this.successService.showApiSuccess("REQUEST_SENT_SUCCESSFUL");
+          this.messageService.success({ message: "Request sent successfully" });
         },
         error: (err: any): void => {
-          this.errorService.showApiError(err.error?.message, err.status);
+          this.messageService.error({ message: "Couldn't request transaction" });
+          // error log service
         }
       })
   }

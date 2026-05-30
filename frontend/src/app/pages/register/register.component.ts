@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {AuthService} from '../../services/auth/auth.service';
-import {SuccessService} from '../../services/messages/success/success.service';
-import {ErrorService} from '../../services/messages/error/error.service';
+import {MessageService} from '../../services/messages/message.service';
 
 @Component({
   selector: 'app-register',
@@ -15,18 +14,16 @@ import {ErrorService} from '../../services/messages/error/error.service';
 })
 
 export class RegisterComponent {
+  private authService: AuthService = inject(AuthService);
+  private messageService: MessageService = inject(MessageService);
+
   email: string = "";
   username: string = "";
   password: string = "";
   repeatPassword: string = "";
 
-  error: string = "";
-  success: string = "";
-
   loading: boolean = false;
 
-  constructor(private auth: AuthService, private successService: SuccessService, private errorService: ErrorService) {
-  }
 
   onSubmit(form: any): void {
     if (form.invalid) {
@@ -35,15 +32,15 @@ export class RegisterComponent {
 
     this.loading = true;
 
-    this.auth.register(this.email, this.username, this.password).subscribe({
+    this.authService.register(this.email, this.username, this.password).subscribe({
       next: (): void => {
-        this.loading = false;
-        this.successService.showApiSuccess("SUCCESSFUL_REGISTERED");
+        this.messageService.success({ message: "Successfully registered" });
       },
       error: (err: any): void => {
-        this.loading = false;
-        this.errorService.showApiError(err.error?.message, err.status);
+        this.messageService.error({ message: "Registration failed" });
       }
     });
+
+    this.loading = false;
   }
 }

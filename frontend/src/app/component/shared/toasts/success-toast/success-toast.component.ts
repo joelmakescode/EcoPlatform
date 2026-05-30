@@ -1,8 +1,8 @@
 import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SuccessService} from '../../../../services/messages/success/success.service';
 import {ToastService} from '../toastservice/toast.service';
 import {ApplicationSuccess} from '../../../../client/models/messages/message.model';
+import {MessageService} from '../../../../services/messages/message.service';
 
 @Component({
   selector: 'app-success-toast',
@@ -13,7 +13,7 @@ import {ApplicationSuccess} from '../../../../client/models/messages/message.mod
 })
 export class SuccessToastComponent implements OnInit {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
-  private successService: SuccessService = inject(SuccessService);
+  private messageService: MessageService = inject(MessageService);
   private toastService: ToastService = inject(ToastService);
 
   message: string | null = null;
@@ -26,7 +26,7 @@ export class SuccessToastComponent implements OnInit {
       this.cdr.markForCheck();
     })
 
-    this.successService.success$.subscribe((success: ApplicationSuccess): void => {
+    this.messageService.success$.subscribe((success: ApplicationSuccess): void => {
       this.message = success.message;
       this.visible = true;
       this.cdr.markForCheck();
