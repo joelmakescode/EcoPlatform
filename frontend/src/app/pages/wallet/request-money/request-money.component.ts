@@ -45,8 +45,8 @@ export class RequestMoneyComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadTransactions();
 
-    this.websocketSubscription = this.webSocketService.refresh$.subscribe((): void => {
-      this.loadTransactions();
+    this.websocketSubscription = this.webSocketService.message$.subscribe((): void => {
+      this.handleWebSocketRefresh();
     });
   }
 
@@ -75,6 +75,11 @@ export class RequestMoneyComponent implements OnInit, OnDestroy {
           this.errorService.showApiError(err.error?.message, err.status);
         }
       })
+  }
+
+  private handleWebSocketRefresh(): void {
+    this.loadTransactions();
+    this.cdr.detectChanges();
   }
 }
 
