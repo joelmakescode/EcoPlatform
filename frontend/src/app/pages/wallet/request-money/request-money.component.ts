@@ -13,6 +13,7 @@ import {Transaction, TransactionResponse} from '../../../client/models/transacti
 import {SuccessService} from '../../../services/messages/success/success.service';
 import {ErrorService} from '../../../services/messages/error/error.service';
 import {WebSocketService} from '../../../services/websocket/websocket.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-request-money',
@@ -34,6 +35,8 @@ export class RequestMoneyComponent implements OnInit, OnDestroy {
   private transactionService: TransactionService = inject(TransactionService);
   private webSocketService: WebSocketService = inject(WebSocketService);
 
+  private websocketSubscription!: Subscription;
+
   transactions: Transaction[] = [];
   userId: number | null = this.tokenService.getUserId();
   limit: number = 20;
@@ -42,20 +45,19 @@ export class RequestMoneyComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadTransactions();
 
-    this.webSocketService.connect();
-    window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+    this.websocketSubscription = this.webSocketService.refresh$.subscribe((): void => {
+      this.loadTransactions();
+    });
   }
 
   ngOnDestroy(): void {
-    this.webSocketService.disconnect();
-    window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+    this.websocketSubscription.unsubscribe();
   }
 
   loadTransactions(): void {
     this.isLoading = true;
 
-    this.transactionService
-      .getTransactions(this.userId, this.limit, undefined)
+    this.transactionService.getTransactions(this.userId, this.limit, undefined)
       .subscribe((response: TransactionResponse): void => {
         this.isLoading = false;
         this.transactions = filterTransactions(response, this.userId);
@@ -73,10 +75,6 @@ export class RequestMoneyComponent implements OnInit, OnDestroy {
           this.errorService.showApiError(err.error?.message, err.status);
         }
       })
-  }
-
-  private handleWebSocketRefresh(): void {
-    this.loadTransactions();
   }
 }
 

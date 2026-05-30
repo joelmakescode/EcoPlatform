@@ -8,6 +8,7 @@ import {
   TransactionsLayoutComponent
 } from '../../../component/shared/layouts/transactions-layout/transactions-layout.component';
 import {WebSocketService} from '../../../services/websocket/websocket.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-transactions',
@@ -22,7 +23,6 @@ import {WebSocketService} from '../../../services/websocket/websocket.service';
 })
 export class TransactionsComponent implements OnInit, OnDestroy {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
-
   private tokenService: AuthTokenService = inject(AuthTokenService);
   private transactionService: TransactionService = inject(TransactionService);
   private webSocketService: WebSocketService = inject(WebSocketService);
@@ -34,16 +34,18 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   cursorStack: (string | null)[] = [null];
   isLoading: boolean = false;
 
+  private websocketSubscription!: Subscription;
+
   ngOnInit(): void {
     this.loadTransactions();
 
-    this.webSocketService.connect();
-    window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
+    this.websocketSubscription = this.webSocketService.refresh$.subscribe(() => {
+      this.handleWebSocketRefresh();
+    })
   }
 
   ngOnDestroy(): void {
-    window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
-    this.webSocketService.disconnect();
+    this.websocketSubscription.unsubscribe();
   }
 
   loadTransactions(cursor: string | null = null): void {
@@ -85,5 +87,6 @@ export class TransactionsComponent implements OnInit, OnDestroy {
 
   private handleWebSocketRefresh(): void {
     this.loadTransactions();
+    this.cdr.detectChanges();
   }
 }
