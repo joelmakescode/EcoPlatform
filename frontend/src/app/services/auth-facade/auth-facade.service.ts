@@ -1,14 +1,14 @@
 import {inject, Injectable} from '@angular/core';
 import {AuthTokenService} from '../auth-token/auth-token.service';
 import {Router} from '@angular/router';
-import {SuccessService} from '../messages/success/success.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {UserContextService} from '../user/usercontext.service';
+import {MessageService} from '../messages/message.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFacadeService {
   private authTokenService: AuthTokenService = inject(AuthTokenService);
-  private successService: SuccessService = inject(SuccessService);
+  private messageService: MessageService = inject(MessageService);
   private router: Router = inject(Router);
   private userContextService: UserContextService = inject(UserContextService);
 
@@ -24,8 +24,8 @@ export class AuthFacadeService {
   }
 
   logout(): void {
-    this.router.navigate(['/login']);
-    this.successService.showApiSuccess("LOGOUT_SUCCESSFUL");
+    this.router.navigate(['/login']).then();
+    this.messageService.success({ message: "Logged Out" });
     this.authTokenService.clear();
     this.userContextService.clearUsername();
   }

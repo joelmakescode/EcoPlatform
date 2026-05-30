@@ -11,9 +11,7 @@ import {DetailBoxComponent} from '../../../component/shared/detail-box/detail-bo
 import {
   CasinoTransferMoneyDetailComponent
 } from '../../../component/shared/detail-box/casino-transfer-money-detail/casino-transfer-money-detail.component';
-import {ErrorService} from '../../../services/messages/error/error.service';
-import {SuccessService} from '../../../services/messages/success/success.service';
-import {WebSocketService} from '../../../services/websocket/websocket.service';
+import {MessageService} from '../../../services/messages/message.service';
 
 @Component({
   selector: 'app-casino-overview',
@@ -30,8 +28,7 @@ import {WebSocketService} from '../../../services/websocket/websocket.service';
 export class CasinoOverviewComponent implements OnInit, OnDestroy {
   private casinoService: CasinoService = inject(CasinoService);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
-  private errorService: ErrorService = inject(ErrorService);
-  private successService: SuccessService = inject(SuccessService);
+  private messageService: MessageService = inject(MessageService);
 
   casinoBalance: number = 0;
   isInfoModalOpen: boolean = false;
@@ -79,24 +76,24 @@ export class CasinoOverviewComponent implements OnInit, OnDestroy {
       this.depositModal();
       this.casinoService.postDepositBalance(amount).subscribe({
         next: (): void => {
-          this.successService.showApiSuccess("CASINO_DEPOSIT_SUCCESSFUL");
+          this.messageService.success({ message: "Casino Deposit successful" });
 
           window.dispatchEvent(new Event('websocket-refresh'));
         },
         error: (err: any): void => {
-          this.errorService.showApiError(err.error?.message, err.status);
+          this.messageService.error({ message: "Casino Deposit failed" });
         }
       });
     } else if (this.isCashOutModalOpen) {
       this.cashOutModal();
       this.casinoService.postCashoutBalance(amount).subscribe({
         next: (): void => {
-          this.successService.showApiSuccess("CASINO_CASHOUT_SUCCESSFUL");
+          this.messageService.success({ message: "Casino Cashout successful" });
 
           window.dispatchEvent(new Event('websocket-refresh'));
         },
         error: (err: any): void => {
-          this.errorService.showApiError(err.error?.message, err.status);
+          this.messageService.error({ message: "Casino Cashout failed" });
         }
       })
     }

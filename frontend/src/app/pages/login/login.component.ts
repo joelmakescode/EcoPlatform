@@ -2,9 +2,8 @@ import {Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AuthService} from '../../services/auth/auth.service';
-import {ErrorService} from '../../services/messages/error/error.service';
 import {Router, RouterLink} from '@angular/router';
-import {SuccessService} from '../../services/messages/success/success.service';
+import {MessageService} from '../../services/messages/message.service';
 
 @Component({
   selector: 'app-login',
@@ -16,8 +15,7 @@ import {SuccessService} from '../../services/messages/success/success.service';
 
 export class LoginComponent {
   private authService: AuthService = inject(AuthService);
-  private errorService: ErrorService = inject(ErrorService);
-  private successService: SuccessService = inject(SuccessService);
+  private messageService: MessageService = inject(MessageService);
   private router: Router = inject(Router);
 
   email: string = '';
@@ -35,14 +33,15 @@ export class LoginComponent {
 
     this.authService.login(this.email, this.password).subscribe({
       next: (): void => {
-        this.loading = false;
-        this.successService.showApiSuccess("LOGIN_SUCCESSFUL");
+        this.messageService.success({ message: "Login successful" });
         this.router.navigate(['/home']).then();
       },
       error: (err: any): void => {
-        this.loading = false;
-        this.errorService.showApiError(err.error?.message, err.status);
+        this.messageService.error({ message: "Login failed" });
+        // error log service
       }
-    })
+    });
+
+    this.loading = false;
   }
 }

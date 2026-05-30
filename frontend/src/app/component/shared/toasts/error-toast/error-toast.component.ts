@@ -1,8 +1,8 @@
 import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ErrorService} from '../../../../services/messages/error/error.service';
 import {ToastService} from '../toastservice/toast.service';
 import {ApplicationError} from '../../../../client/models/messages/message.model';
+import {MessageService} from '../../../../services/messages/message.service';
 
 @Component({
   selector: 'app-error-toast',
@@ -14,7 +14,7 @@ import {ApplicationError} from '../../../../client/models/messages/message.model
 
 export class ErrorToastComponent implements OnInit {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
-  private errorService: ErrorService = inject(ErrorService);
+  private messageService: MessageService = inject(MessageService);
   private toastService: ToastService = inject(ToastService);
 
   message: string | null = null;
@@ -28,9 +28,8 @@ export class ErrorToastComponent implements OnInit {
       this.cdr.markForCheck();
     })
 
-    this.errorService.error$.subscribe((error: ApplicationError): void => {
+    this.messageService.error$.subscribe((error: ApplicationError): void => {
       this.message = error.message;
-      this.status = error.status;
       this.visible = true;
       this.cdr.markForCheck();
 

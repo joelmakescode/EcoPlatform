@@ -3,10 +3,9 @@ import {AuthFacadeService} from '../../services/auth-facade/auth-facade.service'
 import {UserService} from '../../services/user/user.service';
 import {WebSocketService} from '../../services/websocket/websocket.service';
 import {NgIf} from '@angular/common';
-import {ErrorService} from '../../services/messages/error/error.service';
-import {SuccessService} from '../../services/messages/success/success.service';
 import {Balance, DailyClaimStatus, User} from '../../client/models/user/user.model';
 import {Subscription} from 'rxjs';
+import {MessageService} from '../../services/messages/message.service';
 
 @Component({
   selector: 'app-header',
@@ -20,8 +19,7 @@ import {Subscription} from 'rxjs';
 export class HeaderComponent implements OnInit, OnDestroy {
   private authFacadeService: AuthFacadeService = inject(AuthFacadeService);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
-  private errorService: ErrorService = inject(ErrorService);
-  private successService: SuccessService = inject(SuccessService);
+  private messageService: MessageService = inject(MessageService);
   private userService: UserService = inject(UserService);
   private webSocketService: WebSocketService = inject(WebSocketService);
 
@@ -68,7 +66,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.dailyClaim = response.can_claim;
       },
       error: (err: any): void => {
-        this.errorService.showApiError(err.error?.message, err.status);
+        this.messageService.error({ message: "Can't load Daily Claim" });
+        // error log service
       }
     })
   }
@@ -77,11 +76,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userService.postDailyClaim().subscribe({
       next: (): void => {
         this.dailyClaim = false;
-        this.successService.showApiSuccess("DAILY_CLAIM_SUCCESSFUL");
+        this.messageService.success({ message: "Daily Claim successfully claimed" });
         this.cdr.detectChanges();
       },
       error: (err: any): void => {
-        this.errorService.showApiError(err.error?.message, err.status);
+        this.messageService.error({ message: "Claiming Daily Claim failed" });
+        // error log service
       }
     })
   }

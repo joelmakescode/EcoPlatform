@@ -1,67 +1,69 @@
 import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Transaction} from '../../client/models/transactions/transaction.model';
 import {TransactionService} from './transaction.service';
-import {ErrorService} from '../messages/error/error.service';
-import {SuccessService} from '../messages/success/success.service';
+import {MessageService} from '../messages/message.service';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionModalService {
-  private transactionService = inject(TransactionService);
-  private errorService = inject(ErrorService);
-  private successService = inject(SuccessService);
-  private transactionSubject = new BehaviorSubject<Transaction | null>(null);
+  private transactionService: TransactionService = inject(TransactionService);
+  private messageService: MessageService = inject(MessageService);
+  private transactionSubject: BehaviorSubject<Transaction | null> = new BehaviorSubject<Transaction | null>(null);
 
-  transaction$ = this.transactionSubject.asObservable();
+  transaction$: Observable<Transaction | null> = this.transactionSubject.asObservable();
 
-  open(transaction: Transaction) {
+  open(transaction: Transaction): void {
     this.transactionSubject.next(transaction);
   }
 
-  close() {
+  close(): void {
     this.transactionSubject.next(null);
   }
 
-  acceptTransaction(transaction: Transaction) {
+  acceptTransaction(transaction: Transaction): void {
     this.transactionService.acceptTransaction(transaction.id).subscribe({
-      next: () => {
-        this.successService.showApiSuccess("ACCEPT_TRANSACTION_SUCCESSFUL")
+      next: (): void => {
+        this.messageService.success({ message: "Transaction accepted" });
       },
-      error: err => {
-        this.errorService.showApiError(err.error?.message, err.status);
+      error: (err: any): void => {
+        this.messageService.error({ message: "Couldn't accept transaction" });
+        // error log service
       }
     })
   }
 
-  cancelTransaction(transaction: Transaction) {
+  cancelTransaction(transaction: Transaction): void {
     this.transactionService.cancelTransaction(transaction.id).subscribe({
-      next: () => {
-        this.successService.showApiSuccess("CANCEL_TRANSACTION_SUCCESSFUL");
+      next: (): void => {
+        this.messageService.success({ message: "Transaction cancelled" });
       },
-      error: err => {
-        this.errorService.showApiError(err.error?.message, err.status);
+      error: (err: any): void => {
+        this.messageService.error({ message: "Couldn't cancel transaction" });
+        // error log service
       }
     })
   }
 
-  refundTransaction(transaction: Transaction) {
+  refundTransaction(transaction: Transaction): void {
     this.transactionService.refundTransaction(transaction.id).subscribe({
-      next: () => {
-        this.successService.showApiSuccess("REFUND_TRANSACTION_SUCCESSFUL");
+      next: (): void => {
+        this.messageService.success({ message: "Transaction refunded" });
       },
-      error: err => {
-        this.errorService.showApiError(err.error?.message, err.status);
+      error: (err: any): void => {
+        this.messageService.error({ message: "Couldn't refund transaction" });
+        // error log service
       }
     })
   }
 
-  rejectTransaction(transaction: Transaction) {
+  rejectTransaction(transaction: Transaction): void {
     this.transactionService.rejectTransaction(transaction.id).subscribe({
-      next: () => {
-        this.successService.showApiSuccess("REJECT_TRANSACTION_SUCCESSFUL");
+      next: (): void => {
+        this.messageService.success({ message: "Transaction rejected" });
       },
-      error: err => {
-        this.errorService.showApiError(err.error?.message, err.status);
+      error: (err: any): void => {
+        this.messageService.error({ message: "Couldn't reject transaction" });
+        // error log service
       }
     })
   }

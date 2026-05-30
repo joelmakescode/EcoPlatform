@@ -6,11 +6,10 @@ import {WebSocketService} from '../../../services/websocket/websocket.service';
 import {Subscription} from 'rxjs';
 import {Bets, CasinoBalance} from '../../../client/models/casino/casino.model';
 import {CasinoService} from '../../../services/casino/casino.service';
-import {ErrorService} from '../../../services/messages/error/error.service';
 import {DetailBoxComponent} from '../../../component/shared/detail-box/detail-box.component';
 import {NumberInputComponent} from '../../../component/shared/number-input/number-input.component';
 import {InfoTextComponent} from '../../../component/shared/info-text/info-text.component';
-import {SuccessService} from '../../../services/messages/success/success.service';
+import {MessageService} from '../../../services/messages/message.service';
 
 @Component({
   selector: 'app-roll-a-dice',
@@ -32,8 +31,7 @@ export class RollADiceComponent implements OnInit, OnDestroy {
 
   private casinoService: CasinoService = inject(CasinoService);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
-  private errorService: ErrorService = inject(ErrorService);
-  private successService: SuccessService = inject(SuccessService);
+  private messageService: MessageService = inject(MessageService);
   private websocketService: WebSocketService = inject(WebSocketService);
   private websocketSubscription: Subscription | null = null;
 
@@ -223,7 +221,8 @@ export class RollADiceComponent implements OnInit, OnDestroy {
         this.casinoBalance = response.balance;
       },
       error: (err: any): void => {
-        this.errorService.showApiError(err.error?.message, err.status);
+        this.messageService.error({ message: "Couldn't load Casino Balance" });
+        // error log service
       }
     });
   }
@@ -306,12 +305,12 @@ export class RollADiceComponent implements OnInit, OnDestroy {
     this.closeDepositModal();
     this.casinoService.postDepositBalance(this.depositAmount).subscribe({
       next: (): void => {
-        this.successService.showApiSuccess("CASINO_DEPOSIT_SUCCESSFUL");
+        this.messageService.success({ message: "Casino Balance deposit successful" });
 
         window.dispatchEvent(new Event('websocket-refresh'));
       },
       error: (err: any): void => {
-        this.errorService.showApiError(err.error?.message, err.status);
+        this.messageService.error({ message: "Couldn't deposit Casino Balance" });
       }
     });
   }
