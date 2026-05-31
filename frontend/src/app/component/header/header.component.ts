@@ -34,7 +34,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if (isLoggedIn) {
         this.loadUser();
         this.loadDailyClaim();
-        this.cdr.detectChanges();
       }
     });
 
@@ -53,10 +52,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   loadUser(): void {
     this.userService.getUser().subscribe((response: User): void => {
       this.username = response.username;
+      this.cdr.detectChanges();
     })
 
     this.userService.getBalance().subscribe((response: Balance): void => {
       this.balance = response.balance / 100;
+      this.cdr.detectChanges();
     })
   }
 
