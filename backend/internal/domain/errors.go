@@ -41,6 +41,7 @@ var (
 	ErrInvalidAccountId       = errors.New("invalid Account Id")
 	ErrInvalidEmailOrPassword = errors.New("invalid Email or Password")
 	ErrInvalidPassword        = errors.New("invalid Password")
+	ErrInvalidUsername        = errors.New("invalid Username")
 	ErrNoUserID               = errors.New("no user id given")
 	ErrNoUsername             = errors.New("username cannot be empty")
 	ErrPasswordNotHashed      = errors.New("password couldn't be hashed")

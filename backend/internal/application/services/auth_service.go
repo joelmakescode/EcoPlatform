@@ -39,7 +39,7 @@ func (s *AuthService) Login(email, password string) (string, error) {
 		return "", err
 	}
 
-	valid := security.ValidatePassword([]byte(password), []byte(user.PasswordHash))
+	valid := security.ValidatePasswordToHash([]byte(password), []byte(user.PasswordHash))
 	if !valid {
 		return "", domain.ErrInvalidPassword
 	}

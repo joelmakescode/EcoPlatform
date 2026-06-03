@@ -65,7 +65,7 @@ func (s *DiscordUserService) LoginUser(discordUser *api.DiscordUserLoginData) (*
 		return nil, err
 	}
 
-	valid := security.ValidatePassword([]byte(discordUser.Password), []byte(user.PasswordHash))
+	valid := security.ValidatePasswordToHash([]byte(discordUser.Password), []byte(user.PasswordHash))
 	if !valid {
 		return nil, domain.ErrInvalidPassword
 	}
