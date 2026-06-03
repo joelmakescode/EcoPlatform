@@ -20,12 +20,8 @@ type TransactionService struct {
 	userRepo *repository.UserRepository
 }
 
-func NewTransactionService(repo *repository.TransactionRepository, userRepo *repository.UserRepository) *TransactionService {
-	return &TransactionService{repo: repo, userRepo: userRepo}
-}
-
-func (s *TransactionService) SetNotifier(notifier ports.Notifier) {
-	s.notifier = notifier
+func NewTransactionService(notifier ports.Notifier, repo *repository.TransactionRepository, userRepo *repository.UserRepository) *TransactionService {
+	return &TransactionService{notifier: notifier, repo: repo, userRepo: userRepo}
 }
 
 func (s *TransactionService) CreateTransaction(ctx context.Context, senderUsername string, receiverUsername string, amount float64, txType string) (*models.Transaction, error) {

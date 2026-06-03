@@ -15,19 +15,11 @@ type CasinoService struct {
 	notifier ports.Notifier
 	repo     *repository.CasinoRepository
 	userRepo *repository.UserRepository
-	game     *games.RollADiceHandler
+	Game     *games.RollADiceHandler
 }
 
-func NewCasinoService(repo *repository.CasinoRepository, userRepo *repository.UserRepository) *CasinoService {
-	return &CasinoService{repo: repo, userRepo: userRepo}
-}
-
-func (s *CasinoService) SetGame(game *games.RollADiceHandler) {
-	s.game = game
-}
-
-func (s *CasinoService) SetNotifier(notifier ports.Notifier) {
-	s.notifier = notifier
+func NewCasinoService(notifier ports.Notifier, repo *repository.CasinoRepository, userRepo *repository.UserRepository, game *games.RollADiceHandler) *CasinoService {
+	return &CasinoService{notifier: notifier, repo: repo, userRepo: userRepo, Game: game}
 }
 
 func (s *CasinoService) CashoutCasinoBalance(userId uint, amount int64) error {
@@ -68,7 +60,7 @@ func (s *CasinoService) CashoutCasinoBalance(userId uint, amount int64) error {
 }
 
 func (s *CasinoService) CreateBetRollADice(userId uint, bets api.BetRollADiceBets) error {
-	if s.game == nil {
+	if s.Game == nil {
 		panic("game not initialized")
 	}
 
@@ -100,9 +92,9 @@ func (s *CasinoService) CreateBetRollADice(userId uint, bets api.BetRollADiceBet
 	if err = s.repo.UpdateCasinoAccount(casinoAccount); err != nil {
 		return err
 	}
-	s.game.SendCurrentBalance(userId, casinoAccount.Balance)
+	s.Game.SendCurrentBalance(userId, casinoAccount.Balance)
 
-	currentRoundId := s.game.GetCurrentRoundId()
+	currentRoundId := s.Game.GetCurrentRoundId()
 
 	return s.repo.CreateBet(userId, currentRoundId, bets)
 }
@@ -157,7 +149,7 @@ func (s *CasinoService) UpdateCasinoBalance(userId uint, amount int64) error {
 	}
 
 	balance, _ := s.GetCasinoBalance(userId)
-	s.game.SendCurrentBalance(userId, balance)
+	s.Game.SendCurrentBalance(userId, balance)
 	s.notifier.NotifyUserRefresh(userId)
 
 	return nil

@@ -19,16 +19,12 @@ import (
 )
 
 type UserService struct {
-	repo     *repository.UserRepository
 	notifier ports.Notifier
+	repo     *repository.UserRepository
 }
 
-func NewUserService(repo *repository.UserRepository) *UserService {
-	return &UserService{repo: repo}
-}
-
-func (s *UserService) SetNotifier(notifier ports.Notifier) {
-	s.notifier = notifier
+func NewUserService(notifier ports.Notifier, repo *repository.UserRepository) *UserService {
+	return &UserService{notifier: notifier, repo: repo}
 }
 
 func (s *UserService) ClaimDaily(userId uint) error {
