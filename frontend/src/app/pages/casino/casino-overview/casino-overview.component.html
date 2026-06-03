@@ -1,6 +1,6 @@
 <main class="content-casino-overview">
   <div class="content-casino-overview-transfer-money">
-    <h2>Casino Balance: ${{ (casinoBalance / 100).toFixed(2) }}</h2>
+    <h2>Casino Balance: ${{ (casinoBalance$ | async)?.toFixed(2) }}</h2>
 
     <div class="casino-transfer-buttons">
       <button class="casino-overview-deposit-button" (click)="depositModal()">Deposit</button>
@@ -22,11 +22,11 @@
     </span>
 
     <span>
-      Deposit: The money will be instantly sent to your Casino Balance.
+      Deposit: {{ depositMoneyInfoText }}
     </span>
 
     <span>
-      Cash Out: The money will be transferred to your account approximately in the next 2-3 days.
+      Cash Out: {{ cashOutMoneyInfoText }}
     </span>
   </div>
 </app-detail-box>

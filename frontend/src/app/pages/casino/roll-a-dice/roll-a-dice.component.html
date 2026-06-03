@@ -1,42 +1,48 @@
 <app-content-box title="Roll a dice">
   <app-back-link link="/casino" label="Back to Casino Overview"></app-back-link>
 
-  <div class="content-roll-a-dice-box" *ngIf="dice1 !== null && dice2 !== null">
+  <div class="content-roll-a-dice-box">
     <div class="dice-container">
 
-      <div class="casino-balance">
+      @if (dice1 === null || dice2 === null) {
+        <div class="casino-loading">
+          <span>Loading game...</span>
+        </div>
+      } @else {
+        <div class="casino-balance">
         <span class="balance-text">
-          ${{ (casinoBalance / 100).toFixed(2) }}
+          ${{ (casinoBalance$ | async)?.toFixed(2) }}
         </span>
 
-        <button class="deposit-btn" (click)="openDepositModal()">
-          Deposit
-        </button>
-      </div>
-
-      <div class="dice-area">
-        <div class="dice" [class.rolling]="isRolling">
-          <span>{{ dice1 }}</span>
+          <button class="deposit-btn" (click)="openDepositModal()">
+            Deposit
+          </button>
         </div>
 
-        <div class="dice" [class.rolling]="isRolling">
-          <span>{{ dice2 }}</span>
-        </div>
-      </div>
+        <div class="dice-area">
+          <div class="dice" [class.rolling]="isRolling">
+            <span>{{ dice1 }}</span>
+          </div>
 
-      <div class="dice-info">
-        <div class="timer" *ngIf="!isLocked">
-          {{ timeLeft }}
+          <div class="dice" [class.rolling]="isRolling">
+            <span>{{ dice2 }}</span>
+          </div>
         </div>
 
-        <div class="status" [class.locked]="isLocked">
-          {{ isLocked ? 'Locked' : 'Betting' }}
-        </div>
-      </div>
+        <div class="dice-info">
+          <div class="timer" *ngIf="!isLocked">
+            {{ timeLeft }}
+          </div>
 
-      <div class="win-text" *ngIf="winAmount > 0">
-        +${{ (winAmount / 100).toFixed(2) }}
-      </div>
+          <div class="status" [class.locked]="isLocked">
+            {{ isLocked ? 'Locked' : 'Betting' }}
+          </div>
+        </div>
+
+        <div class="win-text" *ngIf="winAmount > 0">
+          +${{ (winAmount / 100).toFixed(2) }}
+        </div>
+      }
 
     </div>
   </div>

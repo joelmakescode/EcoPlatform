@@ -62,6 +62,8 @@ func (h *RollADiceHandler) Start() {
 
 			h.eventEmitter.SendEventToAll(websocket.EventTypeRoundTimer, map[string]interface{}{
 				"timeLeft": i,
+				"dice1":    currentGameState.Dice1,
+				"dice2":    currentGameState.Dice2,
 			}, "normal")
 			time.Sleep(1 * time.Second)
 		}
