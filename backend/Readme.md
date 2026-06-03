@@ -21,5 +21,5 @@ Sofern ein neuer Path implementiert werden soll, gelten folgende Regeln:
 Um die API zu aktualisieren, wird folgender Befehl benötigt:
 
 ```text
-ogen --target api openapi.yaml
+ogen --target generated openapi.yaml
 ```
