@@ -1,9 +1,9 @@
-package handler
+package handlers
 
 import (
 	"backend/api"
 	"backend/handler/authz"
-	"backend/repository/model"
+	"backend/internal/infrastructure/persistence/models"
 	"backend/service"
 	"context"
 	"errors"
@@ -146,7 +146,7 @@ func (h *TransactionHandler) RejectTransaction(ctx context.Context, param api.Re
 	return &api.RejectTransactionNoContent{}, nil
 }
 
-func mapTransactions(txs []model.Transaction) []api.Transaction {
+func mapTransactions(txs []models.Transaction) []api.Transaction {
 	out := make([]api.Transaction, 0, len(txs))
 
 	for _, tx := range txs {
@@ -171,7 +171,7 @@ func mapTransactions(txs []model.Transaction) []api.Transaction {
 	return out
 }
 
-func mapTransaction(tx *model.Transaction) *api.Transaction {
+func mapTransaction(tx *models.Transaction) *api.Transaction {
 	uuidVal, err := uuid.FromBytes(tx.ID)
 	if err != nil {
 		panic("invalid uuid bytes")

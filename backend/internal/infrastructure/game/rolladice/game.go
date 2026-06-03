@@ -1,9 +1,9 @@
 package rolladice
 
 import (
-	"backend/repository"
-	"backend/repository/model"
-	"backend/websocket"
+	"backend/internal/infrastructure/persistence/models"
+	"backend/internal/infrastructure/persistence/repositories"
+	"backend/internal/infrastructure/websocket"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -11,14 +11,14 @@ import (
 )
 
 type RollADiceHandler struct {
-	repo         *repository.CasinoRepository
+	repo         *repositories.CasinoRepository
 	eventEmitter EventEmitter
 
 	currentRoundId int64
 	state          GameState
 }
 
-func NewRollADiceHandler(repo *repository.CasinoRepository, eventEmitter EventEmitter) *RollADiceHandler {
+func NewRollADiceHandler(repo *repositories.CasinoRepository, eventEmitter EventEmitter) *RollADiceHandler {
 	return &RollADiceHandler{repo: repo, eventEmitter: eventEmitter}
 }
 
@@ -90,7 +90,7 @@ func (h *RollADiceHandler) Start() {
 
 		for _, bet := range bets {
 			if isBetWon(bet.BetKey, dice1, dice2) {
-				multiplier := model.BetsMultiplies[bet.BetKey]
+				multiplier := models.BetsMultiplies[bet.BetKey]
 				win := bet.Amount * multiplier
 				userWins[bet.UserID] += win
 			}

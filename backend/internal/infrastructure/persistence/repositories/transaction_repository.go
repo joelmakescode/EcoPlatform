@@ -1,7 +1,7 @@
-package repository
+package repositories
 
 import (
-	"backend/repository/model"
+	"backend/internal/infrastructure/persistence/models"
 	"context"
 	"time"
 
@@ -22,18 +22,18 @@ func NewTransactionRepository(db *gorm.DB) *TransactionRepository {
 	return &TransactionRepository{db: db}
 }
 
-func (r *TransactionRepository) Create(ctx context.Context, tx *model.Transaction) error {
+func (r *TransactionRepository) Create(ctx context.Context, tx *models.Transaction) error {
 	return r.db.WithContext(ctx).Create(tx).Error
 }
 
-func (r *TransactionRepository) ListById(ctx context.Context, userId int64, limit int, cursor *Cursor) ([]model.Transaction, *Cursor, error) {
+func (r *TransactionRepository) ListById(ctx context.Context, userId int64, limit int, cursor *Cursor) ([]models.Transaction, *Cursor, error) {
 	query := r.db.WithContext(ctx).Where("(sender_id = ? OR receiver_id = ?)", userId, userId).Order("created_at DESC, id DESC").Limit(limit + 1)
 
 	if cursor != nil {
 		query = query.Where("(created_at < ?) OR (created_at = ? AND id < ?)", cursor.CreatedAt, cursor.CreatedAt, cursor.ID)
 	}
 
-	var txs []model.Transaction
+	var txs []models.Transaction
 	if err := query.Find(&txs).Error; err != nil {
 		return nil, nil, err
 	}
@@ -64,7 +64,7 @@ func (r *TransactionRepository) GetParticipantsFromTransactionID(ctx context.Con
 		Amount     float64 `gorm:"column:amount"`
 	}
 
-	err = r.db.Model(&model.Transaction{}).Select("sender_id, receiver_id, amount").Where("id = ?", uid[:]).Scan(&result).Error
+	err = r.db.Model(&models.Transaction{}).Select("sender_id, receiver_id, amount").Where("id = ?", uid[:]).Scan(&result).Error
 	if err != nil {
 		return 0, 0, 0, err
 	}
@@ -78,7 +78,7 @@ func (r *TransactionRepository) CompleteTransaction(ctx context.Context, transac
 		return err
 	}
 
-	return r.db.WithContext(ctx).Model(&model.Transaction{}).Where("id = ?", uid[:]).Updates(map[string]interface{}{"status": status, "completed_at": time.Now()}).Error
+	return r.db.WithContext(ctx).Model(&models.Transaction{}).Where("id = ?", uid[:]).Updates(map[string]interface{}{"status": status, "completed_at": time.Now()}).Error
 }
 
 func parseUUID(transactionID string) (uuid.UUID, error) {

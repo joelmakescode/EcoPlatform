@@ -1,20 +1,19 @@
-package handler
+package handlers
 
 import (
 	"backend/api"
-	"backend/handler/authz"
-	"backend/service"
+	"backend/internal/application/services"
 	"context"
 
 	"errors"
 )
 
 type UserHandler struct {
-	service *service.UserService
+	userService *service.UserService
 }
 
-func NewUserHandler(service *service.UserService) *UserHandler {
-	return &UserHandler{service: service}
+func NewUserHandler(userService *service.UserService) *UserHandler {
+	return &UserHandler{userService: userService}
 }
 
 func (h *UserHandler) ClaimDailyBalance(ctx context.Context, param api.ClaimDailyBalanceParams) (api.ClaimDailyBalanceRes, error) {
@@ -41,6 +40,7 @@ func (h *UserHandler) ClaimDailyBalance(ctx context.Context, param api.ClaimDail
 }
 
 func (h *UserHandler) CreateUser(ctx context.Context, req *api.CreateUserData) (api.CreateUserRes, error) {
+
 	created, err := h.service.CreateUser(req)
 
 	if err != nil {

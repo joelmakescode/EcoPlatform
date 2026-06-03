@@ -2,12 +2,12 @@ package main
 
 import (
 	"backend/api"
-	"backend/game/rolladice"
-	"backend/handler"
-	"backend/middleware"
-	"backend/repository"
+	"backend/internal/infrastructure/game/rolladice"
+	"backend/internal/infrastructure/http/handlers"
+	middleware2 "backend/internal/infrastructure/http/middleware"
+	"backend/internal/infrastructure/persistence/repositories"
+	websocket2 "backend/internal/infrastructure/websocket"
 	"backend/service"
-	"backend/websocket"
 	"context"
 	"fmt"
 	"log"
@@ -23,13 +23,13 @@ import (
 func main() {
 	db := connectDB()
 
-	hub := websocket.NewHub()
+	hub := websocket2.NewHub()
 	go hub.Run()
 
-	casinoRepository := repository.NewCasinoRepository(db)
-	discordUserRepository := repository.NewDiscordUserRepository(db)
-	transactionRepository := repository.NewTransactionRepository(db)
-	userRepository := repository.NewUserRepository(db)
+	casinoRepository := repositories.NewCasinoRepository(db)
+	discordUserRepository := repositories.NewDiscordUserRepository(db)
+	transactionRepository := repositories.NewTransactionRepository(db)
+	userRepository := repositories.NewUserRepository(db)
 
 	authService := service.NewAuthService(userRepository)
 	casinoService := service.NewCasinoService(casinoRepository, userRepository)
@@ -37,17 +37,17 @@ func main() {
 	transactionService := service.NewTransactionService(transactionRepository, userRepository)
 	userService := service.NewUserService(userRepository)
 
-	wsHandler := websocket.NewHandler(hub, []byte("ecoplatform"))
+	wsHandler := websocket2.NewHandler(hub, []byte("ecoplatform"))
 	userService.SetNotifier(wsHandler)
 	transactionService.SetNotifier(wsHandler)
 	casinoService.SetNotifier(wsHandler)
 
-	handlers := handler.NewHandler(
-		handler.NewCasinoHandler(casinoService),
-		handler.NewDiscordUserHandler(discordUserService),
-		handler.NewAuthHandler(authService),
-		handler.NewTransactionHandler(transactionService),
-		handler.NewUserHandler(userService),
+	handlers := handlers.NewHandler(
+		handlers.NewCasinoHandler(casinoService),
+		handlers.NewDiscordUserHandler(discordUserService),
+		handlers.NewAuthHandler(authService),
+		handlers.NewTransactionHandler(transactionService),
+		handlers.NewUserHandler(userService),
 	)
 
 	server, err := api.NewServer(handlers, api.WithPathPrefix("/api"), api.WithErrorHandler(errorHandler))
@@ -57,16 +57,16 @@ func main() {
 
 	game := rolladice.NewRollADiceHandler(casinoRepository, wsHandler)
 	casinoService.SetGame(game)
-	wsHandler.Connect(func(client *websocket.Client) {
+	wsHandler.Connect(func(client *websocket2.Client) {
 		game.SendCurrentGameState(client)
 	})
 	go game.Start()
 
 	mux := http.NewServeMux()
-	mux.Handle("/api/", middleware.CORS(middleware.AuthMiddleware(middleware.BotAuthMiddleware(server))))
+	mux.Handle("/api/", middleware2.CORS(middleware2.AuthMiddleware(middleware2.BotAuthMiddleware(server))))
 	mux.HandleFunc("/ws", wsHandler.ServeHTTP)
 
-	wrapped := middleware.CORS(mux)
+	wrapped := middleware2.CORS(mux)
 
 	log.Println("API listening on :8080")
 	log.Println("WebSocket endpoint available at ws://localhost:8080/ws")
