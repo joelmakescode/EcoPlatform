@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import {Injectable, inject, NgZone} from '@angular/core';
 import { AuthTokenService } from '../auth-token/auth-token.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 
@@ -8,6 +8,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 export class WebSocketService {
   private socket: WebSocket | null = null;
   private authTokenService: AuthTokenService = inject(AuthTokenService);
+  private ngZone: NgZone = inject(NgZone);
 
   private messageSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public message$: Observable<any> = this.messageSubject.asObservable();

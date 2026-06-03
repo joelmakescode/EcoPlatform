@@ -6,12 +6,15 @@ import {
   CasinoOverviewTransferMoneyInfoMessages,
   CasinoOverviewTransferMoneyType
 } from '../../../client/models/casino/casino.model';
-import {NgIf} from '@angular/common';
+import {AsyncPipe, NgIf} from '@angular/common';
 import {DetailBoxComponent} from '../../../component/shared/detail-box/detail-box.component';
 import {
   CasinoTransferMoneyDetailComponent
 } from '../../../component/shared/detail-box/casino-transfer-money-detail/casino-transfer-money-detail.component';
 import {MessageService} from '../../../services/messages/message.service';
+import {CasinoStatesService} from '../../../services/casino/casinostates.service';
+import {Observable} from 'rxjs';
+import {WebSocketService} from '../../../services/websocket/websocket.service';
 
 @Component({
   selector: 'app-casino-overview',
@@ -21,16 +24,19 @@ import {MessageService} from '../../../services/messages/message.service';
     DetailBoxComponent,
     NgIf,
     CasinoTransferMoneyDetailComponent,
+    AsyncPipe,
   ],
   templateUrl: './casino-overview.component.html',
   styleUrl: './casino-overview.component.css',
 })
 export class CasinoOverviewComponent implements OnInit, OnDestroy {
   private casinoService: CasinoService = inject(CasinoService);
-  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private casinoStatesService: CasinoStatesService = inject(CasinoStatesService);
   private messageService: MessageService = inject(MessageService);
+  private websocketService: WebSocketService = inject(WebSocketService);
 
-  casinoBalance: number = 0;
+  casinoBalance$: Observable<number> = this.casinoStatesService.casinoBalance$;
+
   isInfoModalOpen: boolean = false;
   isDepositModalOpen: boolean = false;
   isCashOutModalOpen: boolean = false;
@@ -41,23 +47,13 @@ export class CasinoOverviewComponent implements OnInit, OnDestroy {
   depositMoneyInfoText: string = CasinoOverviewTransferMoneyInfoMessages[this.depositMoney];
   cashOutMoneyInfoText: string = CasinoOverviewTransferMoneyInfoMessages[this.cashOutMoney]
 
-  private bindWebSocketRefresh: () => void = this.handleWebSocketRefresh.bind(this);
 
-  ngOnInit() {
-    this.loadBalance();
-    window.addEventListener("websocket-refresh", this.bindWebSocketRefresh);
+  ngOnInit(): void {
+    this.casinoStatesService.load();
+    this.handleWebsocketConnection();
   }
 
-  ngOnDestroy() {
-    window.removeEventListener('websocket-refresh', this.bindWebSocketRefresh);
-  }
-
-  loadBalance(): void {
-    this.casinoService.getBalance().subscribe((response: CasinoBalance): void => {
-      this.casinoBalance = response.balance;
-      this.cdr.detectChanges();
-    })
-  }
+  ngOnDestroy(): void {}
 
   infoModal(): void {
     this.isInfoModalOpen = !this.isInfoModalOpen;
@@ -77,8 +73,6 @@ export class CasinoOverviewComponent implements OnInit, OnDestroy {
       this.casinoService.postDepositBalance(amount).subscribe({
         next: (): void => {
           this.messageService.success({ message: "Casino Deposit successful" });
-
-          window.dispatchEvent(new Event('websocket-refresh'));
         },
         error: (err: any): void => {
           this.messageService.error({ message: "Casino Deposit failed" });
@@ -89,8 +83,6 @@ export class CasinoOverviewComponent implements OnInit, OnDestroy {
       this.casinoService.postCashoutBalance(amount).subscribe({
         next: (): void => {
           this.messageService.success({ message: "Casino Cashout successful" });
-
-          window.dispatchEvent(new Event('websocket-refresh'));
         },
         error: (err: any): void => {
           this.messageService.error({ message: "Casino Cashout failed" });
@@ -99,8 +91,10 @@ export class CasinoOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  private handleWebSocketRefresh(): void {
-    this.loadBalance();
-    this.cdr.detectChanges();
+  private handleWebsocketConnection(): void {
+    this.websocketService.connect();
+    this.websocketService.refresh$.subscribe((): void => {
+      this.casinoStatesService.load();
+    });
   }
 }

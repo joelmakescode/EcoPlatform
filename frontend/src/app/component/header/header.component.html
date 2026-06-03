@@ -15,10 +15,10 @@
         <img src="assets/icons-header/icon_user.png" alt="user_icon" class="user-icon"/>
 
         <div class="user-text">
-          <span class="username"> {{ username }} </span>
+          <span class="username"> {{ (userHeaderInfo$ | async)?.username }} </span>
 
           <span class="balance">
-          ${{ balance }}
+          ${{ (userHeaderInfo$ | async)?.balance }}
         </span>
         </div>
 

@@ -1,64 +1,49 @@
-import {ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, inject, OnDestroy, OnInit} from '@angular/core';
 import {AuthFacadeService} from '../../services/auth-facade/auth-facade.service';
 import {UserService} from '../../services/user/user.service';
 import {WebSocketService} from '../../services/websocket/websocket.service';
-import {NgIf} from '@angular/common';
-import {Balance, DailyClaimStatus, User} from '../../client/models/user/user.model';
-import {Subscription} from 'rxjs';
+import {AsyncPipe, NgIf} from '@angular/common';
+import {DailyClaimStatus, UserHeaderInfo} from '../../client/models/user/user.model';
+import {Observable, Subscription} from 'rxjs';
 import {MessageService} from '../../services/messages/message.service';
+import {UserStatesService} from '../../services/user/userstates.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    AsyncPipe
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   private authFacadeService: AuthFacadeService = inject(AuthFacadeService);
-  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private messageService: MessageService = inject(MessageService);
   private userService: UserService = inject(UserService);
+  private userStatesService: UserStatesService = inject(UserStatesService);
   private webSocketService: WebSocketService = inject(WebSocketService);
 
   private websocketSubscription!: Subscription;
 
-  username: string = '';
-  balance: number = 0;
+  userHeaderInfo$: Observable<UserHeaderInfo> = this.userStatesService.userHeaderInfo$;
   dailyClaim: boolean = false;
 
   ngOnInit(): void {
     this.authFacadeService.isLoggedIn$.subscribe((isLoggedIn: boolean): void => {
       if (isLoggedIn) {
-        this.loadUser();
+        this.userStatesService.loadHeaderInfo();
         this.loadDailyClaim();
       }
     });
 
-    this.webSocketService.connect();
-    this.websocketSubscription = this.webSocketService.refresh$.subscribe((): void => {
-      this.loadUser();
-      this.cdr.detectChanges();
-    })
+    this.setupWebsocket();
   }
 
   ngOnDestroy(): void {
     this.webSocketService.disconnect();
     this.websocketSubscription.unsubscribe();
-  }
-
-  loadUser(): void {
-    this.userService.getUser().subscribe((response: User): void => {
-      this.username = response.username;
-      this.cdr.detectChanges();
-    })
-
-    this.userService.getBalance().subscribe((response: Balance): void => {
-      this.balance = response.balance / 100;
-      this.cdr.detectChanges();
-    })
   }
 
   loadDailyClaim(): void {
@@ -78,7 +63,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       next: (): void => {
         this.dailyClaim = false;
         this.messageService.success({ message: "Daily Claim successfully claimed" });
-        this.cdr.detectChanges();
       },
       error: (err: any): void => {
         this.messageService.error({ message: "Claiming Daily Claim failed" });
@@ -111,5 +95,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authFacadeService.logout();
+  }
+
+  private setupWebsocket(): void {
+    this.webSocketService.connect();
+    this.websocketSubscription = this.webSocketService.refresh$.subscribe((): void => {
+      this.userStatesService.loadHeaderInfo();
+    })
   }
 }

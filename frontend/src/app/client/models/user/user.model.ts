@@ -2,6 +2,11 @@ export interface Balance {
   balance: number;
 }
 
+export interface UserHeaderInfo {
+  username: string;
+  balance: number;
+}
+
 export interface DailyClaimStatus {
   can_claim: boolean
 }
