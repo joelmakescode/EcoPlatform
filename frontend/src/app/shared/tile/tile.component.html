@@ -1,0 +1,15 @@
+<div class="tile" [routerLink]="route">
+  <div class="tile-header">
+    @if (icon) {
+      <img [src]="icon" class="tile-icon"/>
+    }
+
+    <h3 class="tile-title">
+      {{ title }}
+    </h3>
+  </div>
+
+  <div class="tile-body">
+    <ng-content></ng-content>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
-import {OverlayComponent} from './component/overlay/overlay.component';
+import {OverlayComponent} from './components/overlay/overlay.component';
 
 @Component({
   selector: 'app-root',

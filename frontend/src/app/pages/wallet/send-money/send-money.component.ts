@@ -1,19 +1,18 @@
 import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {ContentBoxComponent} from '../../../component/content-box/content-box.component';
-import {BackLinkComponent} from '../../../component/shared/back-link/back-link.component';
+import {ContentBoxComponent} from '../../../components/content-box/content-box.component';
+import {BackLinkComponent} from '../../../shared/back-link/back-link.component';
 import {
   TransactionsLayoutComponent
-} from '../../../component/shared/layouts/transactions-layout/transactions-layout.component';
+} from '../../../components/transactions/transactions-layout.component';
 import {
   TransactionsInputLayoutComponent
-} from '../../../component/shared/layouts/transactions-layout/transactions-input-layout/transactions-input-layout.component';
+} from '../../../components/transactions/transactions-input-layout/transactions-input-layout.component';
 import {AuthTokenService} from '../../../services/auth-token/auth-token.service';
-import {TransactionService} from '../../../services/transactions/transaction.service';
-import {Transaction} from '../../../client/models/transactions/transaction.model';
-import {TransactionResponse} from '../../../client/models/transactions/transaction.model';
-import {WebSocketService} from '../../../services/websocket/websocket.service';
+import {TransactionService} from '../../../client/services/transactions/transaction.service';
+import {WebSocketService} from '../../../client/services/websocket/websocket.service';
 import {Subscription} from 'rxjs';
-import {MessageService} from '../../../services/messages/message.service';
+import {MessageService} from '../../../client/services/message/message.service';
+import {Transaction, TransactionResponse} from '../../../types/transaction/transaction.interface';
 
 @Component({
   selector: 'app-send-money',

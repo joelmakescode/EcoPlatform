@@ -1,0 +1,22 @@
+<div class="username-input">
+  <h3>{{ placeholderTitle }}</h3>
+
+  <input
+    type="text"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [value]="value"
+    (input)="onInput($event)"
+    autocomplete="new-password"
+    autocapitalize="off"
+    spellcheck="false"
+  >
+
+  @if (showSuggestions && suggestions.length) {
+    <ul>
+      @for (user of suggestions; track user.username) {
+        <li (click)="selectUser(user)"> {{  user.username }} </li>
+      }
+    </ul>
+  }
+</div>

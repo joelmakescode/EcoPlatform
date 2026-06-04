@@ -19,9 +19,11 @@
       </div>
     </div>
 
-    <div class="content-wallet-overview-transaction-tile" *ngIf="openTransactions !== 0">
-      You have {{ openTransactions }} pending transactions.
-    </div>
+    @if (openTransactions !== 0) {
+      <div class="content-wallet-overview-transaction-tile">
+        You have {{ openTransactions }} pending transactions.
+      </div>
+    }
   </app-tile>
 
   <app-tile title="Send Money" icon="assets/icons-tiles/wallet/icon_send_money.png" route="/wallet/send-money">
@@ -44,6 +46,7 @@
     </div>
 
   </app-tile>
+
   <app-tile title="Request Money" icon="assets/icons-tiles/wallet/icon_request_money.png" route="/wallet/request-money">
     <div class="wallet-stats">
       <div class="stat-row">

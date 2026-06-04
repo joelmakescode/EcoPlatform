@@ -1,16 +1,16 @@
 import {ChangeDetectorRef, Component, EventEmitter, inject, OnDestroy, OnInit, Output} from '@angular/core';
-import {ContentBoxComponent} from '../../../component/content-box/content-box.component';
-import {BackLinkComponent} from '../../../component/shared/back-link/back-link.component';
-import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
-import {WebSocketService} from '../../../services/websocket/websocket.service';
+import {ContentBoxComponent} from '../../../components/content-box/content-box.component';
+import {BackLinkComponent} from '../../../shared/back-link/back-link.component';
+import {AsyncPipe} from '@angular/common';
+import {WebSocketService} from '../../../client/services/websocket/websocket.service';
 import {Observable, Subscription} from 'rxjs';
-import {Bets, CasinoBalance} from '../../../client/models/casino/casino.model';
-import {CasinoService} from '../../../services/casino/casino.service';
-import {DetailBoxComponent} from '../../../component/shared/detail-box/detail-box.component';
-import {NumberInputComponent} from '../../../component/shared/number-input/number-input.component';
-import {InfoTextComponent} from '../../../component/shared/info-text/info-text.component';
-import {MessageService} from '../../../services/messages/message.service';
-import {CasinoStatesService} from '../../../services/casino/casinostates.service';
+import {CasinoService} from '../../../client/services/casino/casino.service';
+import {DetailBoxComponent} from '../../../shared/detail-box/detail-box.component';
+import {NumberInputComponent} from '../../../shared/number-input/number-input.component';
+import {InfoTextComponent} from '../../../shared/info-text/info-text.component';
+import {MessageService} from '../../../client/services/message/message.service';
+import {CasinoStatesService} from '../../../client/services/casino/casinostates.service';
+import {Bets} from '../../../types/casino/casino.interface';
 
 @Component({
   selector: 'app-roll-a-dice',
@@ -18,8 +18,6 @@ import {CasinoStatesService} from '../../../services/casino/casinostates.service
   imports: [
     ContentBoxComponent,
     BackLinkComponent,
-    NgIf,
-    NgForOf,
     DetailBoxComponent,
     NumberInputComponent,
     InfoTextComponent,

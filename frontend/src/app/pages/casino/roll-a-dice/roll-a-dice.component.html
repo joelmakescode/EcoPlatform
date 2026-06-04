@@ -30,18 +30,18 @@
         </div>
 
         <div class="dice-info">
-          <div class="timer" *ngIf="!isLocked">
-            {{ timeLeft }}
-          </div>
+          @if (!isLocked) {
+            <div class="timer"> {{ timeLeft }} </div>
+          }
 
           <div class="status" [class.locked]="isLocked">
             {{ isLocked ? 'Locked' : 'Betting' }}
           </div>
         </div>
 
-        <div class="win-text" *ngIf="winAmount > 0">
-          +${{ (winAmount / 100).toFixed(2) }}
-        </div>
+        @if (winAmount > 0) {
+          <div class="win-text"> +${{ (winAmount / 100).toFixed(2) }} </div>
+        }
       }
 
     </div>
@@ -54,49 +54,49 @@
         <button class="bet-button" (click)="placeBet('single-1')" [disabled]="isLocked">
           1 <span>1:3</span>
 
-          <div class="bet-amount" *ngIf="bets['single-1']">
-            ${{ getBetAmount('single-1') }}
-          </div>
+          @if (bets['single-1']) {
+            <div class="bet-amount"> ${{ getBetAmount('single-1') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('single-2')" [disabled]="isLocked">
           2 <span>1:3</span>
 
-          <div class="bet-amount" *ngIf="bets['single-2']">
-            ${{ getBetAmount('single-2') }}
-          </div>
+          @if (bets['single-2']) {
+            <div class="bet-amount"> ${{ getBetAmount('single-2') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('single-3')" [disabled]="isLocked">
           3 <span>1:3</span>
 
-          <div class="bet-amount" *ngIf="bets['single-3']">
-            ${{ getBetAmount('single-3') }}
-          </div>
+          @if (bets['single-3']) {
+            <div class="bet-amount"> ${{ getBetAmount('single-3') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('single-4')" [disabled]="isLocked">
           4 <span>1:3</span>
 
-          <div class="bet-amount" *ngIf="bets['single-4']">
-            ${{ getBetAmount('single-4') }}
-          </div>
+          @if (bets['single-4']) {
+            <div class="bet-amount"> ${{ getBetAmount('single-4') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('single-5')" [disabled]="isLocked">
           5 <span>1:3</span>
 
-          <div class="bet-amount" *ngIf="bets['single-5']">
-            ${{ getBetAmount('single-5') }}
-          </div>
+          @if (bets['single-5']) {
+            <div class="bet-amount"> ${{ getBetAmount('single-5') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('single-6')" [disabled]="isLocked">
           6 <span>1:3</span>
 
-          <div class="bet-amount" *ngIf="bets['single-6']">
-            ${{ getBetAmount('single-6') }}
-          </div>
+          @if (bets['single-6']) {
+            <div class="bet-amount"> ${{ getBetAmount('single-6') }} </div>
+          }
         </button>
     </div>
 
@@ -105,88 +105,88 @@
         <button class="bet-button" (click)="placeBet('both-2')" [disabled]="isLocked">
           2 <span>1:36</span>
 
-          <div class="bet-amount" *ngIf="bets['both-2']">
-            ${{ getBetAmount('both-2') }}
-          </div>
+          @if (bets['both-2']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-2') }} </div>
+          }
         </button>
         <button class="bet-button" (click)="placeBet('both-3')" [disabled]="isLocked">
           3 <span>1:18</span>
 
-          <div class="bet-amount" *ngIf="bets['both-3']">
-            ${{ getBetAmount('both-3') }}
-          </div>
+          @if (bets['both-3']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-3') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('both-4')" [disabled]="isLocked">
           4 <span>1:12</span>
 
-          <div class="bet-amount" *ngIf="bets['both-4']">
-            ${{ getBetAmount('both-4') }}
-          </div>
+          @if (bets['both-4']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-4') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('both-5')" [disabled]="isLocked">
           5 <span>1:9</span>
 
-          <div class="bet-amount" *ngIf="bets['both-5']">
-            ${{ getBetAmount('both-5') }}
-          </div>
+          @if (bets['both-5']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-5') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('both-6')" [disabled]="isLocked">
           6 <span>1:7</span>
 
-          <div class="bet-amount" *ngIf="bets['both-6']">
-            ${{ getBetAmount('both-6') }}
-          </div>
+          @if (bets['both-6']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-6') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('both-7')" [disabled]="isLocked">
           7 <span>1:6</span>
 
-          <div class="bet-amount" *ngIf="bets['both-7']">
-            ${{ getBetAmount('both-7') }}
-          </div>
+          @if (bets['both-7']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-7') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('both-8')" [disabled]="isLocked">
           8 <span>1:7</span>
 
-          <div class="bet-amount" *ngIf="bets['both-8']">
-            ${{ getBetAmount('both-8') }}
-          </div>
+          @if (bets['both-8']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-8') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('both-9')" [disabled]="isLocked">
           9 <span>1:9</span>
 
-          <div class="bet-amount" *ngIf="bets['both-9']">
-            ${{ getBetAmount('both-9') }}
-          </div>
+          @if (bets['both-9']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-9') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('both-10')" [disabled]="isLocked">
           10 <span>1:12</span>
 
-          <div class="bet-amount" *ngIf="bets['both-10']">
-            ${{ getBetAmount('both-10') }}
-          </div>
+          @if (bets['both-10']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-10') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('both-11')" [disabled]="isLocked">
           11 <span>1:18</span>
 
-          <div class="bet-amount" *ngIf="bets['both-11']">
-            ${{ getBetAmount('both-11') }}
-          </div>
+          @if (bets['both-11']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-11') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('both-12')" [disabled]="isLocked">
           12 <span>1:36</span>
 
-          <div class="bet-amount" *ngIf="bets['both-12']">
-            ${{ getBetAmount('both-12') }}
-          </div>
+          @if (bets['both-12']) {
+            <div class="bet-amount"> ${{ getBetAmount('both-12') }} </div>
+          }
         </button>
     </div>
 
@@ -195,49 +195,49 @@
         <button class="bet-button" (click)="placeBet('double-1')" [disabled]="isLocked">
           1-1 <span>1:36</span>
 
-          <div class="bet-amount" *ngIf="bets['double-1']">
-            ${{ getBetAmount('double-1') }}
-          </div>
+          @if (bets['double-1']) {
+            <div class="bet-amount"> ${{ getBetAmount('double-1') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('double-2')" [disabled]="isLocked">
           2-2 <span>1:36</span>
 
-          <div class="bet-amount" *ngIf="bets['double-2']">
-            ${{ getBetAmount('double-2') }}
-          </div>
+          @if (bets['double-2']) {
+            <div class="bet-amount"> ${{ getBetAmount('double-2') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('double-3')" [disabled]="isLocked">
           3-3 <span>1:36</span>
 
-          <div class="bet-amount" *ngIf="bets['double-3']">
-            ${{ getBetAmount('double-3') }}
-          </div>
+          @if (bets['double-3']) {
+            <div class="bet-amount"> ${{ getBetAmount('double-3') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('double-4')" [disabled]="isLocked">
           4-4 <span>1:36</span>
 
-          <div class="bet-amount" *ngIf="bets['double-4']">
-            ${{ getBetAmount('double-4') }}
-          </div>
+          @if (bets['double-4']) {
+            <div class="bet-amount"> ${{ getBetAmount('double-4') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('double-5')" [disabled]="isLocked">
           5-5 <span>1:36</span>
 
-          <div class="bet-amount" *ngIf="bets['double-5']">
-            ${{ getBetAmount('double-5') }}
-          </div>
+          @if (bets['double-5']) {
+            <div class="bet-amount"> ${{ getBetAmount('double-5') }} </div>
+          }
         </button>
 
         <button class="bet-button" (click)="placeBet('double-6')" [disabled]="isLocked">
           6-6 <span>1:36</span>
 
-          <div class="bet-amount" *ngIf="bets['double-6']">
-            ${{ getBetAmount('double-6') }}
-          </div>
+          @if (bets['double-6']) {
+            <div class="bet-amount"> ${{ getBetAmount('double-6') }} </div>
+          }
         </button>
     </div>
 
@@ -245,9 +245,9 @@
       <button class="bet-button" (click)="placeBet('random-double')" [disabled]="isLocked">
         Random Double<span>1:6</span>
 
-        <div class="bet-amount" *ngIf="bets['random-double']">
-          ${{ getBetAmount('random-double') }}
-        </div>
+        @if (bets['random-double']) {
+          <div class="bet-amount"> ${{ getBetAmount('random-double') }} </div>
+        }
       </button>
     </div>
   </div>
@@ -272,22 +272,28 @@
          Clear
       </button>
 
-      <button *ngFor="let s of stakeOptions" (click)="selectStake(s)" [disabled]="!isStakeAvailable(s)" [class.disabled]="!isStakeAvailable(s)">
-        ${{ s / 100 }}
-      </button>
+      @for (s of stakeOptions; track s) {
+        <button (click)="selectStake(s)" [disabled]="!isStakeAvailable(s)" [class.disabled]="!isStakeAvailable(s)">
+          ${{ s / 100 }}
+        </button>
+      }
+
     </div>
 
   </div>
 </app-content-box>
 
-<app-detail-box *ngIf="isModalOpen" (close)="closeDepositModal()" title="Deposit">
-  <div class="casino-roll-a-dice-details-grid">
-    <app-number-input (valueChange)="depositAmount = $event"></app-number-input>
+@if (isModalOpen) {
+  <app-detail-box (close)="closeDepositModal()" title="Deposit">
+    <div class="casino-roll-a-dice-details-grid">
+      <app-number-input (valueChange)="depositAmount = $event"></app-number-input>
 
-    <button class="deposit-btn" (click)="confirmDeposit()" [disabled]="depositAmount <= 0">Confirm</button>
-  </div>
+      <button class="deposit-btn" (click)="confirmDeposit()" [disabled]="depositAmount <= 0">Confirm</button>
+    </div>
 
-  <div class="casino-roll-a-dice-info-text">
-    <app-info-text infoMessage="The amount will be immediately charged from your account."></app-info-text>
-  </div>
-</app-detail-box>
+    <div class="casino-roll-a-dice-info-text">
+      <app-info-text infoMessage="The amount will be immediately charged from your account."></app-info-text>
+    </div>
+  </app-detail-box>
+}
+

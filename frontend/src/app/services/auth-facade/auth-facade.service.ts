@@ -2,8 +2,8 @@ import {inject, Injectable} from '@angular/core';
 import {AuthTokenService} from '../auth-token/auth-token.service';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {UserContextService} from '../user/usercontext.service';
-import {MessageService} from '../messages/message.service';
+import {UserContextService} from '../../client/services/user/usercontext.service';
+import {MessageService} from '../../client/services/message/message.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFacadeService {

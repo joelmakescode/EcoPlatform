@@ -1,16 +1,15 @@
 import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {TileComponent} from '../../../component/shared/tile/tile.component';
-import {DecimalPipe, NgIf} from '@angular/common';
-import {TransactionService} from '../../../services/transactions/transaction.service';
+import {TileComponent} from '../../../shared/tile/tile.component';
+import {DecimalPipe} from '@angular/common';
+import {TransactionService} from '../../../client/services/transactions/transaction.service';
 import {AuthTokenService} from '../../../services/auth-token/auth-token.service';
-import {WebSocketService} from '../../../services/websocket/websocket.service';
-import {Transaction, TransactionResponse} from '../../../client/models/transactions/transaction.model';
+import {WebSocketService} from '../../../client/services/websocket/websocket.service';
+import {Transaction, TransactionResponse} from '../../../types/transaction/transaction.interface';
 
 @Component({
   selector: 'app-wallet-overview',
   imports: [
     TileComponent,
-    NgIf,
     DecimalPipe,
   ],
   templateUrl: './wallet-overview.component.html',

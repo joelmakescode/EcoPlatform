@@ -2,8 +2,8 @@ import {Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {RouterLink} from '@angular/router';
-import {AuthService} from '../../services/auth/auth.service';
-import {MessageService} from '../../services/messages/message.service';
+import {AuthService} from '../../client/services/auth/auth.service';
+import {MessageService} from '../../client/services/message/message.service';
 
 @Component({
   selector: 'app-register',

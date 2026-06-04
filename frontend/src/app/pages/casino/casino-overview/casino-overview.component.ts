@@ -1,20 +1,19 @@
 import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {TileComponent} from '../../../component/shared/tile/tile.component';
-import {CasinoService} from '../../../services/casino/casino.service';
-import {
-  CasinoBalance,
-  CasinoOverviewTransferMoneyInfoMessages,
-  CasinoOverviewTransferMoneyType
-} from '../../../client/models/casino/casino.model';
-import {AsyncPipe, NgIf} from '@angular/common';
-import {DetailBoxComponent} from '../../../component/shared/detail-box/detail-box.component';
+import {TileComponent} from '../../../shared/tile/tile.component';
+import {CasinoService} from '../../../client/services/casino/casino.service';
+import {AsyncPipe} from '@angular/common';
+import {DetailBoxComponent} from '../../../shared/detail-box/detail-box.component';
 import {
   CasinoTransferMoneyDetailComponent
-} from '../../../component/shared/detail-box/casino-transfer-money-detail/casino-transfer-money-detail.component';
-import {MessageService} from '../../../services/messages/message.service';
-import {CasinoStatesService} from '../../../services/casino/casinostates.service';
+} from '../../../shared/detail-box/casino-transfer-money-detail/casino-transfer-money-detail.component';
+import {MessageService} from '../../../client/services/message/message.service';
+import {CasinoStatesService} from '../../../client/services/casino/casinostates.service';
 import {Observable} from 'rxjs';
-import {WebSocketService} from '../../../services/websocket/websocket.service';
+import {WebSocketService} from '../../../client/services/websocket/websocket.service';
+import {
+  CasinoOverviewTransferMoneyInfoMessages,
+  CasinoOverviewTransferMoneyType
+} from '../../../types/casino/casino.enum';
 
 @Component({
   selector: 'app-casino-overview',
@@ -22,7 +21,6 @@ import {WebSocketService} from '../../../services/websocket/websocket.service';
   imports: [
     TileComponent,
     DetailBoxComponent,
-    NgIf,
     CasinoTransferMoneyDetailComponent,
     AsyncPipe,
   ],

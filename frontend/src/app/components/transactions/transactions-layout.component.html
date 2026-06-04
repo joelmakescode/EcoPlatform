@@ -1,0 +1,34 @@
+<div class="transactions-table">
+
+  <div class="transactions-header">
+    <span>Sender</span>
+    <span>Receiver</span>
+    <span>Amount</span>
+    <span>Type</span>
+    <span>Status</span>
+  </div>
+
+  <div class="transactions-body">
+
+    @for (tx of transactions; track tx.id) {
+      <div  class="transaction-row">
+
+        <span>{{ tx.sender_username }}</span>
+        <span>{{ tx.receiver_username }}</span>
+
+        <span class="amount" [class.amount--positive]="tx.receiver_id === userId" [class.amount--negative]="tx.sender_id === userId">
+          {{ tx.amount | amount:tx.sender_id:userId }}
+        </span>
+
+        <span> {{ tx.type | type }} </span>
+
+        <span class="status" [ngClass]="getStatusClass(tx.status)">
+          <img class="status-icon" [src]="getStatusIcon(tx.status)" alt="" />
+          {{ tx.status | status }}
+         </span>
+
+        <img class="transaction-icon" src="assets/icon_info.png" alt="info_icon" (click)="openTransaction(tx)"/>
+      </div>
+    }
+  </div>
+</div>

@@ -10,7 +10,7 @@ RUN go mod download
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -o server .
+    go build -o server ./cmd/api
 
 # -------- runtime stage --------
 FROM gcr.io/distroless/base-debian12

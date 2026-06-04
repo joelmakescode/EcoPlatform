@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {TileComponent} from '../../component/shared/tile/tile.component';
+import {TileComponent} from '../../shared/tile/tile.component';
 
 @Component({
   selector: 'app-home',
