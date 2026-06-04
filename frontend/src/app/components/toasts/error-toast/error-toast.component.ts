@@ -1,0 +1,42 @@
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ToastService} from '../toastservice/toast.service';
+import {MessageService} from '../../../client/services/message/message.service';
+import {ApplicationError} from '../../../types/application.interface';
+
+@Component({
+  selector: 'app-error-toast',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './error-toast.component.html',
+  styleUrl: './error-toast.component.css',
+})
+
+export class ErrorToastComponent implements OnInit {
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private messageService: MessageService = inject(MessageService);
+  private toastService: ToastService = inject(ToastService);
+
+  message: string | null = null;
+  status?: number;
+  visible: boolean = false;
+  top: number = 80;
+
+  ngOnInit(): void {
+    this.toastService.topPosition$.subscribe((position: number): void => {
+      this.top = position;
+      this.cdr.markForCheck();
+    })
+
+    this.messageService.error$.subscribe((error: ApplicationError): void => {
+      this.message = error.message;
+      this.visible = true;
+      this.cdr.markForCheck();
+
+      setTimeout((): void => {
+        this.visible = false;
+        this.cdr.markForCheck();
+      }, 4000);
+    });
+  }
+}

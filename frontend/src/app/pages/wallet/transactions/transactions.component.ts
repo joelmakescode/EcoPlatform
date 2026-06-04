@@ -1,14 +1,14 @@
 import {ChangeDetectorRef, Component, inject, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {Transaction, TransactionResponse} from '../../../client/models/transactions/transaction.model';
-import {TransactionService} from '../../../services/transactions/transaction.service';
+import {TransactionService} from '../../../client/services/transactions/transaction.service';
 import {AuthTokenService} from '../../../services/auth-token/auth-token.service';
-import {ContentBoxComponent} from '../../../component/content-box/content-box.component';
-import {BackLinkComponent} from '../../../component/shared/back-link/back-link.component';
+import {ContentBoxComponent} from '../../../components/content-box/content-box.component';
+import {BackLinkComponent} from '../../../shared/back-link/back-link.component';
 import {
   TransactionsLayoutComponent
-} from '../../../component/shared/layouts/transactions-layout/transactions-layout.component';
-import {WebSocketService} from '../../../services/websocket/websocket.service';
+} from '../../../components/transactions/transactions-layout.component';
+import {WebSocketService} from '../../../client/services/websocket/websocket.service';
 import {Subscription} from 'rxjs';
+import {Transaction, TransactionResponse} from '../../../types/transaction/transaction.interface';
 
 @Component({
   selector: 'app-transactions',

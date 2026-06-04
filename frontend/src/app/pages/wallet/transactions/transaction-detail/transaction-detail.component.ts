@@ -1,12 +1,12 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
-import {DetailBoxComponent} from '../../../../component/shared/detail-box/detail-box.component';
-import {AmountPipe} from '../../../../pipes/transactions/amount.pipe';
+import {DetailBoxComponent} from '../../../../shared/detail-box/detail-box.component';
+import {AmountPipe} from '../../../../pipes/amount.pipe';
 import {DatePipe, NgIf} from '@angular/common';
-import {InfoTextComponent} from '../../../../component/shared/info-text/info-text.component';
-import {StatusPipe} from '../../../../pipes/transactions/status.pipe';
-import {TypePipe} from '../../../../pipes/transactions/type.pipe';
-import {Transaction} from '../../../../client/models/transactions/transaction.model';
+import {InfoTextComponent} from '../../../../shared/info-text/info-text.component';
+import {StatusPipe} from '../../../../pipes/status.pipe';
+import {TypePipe} from '../../../../pipes/type.pipe';
 import {AuthTokenService} from '../../../../services/auth-token/auth-token.service';
+import {Transaction} from '../../../../types/transaction/transaction.interface';
 
 @Component({
   selector: 'app-transaction-detail',

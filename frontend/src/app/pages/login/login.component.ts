@@ -1,9 +1,9 @@
 import {Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {AuthService} from '../../services/auth/auth.service';
+import {AuthService} from '../../client/services/auth/auth.service';
 import {Router, RouterLink} from '@angular/router';
-import {MessageService} from '../../services/messages/message.service';
+import {MessageService} from '../../client/services/message/message.service';
 
 @Component({
   selector: 'app-login',
