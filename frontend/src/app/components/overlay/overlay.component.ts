@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {AsyncPipe, NgIf} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import {ErrorToastComponent} from '../toasts/error-toast/error-toast.component';
 import {SuccessToastComponent} from '../toasts/success-toast/success-toast.component';
 import {TransactionModalService} from '../../client/services/transactions/transaction-modal.service';
@@ -18,7 +18,6 @@ import {Transaction} from '../../types/transaction/transaction.interface';
   imports: [
     AsyncPipe,
     ErrorToastComponent,
-    NgIf,
     SuccessToastComponent,
     TransactionDetailComponent
   ],

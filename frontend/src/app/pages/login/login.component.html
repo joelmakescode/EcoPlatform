@@ -9,13 +9,18 @@
         email
         #emailField="ngModel"
       />
-      <p class="field-error" *ngIf="emailField.touched && emailField.errors?.['required']">
-        * Email field is required
-      </p>
 
-      <p class="field-error" *ngIf="emailField.touched && emailField.errors?.['email']">
-        * Must contain &#64; and valid domain ending
-      </p>
+      @if (emailField.touched && emailField.errors?.['required']) {
+        <p class="field-error">
+          * Email field is required
+        </p>
+      }
+
+      @if (emailField.touched && emailField.errors?.['email']) {
+        <p class="field-error">
+          * Must contain &#64; and valid domain ending
+        </p>
+      }
     </div>
 
   <div class="form-field">
@@ -28,14 +33,20 @@
       minlength="8"
       #passwordField="ngModel"
     />
-    <p class="field-error" *ngIf="passwordField.touched && passwordField.errors">
-      <span *ngIf="passwordField.errors['required']">
-        * Password field is required
-      </span>
-      <span *ngIf="passwordField.errors['minlength']">
-        * Password must be at least 8 characters long
-      </span>
-    </p>
+
+    @if (passwordField.touched && passwordField.errors) {
+      <p class="field-error">
+
+        @if (passwordField.errors['required']) {
+          <span> * Password field is required </span>
+        }
+
+        @if (passwordField.errors['minlength']) {
+          <span> * Password must be at least 8 characters long </span>
+        }
+
+      </p>
+    }
   </div>
 
   <button class="login-button" type="submit">

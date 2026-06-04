@@ -16,7 +16,6 @@ import {Transaction} from '../../../../types/transaction/transaction.interface';
     AmountPipe,
     DatePipe,
     InfoTextComponent,
-    NgIf,
     StatusPipe,
     TypePipe
   ],

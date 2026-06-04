@@ -12,9 +12,11 @@
     spellcheck="false"
   >
 
-  <ul *ngIf="showSuggestions && suggestions.length">
-    <li *ngFor="let user of suggestions" (click)="selectUser(user)">
-      {{  user.username }}
-    </li>
-  </ul>
+  @if (showSuggestions && suggestions.length) {
+    <ul>
+      @for (user of suggestions; track user.username) {
+        <li (click)="selectUser(user)"> {{  user.username }} </li>
+      }
+    </ul>
+  }
 </div>

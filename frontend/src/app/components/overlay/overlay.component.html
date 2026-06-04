@@ -1,11 +1,13 @@
 <app-error-toast></app-error-toast>
 <app-success-toast></app-success-toast>
-<app-transaction-detail
-  *ngIf="transaction$ | async as tx"
-  [transaction]="tx"
-  (accept)="onAccept(tx)"
-  (cancel)="onCancel(tx)"
-  (refund)="onRefund(tx)"
-  (reject)="onReject(tx)"
-  (close)="closeModal()">
-</app-transaction-detail>
+
+@if (transaction$ | async; as tx) {
+  <app-transaction-detail
+    [transaction]="tx"
+    (accept)="onAccept(tx)"
+    (cancel)="onCancel(tx)"
+    (refund)="onRefund(tx)"
+    (reject)="onReject(tx)"
+    (close)="closeModal()">
+  </app-transaction-detail>
+}

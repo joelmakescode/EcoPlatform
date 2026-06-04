@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {TileComponent} from '../../../shared/tile/tile.component';
 import {CasinoService} from '../../../client/services/casino/casino.service';
-import {AsyncPipe, NgIf} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import {DetailBoxComponent} from '../../../shared/detail-box/detail-box.component';
 import {
   CasinoTransferMoneyDetailComponent
@@ -21,7 +21,6 @@ import {
   imports: [
     TileComponent,
     DetailBoxComponent,
-    NgIf,
     CasinoTransferMoneyDetailComponent,
     AsyncPipe,
   ],

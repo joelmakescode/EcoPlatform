@@ -2,7 +2,7 @@ import {Component, HostListener, inject, OnDestroy, OnInit} from '@angular/core'
 import {AuthFacadeService} from '../../services/auth-facade/auth-facade.service';
 import {UserService} from '../../client/services/user/user.service';
 import {WebSocketService} from '../../client/services/websocket/websocket.service';
-import {AsyncPipe, NgIf} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import {Observable, Subscription} from 'rxjs';
 import {MessageService} from '../../client/services/message/message.service';
 import {UserStatesService} from '../../client/services/user/userstates.service';
@@ -12,7 +12,6 @@ import {DailyClaimStatus, UserHeaderInfo} from '../../types/user/user.interface'
   selector: 'app-header',
   standalone: true,
   imports: [
-    NgIf,
     AsyncPipe
   ],
   templateUrl: './header.component.html',

@@ -16,13 +16,13 @@
       #emailField="ngModel"
     />
 
-    <p class="field-error" *ngIf="emailField.touched && emailField.errors?.['required']">
-      * Email is required
-    </p>
+    @if (emailField.touched && emailField.errors?.['required']) {
+      <p class="field-error"> * Email is required </p>
+    }
 
-    <p class="field-error" *ngIf="emailField.touched && emailField.errors?.['email']">
-      * Must contain &#64; and valid domain ending
-    </p>
+    @if (emailField.touched && emailField.errors?.['email']) {
+      <p class="field-error"> * Must contain &#64; and valid domain ending </p>
+    }
   </div>
 
   <div class="form-field">
@@ -36,15 +36,17 @@
       #usernameField="ngModel"
     />
 
-    <p class="field-error" *ngIf="usernameField.touched && usernameField.errors">
-      <span *ngIf="usernameField.errors['required']">
-        * Username is required
-      </span>
+    @if (usernameField.touched && usernameField.errors) {
+      <p class="field-error">
+        @if (usernameField.errors['required']) {
+          <span> * Username is required </span>
+        }
 
-      <span *ngIf="usernameField.errors['minlength']">
-        * Username must be at least 3 characters long
-      </span>
-    </p>
+        @if (usernameField.errors['minlength']) {
+          <span> * Username must be at least 3 characters long </span>
+        }
+      </p>
+    }
   </div>
 
   <div class="form-field">
@@ -58,15 +60,17 @@
       #passwordField="ngModel"
     />
 
-    <p class="field-error" *ngIf="passwordField.touched && passwordField.errors">
-      <span *ngIf="passwordField.errors['required']">
-        * Password is required
-      </span>
+    @if (passwordField.touched && passwordField.errors) {
+      <p class="field-error">
+        @if (passwordField.errors['required']) {
+          <span> * Password is required </span>
+        }
 
-      <span *ngIf="passwordField.errors['minlength']">
-        * Password must be at least 8 characters long
-      </span>
-    </p>
+        @if (passwordField.errors['minlength']) {
+          <span> * Password must be at least 8 characters long </span>
+        }
+      </p>
+    }
   </div>
 
   <div class="form-field">
@@ -80,19 +84,23 @@
       #repeatpasswordField="ngModel"
     />
 
-    <p class="field-error" *ngIf="repeatpasswordField.touched && repeatpasswordField.errors">
-      <span *ngIf="repeatpasswordField.errors['required']">
-        * Password is required
-      </span>
+    @if (repeatpasswordField.touched && repeatpasswordField.errors) {
+      <p class="field-error">
 
-      <span *ngIf="repeatpasswordField.errors['minlength']">
-        * Password must be at least 8 characters long
-      </span>
-    </p>
+        @if (repeatpasswordField.errors['required']) {
+          <span> * Password is required </span>
+        }
 
-    <p class="field-error" *ngIf="repeatpasswordField.touched && password && repeatPassword && repeatPassword !== password">
-      * Passwords must match
-    </p>
+        @if (repeatpasswordField.errors['minlength']) {
+          <span> * Password must be at least 8 characters long </span>
+        }
+
+        @if (repeatpasswordField.touched && password && repeatPassword && repeatPassword !== password) {
+          <span> * Passwords must match </span>
+        }
+      </p>
+    }
+
   </div>
 
   <button class="register-button" type="submit">

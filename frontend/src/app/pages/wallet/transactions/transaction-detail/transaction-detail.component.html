@@ -1,91 +1,119 @@
-<app-detail-box *ngIf="transaction as tx" (close)="onClose()" title="Transaction Details">
-  <div class="details-grid">
-    <div class="detail-item">
-      <span class="label">Sender</span>
-      <span class="value">{{ tx.sender_username }}</span>
+@if (transaction; as tx) {
+  <app-detail-box (close)="onClose()" title="Transaction Details">
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="label">Sender</span>
+        <span class="value">{{ tx.sender_username }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Receiver</span>
+        <span class="value">{{ tx.receiver_username }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Amount</span>
+        <span class="value">{{ tx.amount | amount:tx.sender_id:userId }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Type</span>
+        <span class="value">{{ tx.type | type }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Status</span>
+        <span class="value">{{ tx.status | status }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Created</span>
+        <span class="value">{{ tx.created_at | date: 'short' }}</span>
+      </div>
+
+      <div class="accept-reject-buttons">
+        @if (CanAcceptOrReject) {
+          <button class="accept-button" (click)="accept.emit(transaction!)">
+            Accept
+          </button>
+
+          <button class="reject-button" (click)="reject.emit(transaction!)">
+            Reject
+          </button>
+        }
+      </div>
+
+      @if (ShowSentMoneyInfoText) {
+        <div class="info-text-wrapper">
+          <app-info-text infoMessage="Someone sent you money."></app-info-text>
+        </div>
+      }
+
+      @if (ShowAcceptedReceiverInfoText) {
+        <div class="info-text-wrapper">
+          <app-info-text infoMessage="Your request was accepted by the donor."></app-info-text>
+        </div>
+      }
+
+      @if (ShowAcceptedSenderInfoText) {
+        <div class="info-text-wrapper">
+          <app-info-text infoMessage="You accepted this transaction request."></app-info-text>
+        </div>
+      }
+
+      @if (ShowRejectedReceiverInfoText) {
+        <div class="info-text-wrapper">
+          <app-info-text infoMessage="Your request was rejected by the presumed donor."></app-info-text>
+        </div>
+      }
+
+      @if (ShowRejectedSenderInfoText) {
+        <div class="info-text-wrapper">
+          <app-info-text infoMessage="You rejected this request."></app-info-text>
+        </div>
+      }
+
+      @if (CanRefund) {
+        <button class="refund-button" (click)="refund.emit(transaction!)">
+          Refund
+        </button>
+      }
+
+      @if (ShowRefundNotAvailableInfoText) {
+        <div class="info-text-wrapper">
+          <app-info-text infoMessage="The refund option is only available within the first 24 hours after sending the money and completing the transaction."></app-info-text>
+        </div>
+      }
+
+      @if (ShowRefundedSenderInfoText) {
+        <div class="info-text-wrapper">
+          <app-info-text infoMessage="You refunded this transaction and received your money back."></app-info-text>
+        </div>
+      }
+
+      @if (ShowRefundedReceiverInfoText) {
+        <div class="info-text-wrapper">
+          <app-info-text infoMessage="The donor of this transaction refunded this transaction. The amount was taken out of your account."></app-info-text>
+        </div>
+      }
+
+      @if (CanCancel) {
+        <button class="cancel-request-button" (click)="cancel.emit(transaction!)">
+          Cancel Request
+        </button>
+      }
+
+      @if (ShowCancelledSenderInfoText) {
+        <div class="info-text-wrapper">
+          <app-info-text infoMessage="The requester cancelled this transaction."></app-info-text>
+        </div>
+      }
+
+      @if (ShowCancelledReceiverInfoText) {
+        <div class="info-text-wrapper">
+          <app-info-text infoMessage="You cancelled this transaction request."></app-info-text>
+        </div>
+      }
     </div>
-
-    <div class="detail-item">
-      <span class="label">Receiver</span>
-      <span class="value">{{ tx.receiver_username }}</span>
-    </div>
-
-    <div class="detail-item">
-      <span class="label">Amount</span>
-      <span class="value">{{ tx.amount | amount:tx.sender_id:userId }}</span>
-    </div>
-
-    <div class="detail-item">
-      <span class="label">Type</span>
-      <span class="value">{{ tx.type | type }}</span>
-    </div>
-
-    <div class="detail-item">
-      <span class="label">Status</span>
-      <span class="value">{{ tx.status | status }}</span>
-    </div>
-
-    <div class="detail-item">
-      <span class="label">Created</span>
-      <span class="value">{{ tx.created_at | date: 'short' }}</span>
-    </div>
-
-    <div class="accept-reject-buttons">
-      <button class="accept-button" *ngIf="CanAcceptOrReject" (click)="accept.emit(transaction!)">
-        Accept
-      </button>
-
-      <button class="reject-button" *ngIf="CanAcceptOrReject" (click)="reject.emit(transaction!)">
-        Reject
-      </button>
-    </div>
-
-    <div class="info-text-wrapper" *ngIf="ShowSentMoneyInfoText">
-      <app-info-text infoMessage="Someone sent you money."></app-info-text>
-    </div>
-
-    <div class="info-text-wrapper" *ngIf="ShowAcceptedReceiverInfoText">
-      <app-info-text infoMessage="Your request was accepted by the donor."></app-info-text>
-    </div>
-
-    <div class="info-text-wrapper" *ngIf="ShowAcceptedSenderInfoText">
-      <app-info-text infoMessage="You accepted this transaction request."></app-info-text>
-    </div>
-
-    <div class="info-text-wrapper" *ngIf="ShowRejectedReceiverInfoText">
-      <app-info-text infoMessage="Your request was rejected by the presumed donor."></app-info-text>
-    </div>
-
-    <div class="info-text-wrapper" *ngIf="ShowRejectedSenderInfoText">
-      <app-info-text infoMessage="You rejected this request."></app-info-text>
-    </div>
-
-    <button class="refund-button" *ngIf="CanRefund" (click)="refund.emit(transaction!)">
-      Refund
-    </button>
-
-    <div class="info-text-wrapper" *ngIf="ShowRefundNotAvailableInfoText">
-      <app-info-text infoMessage="The refund option is only available within the first 24 hours after sending the money and completing the transaction."></app-info-text>
-    </div>
-
-    <div class="info-text-wrapper" *ngIf="ShowRefundedSenderInfoText">
-      <app-info-text infoMessage="You refunded this transaction and received your money back."></app-info-text>
-    </div>
-
-    <div class="info-text-wrapper" *ngIf="ShowRefundedReceiverInfoText">
-      <app-info-text infoMessage="The donor of this transaction refunded this transaction. The amount was taken out of your account."></app-info-text>
-    </div>
-
-    <button class="cancel-request-button" *ngIf="CanCancel" (click)="cancel.emit(transaction!)">
-      Cancel Request
-    </button>
-
-    <div class="info-text-wrapper" *ngIf="ShowCancelledReceiverInfoText">
-      <app-info-text infoMessage="You cancelled this transaction request."></app-info-text>
-    </div>
-
-    <div class="info-text-wrapper" *ngIf="ShowCancelledSenderInfoText">
-      <app-info-text infoMessage="The requester cancelled this transaction."></app-info-text>
-    </div>
-  </div>
-</app-detail-box>
+  </app-detail-box>
+}

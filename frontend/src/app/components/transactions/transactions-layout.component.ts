@@ -1,6 +1,6 @@
 import {Component, inject, Input, numberAttribute} from '@angular/core';
 import {AmountPipe} from '../../pipes/amount.pipe';
-import {NgClass, NgForOf} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {StatusPipe} from '../../pipes/status.pipe';
 import {TypePipe} from '../../pipes/type.pipe';
 import {TransactionModalService} from '../../client/services/transactions/transaction-modal.service';
@@ -11,7 +11,6 @@ import {Transaction} from '../../types/transaction/transaction.interface';
   standalone: true,
   imports: [
     AmountPipe,
-    NgForOf,
     StatusPipe,
     TypePipe,
     NgClass,

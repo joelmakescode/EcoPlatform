@@ -15,21 +15,28 @@
   <app-tile title="Football Bets" icon="assets/icons-tiles/casino/icon_football_bets.png" route="/casino/football-bets"></app-tile>
 </main>
 
-<app-detail-box *ngIf="isInfoModalOpen" title="Information" (close)="infoModal()">
-  <div class="content-casino-overview-information-box">
+@if (isInfoModalOpen) {
+  <app-detail-box title="Information" (close)="infoModal()">
+    <div class="content-casino-overview-information-box">
     <span>
       Gambling can be addicting.
     </span>
 
-    <span>
+      <span>
       Deposit: {{ depositMoneyInfoText }}
     </span>
 
-    <span>
+      <span>
       Cash Out: {{ cashOutMoneyInfoText }}
     </span>
-  </div>
-</app-detail-box>
+    </div>
+  </app-detail-box>
+}
 
-<app-casino-transfer-money-detail *ngIf="isDepositModalOpen" [title]="depositMoney" [infoText]="depositMoneyInfoText" (close)="depositModal()" (confirm)="confirm($event)"></app-casino-transfer-money-detail>
-<app-casino-transfer-money-detail *ngIf="isCashOutModalOpen" [title]="cashOutMoney" [infoText]="cashOutMoneyInfoText" (close)="cashOutModal()" (confirm)="confirm($event)"></app-casino-transfer-money-detail>
+@if (isDepositModalOpen) {
+  <app-casino-transfer-money-detail [title]="depositMoney" [infoText]="depositMoneyInfoText" (close)="depositModal()" (confirm)="confirm($event)"></app-casino-transfer-money-detail>
+}
+
+@if (isCashOutModalOpen) {
+  <app-casino-transfer-money-detail [title]="cashOutMoney" [infoText]="cashOutMoneyInfoText" (close)="cashOutModal()" (confirm)="confirm($event)"></app-casino-transfer-money-detail>
+}

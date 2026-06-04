@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, EventEmitter, inject, OnDestroy, OnInit, Output} from '@angular/core';
 import {ContentBoxComponent} from '../../../components/content-box/content-box.component';
 import {BackLinkComponent} from '../../../shared/back-link/back-link.component';
-import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import {WebSocketService} from '../../../client/services/websocket/websocket.service';
 import {Observable, Subscription} from 'rxjs';
 import {CasinoService} from '../../../client/services/casino/casino.service';
@@ -18,8 +18,6 @@ import {Bets} from '../../../types/casino/casino.interface';
   imports: [
     ContentBoxComponent,
     BackLinkComponent,
-    NgIf,
-    NgForOf,
     DetailBoxComponent,
     NumberInputComponent,
     InfoTextComponent,

@@ -1,14 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {NgForOf, NgIf} from '@angular/common';
 import {UserSuggestion} from '../../types/user/user.interface';
 
 @Component({
   selector: 'app-username-input',
   standalone: true,
-  imports: [
-    NgIf,
-    NgForOf
-  ],
+  imports: [],
   templateUrl: './username-input.component.html',
   styleUrl: './username-input.component.css',
 })

@@ -1,6 +1,8 @@
 <div class="tile" [routerLink]="route">
   <div class="tile-header">
-    <img *ngIf="icon" [src]="icon" class="tile-icon"/>
+    @if (icon) {
+      <img [src]="icon" class="tile-icon"/>
+    }
 
     <h3 class="tile-title">
       {{ title }}
