@@ -4,7 +4,6 @@ import (
 	"backend/internal/domain"
 	"backend/internal/infrastructure/persistence/repository"
 	"backend/internal/infrastructure/websocket"
-	"fmt"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -116,10 +115,6 @@ func (h *SicBoHandler) Start() {
 				"win_amount": win,
 			}, "normal")
 		}
-
-		fmt.Printf("Bets in round: %+v\n", bets)
-		fmt.Printf("Dice: %d %d\n", dice1, dice2)
-		fmt.Printf("UserWins: %+v\n", userWins)
 
 		time.Sleep(3 * time.Second)
 	}
