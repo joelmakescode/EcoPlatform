@@ -17,8 +17,8 @@ type ClaimDailyBalanceRes interface {
 	claimDailyBalanceRes()
 }
 
-type CreateBetRollADiceRes interface {
-	createBetRollADiceRes()
+type CreateBetSicBoRes interface {
+	createBetSicBoRes()
 }
 
 type CreateDiscordUserRes interface {

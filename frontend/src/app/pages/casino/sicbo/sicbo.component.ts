@@ -1,38 +1,44 @@
-import {ChangeDetectorRef, Component, EventEmitter, inject, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, DestroyRef, EventEmitter, inject, OnDestroy, OnInit, Output} from '@angular/core';
 import {ContentBoxComponent} from '../../../components/content-box/content-box.component';
 import {BackLinkComponent} from '../../../shared/back-link/back-link.component';
 import {AsyncPipe} from '@angular/common';
-import {WebSocketService} from '../../../client/services/websocket/websocket.service';
-import {Observable, Subscription} from 'rxjs';
+import {filter, Observable, Subscription} from 'rxjs';
 import {CasinoService} from '../../../client/services/casino/casino.service';
 import {DetailBoxComponent} from '../../../shared/detail-box/detail-box.component';
 import {NumberInputComponent} from '../../../shared/number-input/number-input.component';
 import {InfoTextComponent} from '../../../shared/info-text/info-text.component';
 import {MessageService} from '../../../client/services/message/message.service';
-import {Bets, CasinoBalance, RollADiceState} from '../../../types/casino/casino.interface';
+import {Bets, RollADiceState} from '../../../types/casino/casino.interface';
 import {CasinoStateService} from '../../../client/services/casino/casinostate.service';
 import {RollADiceStateService} from '../../../client/services/casino/games/rolladice/rolladicestate.service';
 import {RollADiceLiveService} from '../../../client/services/casino/games/rolladice/rolladicelive.service';
+import {
+  CasinoTransferMoneyDetailComponent
+} from '../../../shared/detail-box/casino-transfer-money-detail/casino-transfer-money-detail.component';
+import {
+  CasinoOverviewTransferMoneyInfoMessages,
+  CasinoOverviewTransferMoneyType
+} from '../../../types/casino/casino.enum';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-roll-a-dice',
+  selector: 'app-sic-bo',
   standalone: true,
   imports: [
     ContentBoxComponent,
     BackLinkComponent,
-    DetailBoxComponent,
-    NumberInputComponent,
-    InfoTextComponent,
     AsyncPipe,
+    CasinoTransferMoneyDetailComponent,
   ],
-  templateUrl: './roll-a-dice.component.html',
-  styleUrl: './roll-a-dice.component.css',
+  templateUrl: './sicbo.component.html',
+  styleUrl: './sicbo.component.css',
 })
-export class RollADiceComponent implements OnInit, OnDestroy {
+export class SicboComponent implements OnInit, OnDestroy {
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   private casinoService: CasinoService = inject(CasinoService);
   private casinoStatesService: CasinoStateService = inject(CasinoStateService);
+  private destroyRef: DestroyRef = inject(DestroyRef);
   private messageService: MessageService = inject(MessageService);
 
   private stateService: RollADiceStateService = inject(RollADiceStateService);
@@ -42,7 +48,9 @@ export class RollADiceComponent implements OnInit, OnDestroy {
   casinoBalance$: Observable<number> = this.casinoStatesService.casinoBalance$;
   casinoBalance: number = 0;
 
-  depositAmount: number = 0;
+  depositMoney: CasinoOverviewTransferMoneyType = CasinoOverviewTransferMoneyType.DEPOSIT_MONEY;
+  depositMoneyInfoText: string = CasinoOverviewTransferMoneyInfoMessages[this.depositMoney];
+
   isModalOpen: boolean = false;
   clearMode: boolean = false;
 
@@ -51,7 +59,6 @@ export class RollADiceComponent implements OnInit, OnDestroy {
   stakeOptions: number[] = [20, 50, 100, 200, 500, 1000, 2500, 5000, 10000]
   bets: Bets = {};
 
-  private subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
     this.initializeConnections();
@@ -59,12 +66,16 @@ export class RollADiceComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.bets = {};
-    this.subscriptions.forEach((s: Subscription): void => s.unsubscribe());
-    this.subscriptions = [];
   }
 
   submitBets(): void {
-    this.casinoService.postBets(this.bets).subscribe();
+    this.casinoService.postBets(this.bets).subscribe({
+      next: (): void => {
+        this.casinoStatesService.load();
+      }, error: (): void => {
+        this.messageService.error({ message: 'Sending Bet failed' });
+      }
+    });
   }
 
   selectStake(value: number): void {
@@ -174,7 +185,6 @@ export class RollADiceComponent implements OnInit, OnDestroy {
   }
 
   openDepositModal(): void {
-    this.depositAmount = 0;
     this.isModalOpen = !this.isModalOpen;
   }
 
@@ -183,9 +193,9 @@ export class RollADiceComponent implements OnInit, OnDestroy {
     this.close.emit();
   }
 
-  confirmDeposit(): void {
+  confirmDeposit(amount: number): void {
     this.closeDepositModal();
-    this.casinoService.postDepositBalance(this.depositAmount).subscribe({
+    this.casinoService.postDepositBalance(amount).subscribe({
       next: (): void => {
         this.messageService.success({ message: "Casino Balance deposit successful" });
         this.casinoStatesService.load();
@@ -197,13 +207,22 @@ export class RollADiceComponent implements OnInit, OnDestroy {
   }
 
   private initializeConnections(): void {
-    this.liveService.roundLockObservable$.subscribe((): void => {
-      this.submitBets();
-    });
+    this.casinoStatesService.load();
+    this.liveService.roundLockObservable$
+      .pipe(
+        filter((): boolean => Object.keys(this.bets).length > 0),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((): void => {
+        this.submitBets();
+      });
 
-    this.subscriptions.push(this.casinoBalance$.subscribe((balance: number): void => {
-      this.casinoBalance = balance
-      this.casinoStatesService.load();
-    }))
+    this.casinoBalance$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((balance: number): void => {
+        this.casinoBalance = balance;
+      })
   }
 }

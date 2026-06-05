@@ -16,10 +16,10 @@
 
   @if (state$ | async; as state) {
     <app-casino-game-tile
-      title="Roll a dice"
-      icon="assets/icons-tiles/casino/icon_roll_a_dice.png"
-      route="/casino/roll-a-dice"
-      type="rolladice"
+      title="Sic Bo"
+      icon="assets/icons-tiles/casino/icon_sicbo.png"
+      route="/casino/sic-bo"
+      type="sicbo"
       [dice1]="state.dice1"
       [dice2]="state.dice2"
       [timer]="state.timeLeft"
@@ -43,22 +43,6 @@
   ></app-casino-game-tile>
 
 </app-content-box>
-  <!--
-  <div class="content-casino-overview-transfer-money">
-    <h2>Casino Balance: ${{ (casinoBalance$ | async)?.toFixed(2) }}</h2>
-
-    <div class="casino-transfer-buttons">
-      <button class="casino-overview-deposit-button" (click)="depositModal()">Deposit</button>
-      <button class="casino-overview-cash-out-button" (click)="cashOutModal()">Cash Out</button>
-    </div>
-
-    <img class="casino-overview-info-icon" src="assets/icon_info.png" alt="icon_info" (click)="infoModal()">
-  </div>
-
-  <app-tile title="Roll a dice" icon="assets/icons-tiles/casino/icon_roll_a_dice.png" route="/casino/roll-a-dice"></app-tile>
-  <app-tile title="Slot Machines" icon="assets/icons-tiles/casino/icon_slot_machines.png" route="/casino/slot-machines"></app-tile>
-  <app-tile title="Football Bets" icon="assets/icons-tiles/casino/icon_football_bets.png" route="/casino/football-bets"></app-tile>
-  -->
 
 @if (isDepositModalOpen) {
   <app-casino-transfer-money-detail [title]="depositMoney" [infoText]="depositMoneyInfoText" (close)="depositModal()" (confirm)="confirm($event)"></app-casino-transfer-money-detail>

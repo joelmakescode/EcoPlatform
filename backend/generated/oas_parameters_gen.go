@@ -278,13 +278,13 @@ func decodeClaimDailyBalanceParams(args [1]string, argsEscaped bool, r *http.Req
 	return params, nil
 }
 
-// CreateBetRollADiceParams is parameters of createBetRollADice operation.
-type CreateBetRollADiceParams struct {
+// CreateBetSicBoParams is parameters of createBetSicBo operation.
+type CreateBetSicBoParams struct {
 	// ID of the user.
 	ID int
 }
 
-func unpackCreateBetRollADiceParams(packed middleware.Parameters) (params CreateBetRollADiceParams) {
+func unpackCreateBetSicBoParams(packed middleware.Parameters) (params CreateBetSicBoParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "id",
@@ -295,7 +295,7 @@ func unpackCreateBetRollADiceParams(packed middleware.Parameters) (params Create
 	return params
 }
 
-func decodeCreateBetRollADiceParams(args [1]string, argsEscaped bool, r *http.Request) (params CreateBetRollADiceParams, _ error) {
+func decodeCreateBetSicBoParams(args [1]string, argsEscaped bool, r *http.Request) (params CreateBetSicBoParams, _ error) {
 	// Decode path: id.
 	if err := func() error {
 		param := args[0]

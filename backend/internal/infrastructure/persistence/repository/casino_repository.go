@@ -14,7 +14,7 @@ func NewCasinoRepository(db *gorm.DB) *CasinoRepository {
 	return &CasinoRepository{db: db}
 }
 
-func (r *CasinoRepository) CreateRollADiceRound() (*models.DiceRound, error) {
+func (r *CasinoRepository) CreateSicBoRound() (*models.DiceRound, error) {
 	var round models.DiceRound
 	err := r.db.Create(&round).Error
 	if err != nil {
@@ -66,6 +66,6 @@ func (r *CasinoRepository) UpdateCasinoAccountBalance(userId uint, amount int64)
 	return r.db.Model(&models.CasinoAccount{}).Where("account_id = ?", userId).UpdateColumn("balance", gorm.Expr("balance + ?", amount)).Error
 }
 
-func (r *CasinoRepository) UpdateRollADiceRound(roundID int64, dice1, dice2 int) error {
+func (r *CasinoRepository) UpdateSicBoRound(roundID int64, dice1, dice2 int) error {
 	return r.db.Model(&models.DiceRound{}).Where("id = ?", roundID).Updates(map[string]interface{}{"dice1": dice1, "dice2": dice2}).Error
 }

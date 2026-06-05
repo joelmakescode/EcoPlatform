@@ -45,24 +45,24 @@ func (*Balance) getCasinoBalanceRes()      {}
 func (*Balance) getUserBalanceByIdRes()    {}
 func (*Balance) updateUserBalanceByIdRes() {}
 
-// Ref: #/components/schemas/BetRollADice
-type BetRollADice struct {
-	Bets BetRollADiceBets `json:"bets"`
+// Ref: #/components/schemas/BetSicBo
+type BetSicBo struct {
+	Bets BetSicBoBets `json:"bets"`
 }
 
 // GetBets returns the value of Bets.
-func (s *BetRollADice) GetBets() BetRollADiceBets {
+func (s *BetSicBo) GetBets() BetSicBoBets {
 	return s.Bets
 }
 
 // SetBets sets the value of Bets.
-func (s *BetRollADice) SetBets(val BetRollADiceBets) {
+func (s *BetSicBo) SetBets(val BetSicBoBets) {
 	s.Bets = val
 }
 
-type BetRollADiceBets map[string]int64
+type BetSicBoBets map[string]int64
 
-func (s *BetRollADiceBets) init() BetRollADiceBets {
+func (s *BetSicBoBets) init() BetSicBoBets {
 	m := *s
 	if m == nil {
 		m = map[string]int64{}
@@ -142,30 +142,30 @@ type ClaimDailyBalanceUnauthorized Error
 
 func (*ClaimDailyBalanceUnauthorized) claimDailyBalanceRes() {}
 
-type CreateBetRollADiceBadRequest Error
+type CreateBetSicBoBadRequest Error
 
-func (*CreateBetRollADiceBadRequest) createBetRollADiceRes() {}
+func (*CreateBetSicBoBadRequest) createBetSicBoRes() {}
 
-type CreateBetRollADiceConflict Error
+type CreateBetSicBoConflict Error
 
-func (*CreateBetRollADiceConflict) createBetRollADiceRes() {}
+func (*CreateBetSicBoConflict) createBetSicBoRes() {}
 
-type CreateBetRollADiceForbidden Error
+type CreateBetSicBoForbidden Error
 
-func (*CreateBetRollADiceForbidden) createBetRollADiceRes() {}
+func (*CreateBetSicBoForbidden) createBetSicBoRes() {}
 
-type CreateBetRollADiceInternalServerError Error
+type CreateBetSicBoInternalServerError Error
 
-func (*CreateBetRollADiceInternalServerError) createBetRollADiceRes() {}
+func (*CreateBetSicBoInternalServerError) createBetSicBoRes() {}
 
-// CreateBetRollADiceNoContent is response for CreateBetRollADice operation.
-type CreateBetRollADiceNoContent struct{}
+// CreateBetSicBoNoContent is response for CreateBetSicBo operation.
+type CreateBetSicBoNoContent struct{}
 
-func (*CreateBetRollADiceNoContent) createBetRollADiceRes() {}
+func (*CreateBetSicBoNoContent) createBetSicBoRes() {}
 
-type CreateBetRollADiceNotFound Error
+type CreateBetSicBoNotFound Error
 
-func (*CreateBetRollADiceNotFound) createBetRollADiceRes() {}
+func (*CreateBetSicBoNotFound) createBetSicBoRes() {}
 
 type CreateDiscordUserBadRequest Error
 

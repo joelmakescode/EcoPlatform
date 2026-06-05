@@ -10,7 +10,7 @@ const (
 	CancelTransactionOperation             OperationName = "CancelTransaction"
 	CashoutCasinoBalanceOperation          OperationName = "CashoutCasinoBalance"
 	ClaimDailyBalanceOperation             OperationName = "ClaimDailyBalance"
-	CreateBetRollADiceOperation            OperationName = "CreateBetRollADice"
+	CreateBetSicBoOperation                OperationName = "CreateBetSicBo"
 	CreateDiscordUserOperation             OperationName = "CreateDiscordUser"
 	CreateLinkAccountCodeOperation         OperationName = "CreateLinkAccountCode"
 	CreateTransactionOperation             OperationName = "CreateTransaction"

@@ -35,7 +35,7 @@ func NewDependencies(db *gorm.DB) (*Dependencies, error) {
 	transactionRepository := repository.NewTransactionRepository(db)
 	userRepository := repository.NewUserRepository(db)
 
-	game := games.NewRollADiceHandler(casinoRepository, websocketHandler)
+	game := games.NewSicBoHandler(casinoRepository, websocketHandler)
 
 	authService := services.NewAuthService(userRepository)
 	casinoService := services.NewCasinoService(websocketHandler, casinoRepository, userRepository, game)

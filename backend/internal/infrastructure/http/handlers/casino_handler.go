@@ -39,25 +39,25 @@ func (h *CasinoHandler) CashoutCasinoBalance(ctx context.Context, req *api.Balan
 	return &api.CashoutCasinoBalanceNoContent{}, nil
 }
 
-func (h *CasinoHandler) CreateBetRollADice(ctx context.Context, req *api.BetRollADice, param api.CreateBetRollADiceParams) (api.CreateBetRollADiceRes, error) {
+func (h *CasinoHandler) CreateBetSicBo(ctx context.Context, req *api.BetSicBo, param api.CreateBetSicBoParams) (api.CreateBetSicBoRes, error) {
 	if err := authz.Self(ctx, uint(param.ID)); err != nil {
-		return &api.CreateBetRollADiceForbidden{Message: api.NewOptString(err.Error())}, nil
+		return &api.CreateBetSicBoForbidden{Message: api.NewOptString(err.Error())}, nil
 	}
 
-	err := h.service.CreateBetRollADice(uint(param.ID), req.Bets)
+	err := h.service.CreateBetSicBo(uint(param.ID), req.Bets)
 	if err != nil {
 		switch {
 		case errors.Is(err, domain.ErrInvalidStake),
 			errors.Is(err, domain.ErrStakeOptionDoesntExist):
-			return &api.CreateBetRollADiceBadRequest{Message: api.NewOptString(err.Error())}, nil
+			return &api.CreateBetSicBoBadRequest{Message: api.NewOptString(err.Error())}, nil
 		case errors.Is(err, domain.ErrInsufficientBalance):
-			return &api.CreateBetRollADiceConflict{Message: api.NewOptString(err.Error())}, nil
+			return &api.CreateBetSicBoConflict{Message: api.NewOptString(err.Error())}, nil
 		default:
-			return &api.CreateBetRollADiceInternalServerError{Message: api.NewOptString(err.Error())}, nil
+			return &api.CreateBetSicBoInternalServerError{Message: api.NewOptString(err.Error())}, nil
 		}
 	}
 
-	return &api.CreateBetRollADiceNoContent{}, nil
+	return &api.CreateBetSicBoNoContent{}, nil
 }
 
 func (h *CasinoHandler) DepositCasinoBalance(ctx context.Context, req *api.Balance, param api.DepositCasinoBalanceParams) (api.DepositCasinoBalanceRes, error) {

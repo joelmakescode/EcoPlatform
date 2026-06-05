@@ -52,15 +52,17 @@ export class RollADiceLiveService {
           timeLeft: data?.timeLeft,
           isLocked: data?.isLocked ?? false,
         });
+
         break;
 
       case 'round_lock':
         this.stateService.setState({ isLocked: true });
+        this.startRollingAnimation();
         this.roundLock$.next();
         break;
 
       case 'round_result':
-        this.rollADiceAnimation(data?.dice1, data?.dice2)
+        this.stopRollingAnimation(data?.dice1, data?.dice2);
         break;
 
       case 'casino_win':
@@ -73,25 +75,37 @@ export class RollADiceLiveService {
           setTimeout((): void => {
             this.casinoStateService.load();
           }, 500);
+
+          setTimeout(() => {
+            this.pendingWin = 0;
+            this.stateService.setState({ winAmount: this.pendingWin });
+          }, 2000)
         }
         break;
     }
   }
 
-  private rollADiceAnimation(result1: number, result2: number): void {
+  private rollingInterval: any;
+  private startRollingAnimation(): void {
     this.stateService.setState({ isRolling: true });
-    let count: number = 0;
 
-    const interval = setInterval((): void => {
-      this.stateService.setState({ dice1: Math.floor(Math.random() * 6) + 1, dice2: Math.floor(Math.random() * 6) + 1 });
-
-      count++;
-
-      if (count > 10) {
-        clearInterval(interval);
-
-        this.stateService.setState({ dice1: result1, dice2: result2, isRolling: false });
-      }
+    this.rollingInterval = setInterval((): void => {
+      this.stateService.setState({
+        dice1: Math.floor(Math.random() * 6) + 1,
+        dice2: Math.floor(Math.random() * 6) + 1,
+      });
     }, 80);
+  }
+
+  private stopRollingAnimation(result1: number, result2: number): void {
+    if (this.rollingInterval) {
+      clearInterval(this.rollingInterval);
+    }
+
+    this.stateService.setState({
+      isRolling: false ,
+      dice1: result1,
+      dice2: result2,
+    });
   }
 }

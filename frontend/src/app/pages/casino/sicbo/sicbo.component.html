@@ -1,7 +1,7 @@
-<app-content-box title="Roll a dice">
+<app-content-box title="Sic Bo">
   <app-back-link link="/casino" label="Back to Casino Overview"></app-back-link>
 
-  <div class="content-roll-a-dice-box">
+  <div class="content-sicbo-box">
     <div class="dice-container">
 
       @if (!(state$ | async)) {
@@ -286,16 +286,12 @@
 </app-content-box>
 
 @if (isModalOpen) {
-  <app-detail-box (close)="closeDepositModal()" title="Deposit">
-    <div class="casino-roll-a-dice-details-grid">
-      <app-number-input (valueChange)="depositAmount = $event"></app-number-input>
-
-      <button class="deposit-btn" (click)="confirmDeposit()" [disabled]="depositAmount <= 0">Confirm</button>
-    </div>
-
-    <div class="casino-roll-a-dice-info-text">
-      <app-info-text infoMessage="The amount will be immediately charged from your account."></app-info-text>
-    </div>
-  </app-detail-box>
+  <app-casino-transfer-money-detail
+    [title]="depositMoney"
+    [infoText]="depositMoneyInfoText"
+    (close)="closeDepositModal()"
+    (confirm)="confirmDeposit($event)"
+  >
+  </app-casino-transfer-money-detail>
 }
 
