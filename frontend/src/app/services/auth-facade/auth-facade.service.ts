@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {UserContextService} from '../../client/services/user/usercontext.service';
 import {MessageService} from '../../client/services/message/message.service';
+import {WebSocketService} from '../../client/services/websocket/websocket.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFacadeService {
@@ -11,6 +12,7 @@ export class AuthFacadeService {
   private messageService: MessageService = inject(MessageService);
   private router: Router = inject(Router);
   private userContextService: UserContextService = inject(UserContextService);
+  private websocketService: WebSocketService = inject(WebSocketService);
 
   private loggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -27,6 +29,7 @@ export class AuthFacadeService {
     this.router.navigate(['/login']).then();
     this.messageService.success({ message: "Logged Out" });
     this.authTokenService.clear();
+    this.websocketService.disconnect();
     this.userContextService.clearUsername();
   }
 }

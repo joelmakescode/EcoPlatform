@@ -24,10 +24,6 @@ export class TransactionsLayoutComponent {
 
   private transactionModalService: TransactionModalService = inject(TransactionModalService);
 
-  trackByTxId(_: number, tx: Transaction): string {
-    return tx.id;
-  }
-
   getStatusClass(status: string): string {
     switch (status) {
       case 'completed':

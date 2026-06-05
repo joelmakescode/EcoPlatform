@@ -1,0 +1,26 @@
+<div class="game-tile" (click)="navigate()">
+  <div class="left">
+    <img [src]="icon" class="game-tile-icon" alt="game icon">
+    <h3> {{ title }} </h3>
+  </div>
+
+  <div class="center">
+
+    @if (type === 'rolladice') {
+      <div class="live-info">
+        <span> <img class="game-tile-icon" src="assets/icons-tiles/casino/icon_dice.png" alt="icon_dice"> Dices: {{ dice1 }} - {{ dice2 }}</span>
+        <span> <img class="game-tile-icon" src="assets/icons-tiles/casino/icon_timer.png" alt="icon_timer"> Timer: {{ timer }}</span>
+        <span [class.locked]="isLocked">
+          Game State: {{ isLocked ? 'Locked' : 'Betting' }}
+        </span>
+      </div>
+    }
+
+  </div>
+
+  <div class="right">
+    <span> > </span>
+  </div>
+
+</div>
+

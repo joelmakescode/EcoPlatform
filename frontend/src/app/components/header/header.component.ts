@@ -97,7 +97,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private setupWebsocket(): void {
-    this.webSocketService.connect();
     this.websocketSubscription = this.webSocketService.refresh$.subscribe((): void => {
       this.userStatesService.loadHeaderInfo();
     })

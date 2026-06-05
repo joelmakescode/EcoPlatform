@@ -9,8 +9,10 @@ import {DetailBoxComponent} from '../../../shared/detail-box/detail-box.componen
 import {NumberInputComponent} from '../../../shared/number-input/number-input.component';
 import {InfoTextComponent} from '../../../shared/info-text/info-text.component';
 import {MessageService} from '../../../client/services/message/message.service';
-import {CasinoStatesService} from '../../../client/services/casino/casinostates.service';
-import {Bets} from '../../../types/casino/casino.interface';
+import {Bets, CasinoBalance, RollADiceState} from '../../../types/casino/casino.interface';
+import {CasinoStateService} from '../../../client/services/casino/casinostate.service';
+import {RollADiceStateService} from '../../../client/services/casino/games/rolladice/rolladicestate.service';
+import {RollADiceLiveService} from '../../../client/services/casino/games/rolladice/rolladicelive.service';
 
 @Component({
   selector: 'app-roll-a-dice',
@@ -30,143 +32,35 @@ export class RollADiceComponent implements OnInit, OnDestroy {
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   private casinoService: CasinoService = inject(CasinoService);
-  private casinoStatesService: CasinoStatesService = inject(CasinoStatesService);
-  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private casinoStatesService: CasinoStateService = inject(CasinoStateService);
   private messageService: MessageService = inject(MessageService);
-  private websocketService: WebSocketService = inject(WebSocketService);
 
-  private subscriptions: Subscription[] = [];
+  private stateService: RollADiceStateService = inject(RollADiceStateService);
+  private liveService: RollADiceLiveService = inject(RollADiceLiveService);
+
+  state$: Observable<RollADiceState> = this.stateService.state$;
   casinoBalance$: Observable<number> = this.casinoStatesService.casinoBalance$;
-
   casinoBalance: number = 0;
-  winAmount: number = 0;
-  private pendingWin: number = 0;
-  depositAmount: number = 0;
 
-  dice1: number | null = null;
-  dice2: number | null = null;
-  timeLeft: number | null = null;
-  isRolling: boolean = false;
-  isLocked: boolean = false;
-  clearMode: boolean = false;
+  depositAmount: number = 0;
   isModalOpen: boolean = false;
+  clearMode: boolean = false;
 
   // CENT FORMAT FOR THE SAKE OF THE INTEGER OVERFLOW AND DATABASE
   currentStake: number = 10;
   stakeOptions: number[] = [20, 50, 100, 200, 500, 1000, 2500, 5000, 10000]
-
   bets: Bets = {};
 
+  private subscriptions: Subscription[] = [];
+
   ngOnInit(): void {
-    this.connectWebsocket();
-    this.casinoStatesService.load();
+    this.initializeConnections();
   }
 
   ngOnDestroy(): void {
     this.bets = {};
-    this.disconnectWebsocket();
-  }
-
-  handleEvent(message: any): void {
-
-    if (!message || !message.type) {
-      return;
-    }
-
-    let data: any = null;
-
-    if (message.data) {
-      try {
-        data = typeof message.data === 'string' ? JSON.parse(message.data) : message.data;
-      } catch (e) {}
-    }
-
-    switch (message.type) {
-
-      case 'game_state':
-        this.isLocked = data?.isLocked ?? false;
-        this.timeLeft = data?.timeLeft ?? 15;
-        this.dice1 = data?.dice1 ?? 1;
-        this.dice2 = data?.dice2 ?? 1;
-        break;
-
-      case 'round_start':
-        this.isLocked = false;
-        this.pendingWin = 0;
-        this.winAmount = 0;
-        this.timeLeft = data?.timeLeft ?? 15;
-        break;
-
-      case 'round_timer':
-        this.dice1 = data?.dice1 ?? 1;
-        this.dice2 = data?.dice2 ?? 1;
-        this.timeLeft = data?.timeLeft ?? 0;
-        if (this.timeLeft === 1) {
-          this.submitBets();
-        }
-        break;
-
-      case 'round_lock':
-        this.isLocked = true;
-        break;
-
-      case 'round_result':
-        if (data) {
-          this.isLocked = true;
-          this.rollDiceAnimation(data.dice1, data.dice2);
-        }
-        break;
-
-      case 'casino_balance_updated':
-        this.casinoStatesService.load();
-        this.adjustCurrentStake();
-        break;
-
-      case 'casino_win':
-        const win: number = Number(data?.win_amount ?? 0);
-        if (win > 0) {
-          this.pendingWin = win;
-        }
-        break;
-    }
-
-    this.cdr.detectChanges();
-  }
-
-  rollDiceAnimation(result1: number, result2: number): void {
-    this.isRolling = true;
-
-    let count: number = 0;
-
-    setTimeout((): void => {
-      const interval = setInterval(() => {
-
-        this.dice1 = Math.floor(Math.random() * 6) + 1;
-        this.dice2 = Math.floor(Math.random() * 6) + 1;
-
-        count++;
-
-        if (count > 10) {
-          clearInterval(interval);
-          this.dice1 = result1;
-          this.dice2 = result2;
-
-          this.isRolling = false;
-
-          if (this.pendingWin > 0) {
-            this.winAmount = this.pendingWin;
-            this.pendingWin = 0;
-
-            setTimeout((): void => {
-              this.winAmount = 0;
-            }, 2000)
-          }
-        }
-
-        this.cdr.detectChanges();
-
-      }, 80);
-    }, 10);
+    this.subscriptions.forEach((s: Subscription): void => s.unsubscribe());
+    this.subscriptions = [];
   }
 
   submitBets(): void {
@@ -175,14 +69,16 @@ export class RollADiceComponent implements OnInit, OnDestroy {
 
   selectStake(value: number): void {
     this.clearMode = false;
+
     this.stakeOptions.push(this.currentStake);
     this.stakeOptions = this.stakeOptions.filter((v: number): boolean => v !== value);
+
     this.currentStake = value;
     this.stakeOptions.sort((a: number, b: number): number => a - b);
   }
 
-  placeBet(key: string): void {
-    if (this.isLocked) {
+  placeBet(key: string, isLocked: boolean): void {
+    if (isLocked) {
       return;
     }
 
@@ -292,6 +188,7 @@ export class RollADiceComponent implements OnInit, OnDestroy {
     this.casinoService.postDepositBalance(this.depositAmount).subscribe({
       next: (): void => {
         this.messageService.success({ message: "Casino Balance deposit successful" });
+        this.casinoStatesService.load();
       },
       error: (err: any): void => {
         this.messageService.error({ message: "Couldn't deposit Casino Balance" });
@@ -299,24 +196,14 @@ export class RollADiceComponent implements OnInit, OnDestroy {
     });
   }
 
-  private connectWebsocket(): void {
-    this.websocketService.connect();
-    this.subscriptions.push(this.websocketService.refresh$.subscribe((): void => {
+  private initializeConnections(): void {
+    this.liveService.roundLockObservable$.subscribe((): void => {
+      this.submitBets();
+    });
+
+    this.subscriptions.push(this.casinoBalance$.subscribe((balance: number): void => {
+      this.casinoBalance = balance
       this.casinoStatesService.load();
-    }));
-
-    this.subscriptions.push(this.websocketService.message$.subscribe((message: any): void => {
-      this.handleEvent(message);
-    }));
-
-    this.subscriptions.push(this.casinoStatesService.casinoBalance$.subscribe((casinoBalance: number): void => {
-      this.casinoBalance = casinoBalance;
     }))
-  }
-
-  private disconnectWebsocket(): void {
-    this.websocketService.disconnect();
-    this.subscriptions.forEach((sub: Subscription): void => sub.unsubscribe());
-    this.subscriptions = [];
   }
 }

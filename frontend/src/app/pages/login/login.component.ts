@@ -4,6 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {AuthService} from '../../client/services/auth/auth.service';
 import {Router, RouterLink} from '@angular/router';
 import {MessageService} from '../../client/services/message/message.service';
+import {WebSocketService} from '../../client/services/websocket/websocket.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent {
   private authService: AuthService = inject(AuthService);
   private messageService: MessageService = inject(MessageService);
   private router: Router = inject(Router);
+  private websocketService: WebSocketService = inject(WebSocketService);
 
   email: string = '';
   password: string = '';
@@ -34,6 +36,7 @@ export class LoginComponent {
     this.authService.login(this.email, this.password).subscribe({
       next: (): void => {
         this.messageService.success({ message: "Login successful" });
+        this.websocketService.connect();
         this.router.navigate(['/home']).then();
       },
       error: (err: any): void => {

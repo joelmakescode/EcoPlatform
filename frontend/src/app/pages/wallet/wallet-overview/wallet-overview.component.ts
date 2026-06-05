@@ -44,13 +44,11 @@ export class WalletOverviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadTransactions();
 
-    this.webSocketService.connect();
     window.addEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
   }
 
   ngOnDestroy(): void {
     window.removeEventListener('websocket-refresh', this.handleWebSocketRefresh.bind(this));
-    this.webSocketService.disconnect();
   }
 
   loadTransactions(): void {

@@ -4,14 +4,14 @@
   <div class="content-roll-a-dice-box">
     <div class="dice-container">
 
-      @if (dice1 === null || dice2 === null) {
+      @if (!(state$ | async)) {
         <div class="casino-loading">
           <span>Loading game...</span>
         </div>
-      } @else {
+      } @else if (state$ | async; as state) {
         <div class="casino-balance">
         <span class="balance-text">
-          ${{ (casinoBalance$ | async)?.toFixed(2) }}
+          Casino Balance: ${{ ((casinoBalance$ | async)! / 100).toFixed(2) }}
         </span>
 
           <button class="deposit-btn" (click)="openDepositModal()">
@@ -20,38 +20,39 @@
         </div>
 
         <div class="dice-area">
-          <div class="dice" [class.rolling]="isRolling">
-            <span>{{ dice1 }}</span>
+          <div class="dice" [class.rolling]="state.isRolling">
+            <span>{{ state.dice1 }}</span>
           </div>
 
-          <div class="dice" [class.rolling]="isRolling">
-            <span>{{ dice2 }}</span>
+          <div class="dice" [class.rolling]="state.isRolling">
+            <span>{{ state.dice2 }}</span>
           </div>
         </div>
 
         <div class="dice-info">
-          @if (!isLocked) {
-            <div class="timer"> {{ timeLeft }} </div>
+          @if (!state.isLocked) {
+            <div class="timer"> {{ state.timeLeft }} </div>
           }
 
-          <div class="status" [class.locked]="isLocked">
-            {{ isLocked ? 'Locked' : 'Betting' }}
+          <div class="status" [class.locked]="state.isLocked">
+            {{ state.isLocked ? 'Locked' : 'Betting' }}
           </div>
         </div>
 
-        @if (winAmount > 0) {
-          <div class="win-text"> +${{ (winAmount / 100).toFixed(2) }} </div>
+        @if (state.winAmount > 0) {
+          <div class="win-text"> +${{ (state.winAmount / 100).toFixed(2) }} </div>
         }
       }
 
     </div>
   </div>
 
-  <div class="bet-grid">
-    <h3>Single Dice</h3>
-    <div class="bet-group">
+  @if (state$ | async; as state) {
+    <div class="bet-grid">
+      <h3>Single Dice</h3>
+      <div class="bet-group">
 
-        <button class="bet-button" (click)="placeBet('single-1')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('single-1', state.isLocked)" [disabled]="state.isLocked">
           1 <span>1:3</span>
 
           @if (bets['single-1']) {
@@ -59,7 +60,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('single-2')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('single-2', state.isLocked)" [disabled]="state.isLocked">
           2 <span>1:3</span>
 
           @if (bets['single-2']) {
@@ -67,7 +68,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('single-3')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('single-3', state.isLocked)" [disabled]="state.isLocked">
           3 <span>1:3</span>
 
           @if (bets['single-3']) {
@@ -75,7 +76,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('single-4')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('single-4', state.isLocked)" [disabled]="state.isLocked">
           4 <span>1:3</span>
 
           @if (bets['single-4']) {
@@ -83,7 +84,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('single-5')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('single-5', state.isLocked)" [disabled]="state.isLocked">
           5 <span>1:3</span>
 
           @if (bets['single-5']) {
@@ -91,25 +92,25 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('single-6')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('single-6', state.isLocked)" [disabled]="state.isLocked">
           6 <span>1:3</span>
 
           @if (bets['single-6']) {
             <div class="bet-amount"> ${{ getBetAmount('single-6') }} </div>
           }
         </button>
-    </div>
+      </div>
 
-    <h3>Both Dices Count</h3>
-    <div class="bet-group">
-        <button class="bet-button" (click)="placeBet('both-2')" [disabled]="isLocked">
+      <h3>Both Dices Count</h3>
+      <div class="bet-group">
+        <button class="bet-button" (click)="placeBet('both-2', state.isLocked)" [disabled]="state.isLocked">
           2 <span>1:36</span>
 
           @if (bets['both-2']) {
             <div class="bet-amount"> ${{ getBetAmount('both-2') }} </div>
           }
         </button>
-        <button class="bet-button" (click)="placeBet('both-3')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('both-3', state.isLocked)" [disabled]="state.isLocked">
           3 <span>1:18</span>
 
           @if (bets['both-3']) {
@@ -117,7 +118,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('both-4')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('both-4', state.isLocked)" [disabled]="state.isLocked">
           4 <span>1:12</span>
 
           @if (bets['both-4']) {
@@ -125,7 +126,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('both-5')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('both-5', state.isLocked)" [disabled]="state.isLocked">
           5 <span>1:9</span>
 
           @if (bets['both-5']) {
@@ -133,7 +134,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('both-6')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('both-6', state.isLocked)" [disabled]="state.isLocked">
           6 <span>1:7</span>
 
           @if (bets['both-6']) {
@@ -141,7 +142,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('both-7')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('both-7', state.isLocked)" [disabled]="state.isLocked">
           7 <span>1:6</span>
 
           @if (bets['both-7']) {
@@ -149,7 +150,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('both-8')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('both-8', state.isLocked)" [disabled]="state.isLocked">
           8 <span>1:7</span>
 
           @if (bets['both-8']) {
@@ -157,7 +158,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('both-9')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('both-9', state.isLocked)" [disabled]="state.isLocked">
           9 <span>1:9</span>
 
           @if (bets['both-9']) {
@@ -165,7 +166,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('both-10')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('both-10', state.isLocked)" [disabled]="state.isLocked">
           10 <span>1:12</span>
 
           @if (bets['both-10']) {
@@ -173,7 +174,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('both-11')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('both-11', state.isLocked)" [disabled]="state.isLocked">
           11 <span>1:18</span>
 
           @if (bets['both-11']) {
@@ -181,18 +182,18 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('both-12')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('both-12', state.isLocked)" [disabled]="state.isLocked">
           12 <span>1:36</span>
 
           @if (bets['both-12']) {
             <div class="bet-amount"> ${{ getBetAmount('both-12') }} </div>
           }
         </button>
-    </div>
+      </div>
 
-    <h3>Doubles</h3>
-    <div class="bet-group">
-        <button class="bet-button" (click)="placeBet('double-1')" [disabled]="isLocked">
+      <h3>Doubles</h3>
+      <div class="bet-group">
+        <button class="bet-button" (click)="placeBet('double-1', state.isLocked)" [disabled]="state.isLocked">
           1-1 <span>1:36</span>
 
           @if (bets['double-1']) {
@@ -200,7 +201,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('double-2')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('double-2', state.isLocked)" [disabled]="state.isLocked">
           2-2 <span>1:36</span>
 
           @if (bets['double-2']) {
@@ -208,7 +209,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('double-3')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('double-3', state.isLocked)" [disabled]="state.isLocked">
           3-3 <span>1:36</span>
 
           @if (bets['double-3']) {
@@ -216,7 +217,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('double-4')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('double-4', state.isLocked)" [disabled]="state.isLocked">
           4-4 <span>1:36</span>
 
           @if (bets['double-4']) {
@@ -224,7 +225,7 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('double-5')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('double-5', state.isLocked)" [disabled]="state.isLocked">
           5-5 <span>1:36</span>
 
           @if (bets['double-5']) {
@@ -232,25 +233,26 @@
           }
         </button>
 
-        <button class="bet-button" (click)="placeBet('double-6')" [disabled]="isLocked">
+        <button class="bet-button" (click)="placeBet('double-6', state.isLocked)" [disabled]="state.isLocked">
           6-6 <span>1:36</span>
 
           @if (bets['double-6']) {
             <div class="bet-amount"> ${{ getBetAmount('double-6') }} </div>
           }
         </button>
-    </div>
+      </div>
 
-    <div class="bet-group">
-      <button class="bet-button" (click)="placeBet('random-double')" [disabled]="isLocked">
-        Random Double<span>1:6</span>
+      <div class="bet-group">
+        <button class="bet-button" (click)="placeBet('random-double', state.isLocked)" [disabled]="state.isLocked">
+          Random Double<span>1:6</span>
 
-        @if (bets['random-double']) {
-          <div class="bet-amount"> ${{ getBetAmount('random-double') }} </div>
-        }
-      </button>
+          @if (bets['random-double']) {
+            <div class="bet-amount"> ${{ getBetAmount('random-double') }} </div>
+          }
+        </button>
+      </div>
     </div>
-  </div>
+  }
 
   <div class="stake-container">
 

@@ -5,7 +5,7 @@ import {CasinoBalance} from '../../../types/casino/casino.interface';
 
 
 @Injectable({ providedIn: 'root' })
-export class CasinoStatesService {
+export class CasinoStateService {
   private casinoService: CasinoService = inject(CasinoService);
   private casinoBalanceSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   public casinoBalance$: Observable<number> = this.casinoBalanceSubject.asObservable();
@@ -13,7 +13,7 @@ export class CasinoStatesService {
 
   constructor() {
     this.reload$.pipe(switchMap((): Observable<CasinoBalance>  => this.casinoService.getBalance())).subscribe((response: CasinoBalance): void => {
-      this.casinoBalanceSubject.next(response.balance / 100);
+      this.casinoBalanceSubject.next(response.balance);
     });
   }
 

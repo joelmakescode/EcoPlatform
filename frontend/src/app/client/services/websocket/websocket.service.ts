@@ -1,4 +1,4 @@
-import {Injectable, inject, NgZone} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import { AuthTokenService } from '../../../services/auth-token/auth-token.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 
@@ -8,13 +8,19 @@ import {BehaviorSubject, Observable} from 'rxjs';
 export class WebSocketService {
   private socket: WebSocket | null = null;
   private authTokenService: AuthTokenService = inject(AuthTokenService);
-  private ngZone: NgZone = inject(NgZone);
 
   private messageSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public message$: Observable<any> = this.messageSubject.asObservable();
 
   private refreshSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public refresh$: Observable<any> = this.refreshSubject.asObservable();
+
+  constructor() {
+    const token: string | null = this.authTokenService.getToken();
+    if (token) {
+      this.connect();
+    }
+  }
 
   connect(): void {
 
