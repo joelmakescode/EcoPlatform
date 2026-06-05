@@ -1,0 +1,71 @@
+.game-tile {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+
+  padding: 6px 6px;
+  border-radius: 12px;
+
+  background: #1e2329;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.game-tile .left {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.game-tile .right {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.game-tile .live-info {
+  margin-left: -100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.game-tile .live-info span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.game-tile:hover {
+  transform: translateY(-2px);
+  background: #2a2f36;
+}
+
+.game-tile-icon {
+  width: 24px;
+  height: 24px;
+  flex-direction: row;
+}
+
+h3 {
+  display: flex;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
+
+span {
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}

@@ -1,4 +1,49 @@
-<main class="content-casino-overview">
+<app-content-box title="Casino">
+  <div class="casino-overview-header">
+    <h2> Game </h2>
+
+    <div class="casino-overview-balance">
+      <h2> Casino Balance: ${{ ((casinoBalance$ | async)! / 100).toFixed(2) }}</h2>
+
+      <div class="casino-transfer-buttons">
+        <button class="casino-overview-deposit-button" (click)="depositModal()">Deposit</button>
+        <button class="casino-overview-cash-out-button" (click)="cashOutModal()">Cash Out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="casino-header-game-splitter"></div>
+
+  @if (state$ | async; as state) {
+    <app-casino-game-tile
+      title="Roll a dice"
+      icon="assets/icons-tiles/casino/icon_roll_a_dice.png"
+      route="/casino/roll-a-dice"
+      type="rolladice"
+      [dice1]="state.dice1"
+      [dice2]="state.dice2"
+      [timer]="state.timeLeft"
+      [isLocked]="state.isLocked"
+    >
+    </app-casino-game-tile>
+  }
+
+  <app-casino-game-tile
+    title="Football Bets"
+    icon="assets/icons-tiles/casino/icon_football_bets.png"
+    route="/casino/football-bets"
+    type="footballbets"
+  ></app-casino-game-tile>
+
+  <app-casino-game-tile
+    title="Slot Machines"
+    icon="assets/icons-tiles/casino/icon_slot_machines.png"
+    route="/casino/slot-machines"
+    type="slotmachines"
+  ></app-casino-game-tile>
+
+</app-content-box>
+  <!--
   <div class="content-casino-overview-transfer-money">
     <h2>Casino Balance: ${{ (casinoBalance$ | async)?.toFixed(2) }}</h2>
 
@@ -13,25 +58,7 @@
   <app-tile title="Roll a dice" icon="assets/icons-tiles/casino/icon_roll_a_dice.png" route="/casino/roll-a-dice"></app-tile>
   <app-tile title="Slot Machines" icon="assets/icons-tiles/casino/icon_slot_machines.png" route="/casino/slot-machines"></app-tile>
   <app-tile title="Football Bets" icon="assets/icons-tiles/casino/icon_football_bets.png" route="/casino/football-bets"></app-tile>
-</main>
-
-@if (isInfoModalOpen) {
-  <app-detail-box title="Information" (close)="infoModal()">
-    <div class="content-casino-overview-information-box">
-    <span>
-      Gambling can be addicting.
-    </span>
-
-      <span>
-      Deposit: {{ depositMoneyInfoText }}
-    </span>
-
-      <span>
-      Cash Out: {{ cashOutMoneyInfoText }}
-    </span>
-    </div>
-  </app-detail-box>
-}
+  -->
 
 @if (isDepositModalOpen) {
   <app-casino-transfer-money-detail [title]="depositMoney" [infoText]="depositMoneyInfoText" (close)="depositModal()" (confirm)="confirm($event)"></app-casino-transfer-money-detail>

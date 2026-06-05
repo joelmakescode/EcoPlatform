@@ -1,5 +1,5 @@
 export enum CasinoOverviewTransferMoneyType {
-  DEPOSIT_MONEY = "Deposit money",
+  DEPOSIT_MONEY = "Deposit",
   CASH_OUT_MONEY = "Cash Out",
 }
 

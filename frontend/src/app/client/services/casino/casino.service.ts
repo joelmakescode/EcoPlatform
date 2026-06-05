@@ -26,6 +26,7 @@ export class CasinoService {
   }
 
   postBets(bets: Bets): Observable<void> {
+    console.log(bets);
     return this.http.post<void>(`${this.baseUrl}/casino/roll-a-dice/${this.userCtx.UserId}`, { bets });
   }
 }
