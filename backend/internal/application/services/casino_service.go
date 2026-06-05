@@ -15,10 +15,10 @@ type CasinoService struct {
 	notifier ports.Notifier
 	repo     *repository.CasinoRepository
 	userRepo *repository.UserRepository
-	Game     *games.RollADiceHandler
+	Game     *games.SicBoHandler
 }
 
-func NewCasinoService(notifier ports.Notifier, repo *repository.CasinoRepository, userRepo *repository.UserRepository, game *games.RollADiceHandler) *CasinoService {
+func NewCasinoService(notifier ports.Notifier, repo *repository.CasinoRepository, userRepo *repository.UserRepository, game *games.SicBoHandler) *CasinoService {
 	return &CasinoService{notifier: notifier, repo: repo, userRepo: userRepo, Game: game}
 }
 
@@ -59,7 +59,7 @@ func (s *CasinoService) CashoutCasinoBalance(userId uint, amount int64) error {
 	return nil
 }
 
-func (s *CasinoService) CreateBetRollADice(userId uint, bets api.BetRollADiceBets) error {
+func (s *CasinoService) CreateBetSicBo(userId uint, bets api.BetSicBoBets) error {
 	if s.Game == nil {
 		panic("game not initialized")
 	}

@@ -49,12 +49,12 @@ func (UnimplementedHandler) ClaimDailyBalance(ctx context.Context, params ClaimD
 	return r, ht.ErrNotImplemented
 }
 
-// CreateBetRollADice implements createBetRollADice operation.
+// CreateBetSicBo implements createBetSicBo operation.
 //
-// Create a new bet for rolling a dice.
+// Create a new bet for sic bo.
 //
-// POST /casino/roll-a-dice/{id}
-func (UnimplementedHandler) CreateBetRollADice(ctx context.Context, req *BetRollADice, params CreateBetRollADiceParams) (r CreateBetRollADiceRes, _ error) {
+// POST /casino/sicbo/{id}
+func (UnimplementedHandler) CreateBetSicBo(ctx context.Context, req *BetSicBo, params CreateBetSicBoParams) (r CreateBetSicBoRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

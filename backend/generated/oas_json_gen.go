@@ -225,28 +225,28 @@ func (s *Balance) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s *BetRollADice) Encode(e *jx.Encoder) {
+func (s *BetSicBo) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *BetRollADice) encodeFields(e *jx.Encoder) {
+func (s *BetSicBo) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("bets")
 		s.Bets.Encode(e)
 	}
 }
 
-var jsonFieldsNameOfBetRollADice = [1]string{
+var jsonFieldsNameOfBetSicBo = [1]string{
 	0: "bets",
 }
 
-// Decode decodes BetRollADice from json.
-func (s *BetRollADice) Decode(d *jx.Decoder) error {
+// Decode decodes BetSicBo from json.
+func (s *BetSicBo) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode BetRollADice to nil")
+		return errors.New("invalid: unable to decode BetSicBo to nil")
 	}
 	var requiredBitSet [1]uint8
 
@@ -267,7 +267,7 @@ func (s *BetRollADice) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode BetRollADice")
+		return errors.Wrap(err, "decode BetSicBo")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
@@ -284,8 +284,8 @@ func (s *BetRollADice) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfBetRollADice) {
-					name = jsonFieldsNameOfBetRollADice[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfBetSicBo) {
+					name = jsonFieldsNameOfBetSicBo[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -306,27 +306,27 @@ func (s *BetRollADice) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *BetRollADice) MarshalJSON() ([]byte, error) {
+func (s *BetSicBo) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *BetRollADice) UnmarshalJSON(data []byte) error {
+func (s *BetSicBo) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s BetRollADiceBets) Encode(e *jx.Encoder) {
+func (s BetSicBoBets) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields implements json.Marshaler.
-func (s BetRollADiceBets) encodeFields(e *jx.Encoder) {
+func (s BetSicBoBets) encodeFields(e *jx.Encoder) {
 	for k, elem := range s {
 		e.FieldStart(k)
 
@@ -334,10 +334,10 @@ func (s BetRollADiceBets) encodeFields(e *jx.Encoder) {
 	}
 }
 
-// Decode decodes BetRollADiceBets from json.
-func (s *BetRollADiceBets) Decode(d *jx.Decoder) error {
+// Decode decodes BetSicBoBets from json.
+func (s *BetSicBoBets) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode BetRollADiceBets to nil")
+		return errors.New("invalid: unable to decode BetSicBoBets to nil")
 	}
 	m := s.init()
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
@@ -355,21 +355,21 @@ func (s *BetRollADiceBets) Decode(d *jx.Decoder) error {
 		m[string(k)] = elem
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode BetRollADiceBets")
+		return errors.Wrap(err, "decode BetSicBoBets")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s BetRollADiceBets) MarshalJSON() ([]byte, error) {
+func (s BetSicBoBets) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *BetRollADiceBets) UnmarshalJSON(data []byte) error {
+func (s *BetSicBoBets) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -906,17 +906,17 @@ func (s *ClaimDailyBalanceUnauthorized) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes CreateBetRollADiceBadRequest as json.
-func (s *CreateBetRollADiceBadRequest) Encode(e *jx.Encoder) {
+// Encode encodes CreateBetSicBoBadRequest as json.
+func (s *CreateBetSicBoBadRequest) Encode(e *jx.Encoder) {
 	unwrapped := (*Error)(s)
 
 	unwrapped.Encode(e)
 }
 
-// Decode decodes CreateBetRollADiceBadRequest from json.
-func (s *CreateBetRollADiceBadRequest) Decode(d *jx.Decoder) error {
+// Decode decodes CreateBetSicBoBadRequest from json.
+func (s *CreateBetSicBoBadRequest) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CreateBetRollADiceBadRequest to nil")
+		return errors.New("invalid: unable to decode CreateBetSicBoBadRequest to nil")
 	}
 	var unwrapped Error
 	if err := func() error {
@@ -927,34 +927,34 @@ func (s *CreateBetRollADiceBadRequest) Decode(d *jx.Decoder) error {
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = CreateBetRollADiceBadRequest(unwrapped)
+	*s = CreateBetSicBoBadRequest(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CreateBetRollADiceBadRequest) MarshalJSON() ([]byte, error) {
+func (s *CreateBetSicBoBadRequest) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CreateBetRollADiceBadRequest) UnmarshalJSON(data []byte) error {
+func (s *CreateBetSicBoBadRequest) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CreateBetRollADiceConflict as json.
-func (s *CreateBetRollADiceConflict) Encode(e *jx.Encoder) {
+// Encode encodes CreateBetSicBoConflict as json.
+func (s *CreateBetSicBoConflict) Encode(e *jx.Encoder) {
 	unwrapped := (*Error)(s)
 
 	unwrapped.Encode(e)
 }
 
-// Decode decodes CreateBetRollADiceConflict from json.
-func (s *CreateBetRollADiceConflict) Decode(d *jx.Decoder) error {
+// Decode decodes CreateBetSicBoConflict from json.
+func (s *CreateBetSicBoConflict) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CreateBetRollADiceConflict to nil")
+		return errors.New("invalid: unable to decode CreateBetSicBoConflict to nil")
 	}
 	var unwrapped Error
 	if err := func() error {
@@ -965,34 +965,34 @@ func (s *CreateBetRollADiceConflict) Decode(d *jx.Decoder) error {
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = CreateBetRollADiceConflict(unwrapped)
+	*s = CreateBetSicBoConflict(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CreateBetRollADiceConflict) MarshalJSON() ([]byte, error) {
+func (s *CreateBetSicBoConflict) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CreateBetRollADiceConflict) UnmarshalJSON(data []byte) error {
+func (s *CreateBetSicBoConflict) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CreateBetRollADiceForbidden as json.
-func (s *CreateBetRollADiceForbidden) Encode(e *jx.Encoder) {
+// Encode encodes CreateBetSicBoForbidden as json.
+func (s *CreateBetSicBoForbidden) Encode(e *jx.Encoder) {
 	unwrapped := (*Error)(s)
 
 	unwrapped.Encode(e)
 }
 
-// Decode decodes CreateBetRollADiceForbidden from json.
-func (s *CreateBetRollADiceForbidden) Decode(d *jx.Decoder) error {
+// Decode decodes CreateBetSicBoForbidden from json.
+func (s *CreateBetSicBoForbidden) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CreateBetRollADiceForbidden to nil")
+		return errors.New("invalid: unable to decode CreateBetSicBoForbidden to nil")
 	}
 	var unwrapped Error
 	if err := func() error {
@@ -1003,34 +1003,34 @@ func (s *CreateBetRollADiceForbidden) Decode(d *jx.Decoder) error {
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = CreateBetRollADiceForbidden(unwrapped)
+	*s = CreateBetSicBoForbidden(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CreateBetRollADiceForbidden) MarshalJSON() ([]byte, error) {
+func (s *CreateBetSicBoForbidden) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CreateBetRollADiceForbidden) UnmarshalJSON(data []byte) error {
+func (s *CreateBetSicBoForbidden) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CreateBetRollADiceInternalServerError as json.
-func (s *CreateBetRollADiceInternalServerError) Encode(e *jx.Encoder) {
+// Encode encodes CreateBetSicBoInternalServerError as json.
+func (s *CreateBetSicBoInternalServerError) Encode(e *jx.Encoder) {
 	unwrapped := (*Error)(s)
 
 	unwrapped.Encode(e)
 }
 
-// Decode decodes CreateBetRollADiceInternalServerError from json.
-func (s *CreateBetRollADiceInternalServerError) Decode(d *jx.Decoder) error {
+// Decode decodes CreateBetSicBoInternalServerError from json.
+func (s *CreateBetSicBoInternalServerError) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CreateBetRollADiceInternalServerError to nil")
+		return errors.New("invalid: unable to decode CreateBetSicBoInternalServerError to nil")
 	}
 	var unwrapped Error
 	if err := func() error {
@@ -1041,34 +1041,34 @@ func (s *CreateBetRollADiceInternalServerError) Decode(d *jx.Decoder) error {
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = CreateBetRollADiceInternalServerError(unwrapped)
+	*s = CreateBetSicBoInternalServerError(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CreateBetRollADiceInternalServerError) MarshalJSON() ([]byte, error) {
+func (s *CreateBetSicBoInternalServerError) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CreateBetRollADiceInternalServerError) UnmarshalJSON(data []byte) error {
+func (s *CreateBetSicBoInternalServerError) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CreateBetRollADiceNotFound as json.
-func (s *CreateBetRollADiceNotFound) Encode(e *jx.Encoder) {
+// Encode encodes CreateBetSicBoNotFound as json.
+func (s *CreateBetSicBoNotFound) Encode(e *jx.Encoder) {
 	unwrapped := (*Error)(s)
 
 	unwrapped.Encode(e)
 }
 
-// Decode decodes CreateBetRollADiceNotFound from json.
-func (s *CreateBetRollADiceNotFound) Decode(d *jx.Decoder) error {
+// Decode decodes CreateBetSicBoNotFound from json.
+func (s *CreateBetSicBoNotFound) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CreateBetRollADiceNotFound to nil")
+		return errors.New("invalid: unable to decode CreateBetSicBoNotFound to nil")
 	}
 	var unwrapped Error
 	if err := func() error {
@@ -1079,19 +1079,19 @@ func (s *CreateBetRollADiceNotFound) Decode(d *jx.Decoder) error {
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = CreateBetRollADiceNotFound(unwrapped)
+	*s = CreateBetSicBoNotFound(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CreateBetRollADiceNotFound) MarshalJSON() ([]byte, error) {
+func (s *CreateBetSicBoNotFound) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CreateBetRollADiceNotFound) UnmarshalJSON(data []byte) error {
+func (s *CreateBetSicBoNotFound) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

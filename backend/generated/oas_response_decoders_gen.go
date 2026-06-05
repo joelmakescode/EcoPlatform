@@ -644,11 +644,11 @@ func decodeClaimDailyBalanceResponse(resp *http.Response) (res ClaimDailyBalance
 	return res, validate.UnexpectedStatusCodeWithResponse(resp)
 }
 
-func decodeCreateBetRollADiceResponse(resp *http.Response) (res CreateBetRollADiceRes, _ error) {
+func decodeCreateBetSicBoResponse(resp *http.Response) (res CreateBetSicBoRes, _ error) {
 	switch resp.StatusCode {
 	case 204:
 		// Code 204.
-		return &CreateBetRollADiceNoContent{}, nil
+		return &CreateBetSicBoNoContent{}, nil
 	case 400:
 		// Code 400.
 		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
@@ -663,7 +663,7 @@ func decodeCreateBetRollADiceResponse(resp *http.Response) (res CreateBetRollADi
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response CreateBetRollADiceBadRequest
+			var response CreateBetSicBoBadRequest
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -698,7 +698,7 @@ func decodeCreateBetRollADiceResponse(resp *http.Response) (res CreateBetRollADi
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response CreateBetRollADiceForbidden
+			var response CreateBetSicBoForbidden
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -733,7 +733,7 @@ func decodeCreateBetRollADiceResponse(resp *http.Response) (res CreateBetRollADi
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response CreateBetRollADiceNotFound
+			var response CreateBetSicBoNotFound
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -768,7 +768,7 @@ func decodeCreateBetRollADiceResponse(resp *http.Response) (res CreateBetRollADi
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response CreateBetRollADiceConflict
+			var response CreateBetSicBoConflict
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -803,7 +803,7 @@ func decodeCreateBetRollADiceResponse(resp *http.Response) (res CreateBetRollADi
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response CreateBetRollADiceInternalServerError
+			var response CreateBetSicBoInternalServerError
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err

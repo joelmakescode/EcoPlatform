@@ -6,5 +6,5 @@ import (
 	"github.com/ogen-go/ogen/middleware"
 )
 
-// Middleware is internal.infrastructure.http.middleware type.
+// Middleware is middleware type.
 type Middleware = middleware.Middleware

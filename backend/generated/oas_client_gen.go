@@ -44,12 +44,12 @@ type CasinoInvoker interface {
 	//
 	// POST /casino/balance/cashout/{id}
 	CashoutCasinoBalance(ctx context.Context, request *Balance, params CashoutCasinoBalanceParams) (CashoutCasinoBalanceRes, error)
-	// CreateBetRollADice invokes createBetRollADice operation.
+	// CreateBetSicBo invokes createBetSicBo operation.
 	//
-	// Create a new bet for rolling a dice.
+	// Create a new bet for sic bo.
 	//
-	// POST /casino/roll-a-dice/{id}
-	CreateBetRollADice(ctx context.Context, request *BetRollADice, params CreateBetRollADiceParams) (CreateBetRollADiceRes, error)
+	// POST /casino/sicbo/{id}
+	CreateBetSicBo(ctx context.Context, request *BetSicBo, params CreateBetSicBoParams) (CreateBetSicBoRes, error)
 	// DepositCasinoBalance invokes depositCasinoBalance operation.
 	//
 	// Deposit money.
@@ -636,21 +636,21 @@ func (c *Client) sendClaimDailyBalance(ctx context.Context, params ClaimDailyBal
 	return result, nil
 }
 
-// CreateBetRollADice invokes createBetRollADice operation.
+// CreateBetSicBo invokes createBetSicBo operation.
 //
-// Create a new bet for rolling a dice.
+// Create a new bet for sic bo.
 //
-// POST /casino/roll-a-dice/{id}
-func (c *Client) CreateBetRollADice(ctx context.Context, request *BetRollADice, params CreateBetRollADiceParams) (CreateBetRollADiceRes, error) {
-	res, err := c.sendCreateBetRollADice(ctx, request, params)
+// POST /casino/sicbo/{id}
+func (c *Client) CreateBetSicBo(ctx context.Context, request *BetSicBo, params CreateBetSicBoParams) (CreateBetSicBoRes, error) {
+	res, err := c.sendCreateBetSicBo(ctx, request, params)
 	return res, err
 }
 
-func (c *Client) sendCreateBetRollADice(ctx context.Context, request *BetRollADice, params CreateBetRollADiceParams) (res CreateBetRollADiceRes, err error) {
+func (c *Client) sendCreateBetSicBo(ctx context.Context, request *BetSicBo, params CreateBetSicBoParams) (res CreateBetSicBoRes, err error) {
 	otelAttrs := []attribute.KeyValue{
-		otelogen.OperationID("createBetRollADice"),
+		otelogen.OperationID("createBetSicBo"),
 		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.URLTemplateKey.String("/casino/roll-a-dice/{id}"),
+		semconv.URLTemplateKey.String("/casino/sicbo/{id}"),
 	}
 	otelAttrs = append(otelAttrs, c.cfg.Attributes...)
 
@@ -666,7 +666,7 @@ func (c *Client) sendCreateBetRollADice(ctx context.Context, request *BetRollADi
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CreateBetRollADiceOperation,
+	ctx, span := c.cfg.Tracer.Start(ctx, CreateBetSicBoOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -684,7 +684,7 @@ func (c *Client) sendCreateBetRollADice(ctx context.Context, request *BetRollADi
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [2]string
-	pathParts[0] = "/casino/roll-a-dice/"
+	pathParts[0] = "/casino/sicbo/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -710,7 +710,7 @@ func (c *Client) sendCreateBetRollADice(ctx context.Context, request *BetRollADi
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
 	}
-	if err := encodeCreateBetRollADiceRequest(request, r); err != nil {
+	if err := encodeCreateBetSicBoRequest(request, r); err != nil {
 		return res, errors.Wrap(err, "encode request")
 	}
 
@@ -723,7 +723,7 @@ func (c *Client) sendCreateBetRollADice(ctx context.Context, request *BetRollADi
 	defer body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCreateBetRollADiceResponse(resp)
+	result, err := decodeCreateBetSicBoResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

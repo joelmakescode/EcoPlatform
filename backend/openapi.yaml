@@ -122,7 +122,7 @@ paths:
         500:
           $ref: '#/components/responses/InternalServerError'      
 
-  /casino/roll-a-dice/{id}:
+  /casino/sicbo/{id}:
     x-ogen-operation-group: Casino
     parameters:
       - name: id
@@ -132,14 +132,14 @@ paths:
         schema:
           type: integer
     post:
-      operationId: createBetRollADice
-      summary: Create a new bet for rolling a dice
+      operationId: createBetSicBo
+      summary: Create a new bet for sic bo
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BetRollADice'
+              $ref: '#/components/schemas/BetSicBo'
       responses:
         204:
           description: Bet created successfully
@@ -749,7 +749,7 @@ components:
         id:
           type: integer
 
-    BetRollADice:
+    BetSicBo:
       type: object
       required:
         - bets

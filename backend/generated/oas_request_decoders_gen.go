@@ -85,8 +85,8 @@ func (s *Server) decodeCashoutCasinoBalanceRequest(r *http.Request) (
 	}
 }
 
-func (s *Server) decodeCreateBetRollADiceRequest(r *http.Request) (
-	req *BetRollADice,
+func (s *Server) decodeCreateBetSicBoRequest(r *http.Request) (
+	req *BetSicBo,
 	rawBody []byte,
 	close func() error,
 	rerr error,
@@ -133,7 +133,7 @@ func (s *Server) decodeCreateBetRollADiceRequest(r *http.Request) (
 		rawBody = append(rawBody, buf...)
 		d := jx.DecodeBytes(buf)
 
-		var request BetRollADice
+		var request BetSicBo
 		if err := func() error {
 			if err := request.Decode(d); err != nil {
 				return err

@@ -24,8 +24,8 @@ func encodeCashoutCasinoBalanceRequest(
 	return nil
 }
 
-func encodeCreateBetRollADiceRequest(
-	req *BetRollADice,
+func encodeCreateBetSicBoRequest(
+	req *BetSicBo,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"

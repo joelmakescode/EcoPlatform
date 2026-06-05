@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject, switchMap} from 'rxjs';
+import {BehaviorSubject, Observable, startWith, Subject, switchMap} from 'rxjs';
 import {CasinoService} from './casino.service';
 import {CasinoBalance} from '../../../types/casino/casino.interface';
 
@@ -12,9 +12,14 @@ export class CasinoStateService {
   private reload$: Subject<void> = new Subject<void>();
 
   constructor() {
-    this.reload$.pipe(switchMap((): Observable<CasinoBalance>  => this.casinoService.getBalance())).subscribe((response: CasinoBalance): void => {
-      this.casinoBalanceSubject.next(response.balance);
-    });
+    this.reload$
+      .pipe(
+        startWith(void 0),
+        switchMap((): Observable<CasinoBalance>  => this.casinoService.getBalance())
+      )
+      .subscribe((response: CasinoBalance): void => {
+        this.casinoBalanceSubject.next(response.balance);
+      });
   }
 
   load(): void {

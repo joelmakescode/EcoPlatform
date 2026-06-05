@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type RollADiceHandler struct {
+type SicBoHandler struct {
 	repo         *repository.CasinoRepository
 	eventEmitter EventEmitter
 
@@ -18,8 +18,8 @@ type RollADiceHandler struct {
 	state          GameState
 }
 
-func NewRollADiceHandler(repo *repository.CasinoRepository, eventEmitter EventEmitter) *RollADiceHandler {
-	return &RollADiceHandler{repo: repo, eventEmitter: eventEmitter}
+func NewSicBoHandler(repo *repository.CasinoRepository, eventEmitter EventEmitter) *SicBoHandler {
+	return &SicBoHandler{repo: repo, eventEmitter: eventEmitter}
 }
 
 type EventEmitter interface {
@@ -41,13 +41,13 @@ var currentGameState = GameState{
 	Dice2:    1,
 }
 
-func (h *RollADiceHandler) GetCurrentRoundId() int64 {
+func (h *SicBoHandler) GetCurrentRoundId() int64 {
 	return h.currentRoundId
 }
 
-func (h *RollADiceHandler) Start() {
+func (h *SicBoHandler) Start() {
 	for {
-		round, _ := h.repo.CreateRollADiceRound()
+		round, _ := h.repo.CreateSicBoRound()
 		h.currentRoundId = round.ID
 
 		currentGameState.IsLocked = false
@@ -71,13 +71,15 @@ func (h *RollADiceHandler) Start() {
 		currentGameState.IsLocked = true
 		h.eventEmitter.SendEventToAll(websocket.EventTypeRoundLock, nil, "normal")
 
+		time.Sleep(2 * time.Second)
+
 		dice1 := rand.Intn(6) + 1
 		dice2 := rand.Intn(6) + 1
 
 		currentGameState.Dice1 = dice1
 		currentGameState.Dice2 = dice2
 
-		if err := h.repo.UpdateRollADiceRound(h.GetCurrentRoundId(), dice1, dice2); err != nil {
+		if err := h.repo.UpdateSicBoRound(h.GetCurrentRoundId(), dice1, dice2); err != nil {
 			return
 		}
 
@@ -114,11 +116,11 @@ func (h *RollADiceHandler) Start() {
 			}, "normal")
 		}
 
-		time.Sleep(5 * time.Second)
+		time.Sleep(3 * time.Second)
 	}
 }
 
-func (h *RollADiceHandler) SendCurrentGameState(client *websocket.Client) {
+func (h *SicBoHandler) SendCurrentGameState(client *websocket.Client) {
 	h.eventEmitter.SendEventToUser(websocket.EventTypeGameState, client.UserID, map[string]interface{}{
 		"timeLeft": currentGameState.TimeLeft,
 		"isLocked": currentGameState.IsLocked,
@@ -127,7 +129,7 @@ func (h *RollADiceHandler) SendCurrentGameState(client *websocket.Client) {
 	}, "normal")
 }
 
-func (h *RollADiceHandler) SendCurrentBalance(userId uint, balance int64) {
+func (h *SicBoHandler) SendCurrentBalance(userId uint, balance int64) {
 	h.eventEmitter.SendEventToUser(websocket.EventTypeCasinoBalanceUpdated, userId, map[string]interface{}{
 		"balance": balance,
 	}, "normal")

@@ -284,15 +284,15 @@ func encodeClaimDailyBalanceResponse(response ClaimDailyBalanceRes, w http.Respo
 	}
 }
 
-func encodeCreateBetRollADiceResponse(response CreateBetRollADiceRes, w http.ResponseWriter, span trace.Span) error {
+func encodeCreateBetSicBoResponse(response CreateBetSicBoRes, w http.ResponseWriter, span trace.Span) error {
 	switch response := response.(type) {
-	case *CreateBetRollADiceNoContent:
+	case *CreateBetSicBoNoContent:
 		w.WriteHeader(204)
 		span.SetStatus(codes.Ok, http.StatusText(204))
 
 		return nil
 
-	case *CreateBetRollADiceBadRequest:
+	case *CreateBetSicBoBadRequest:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(400)
 		span.SetStatus(codes.Error, http.StatusText(400))
@@ -305,7 +305,7 @@ func encodeCreateBetRollADiceResponse(response CreateBetRollADiceRes, w http.Res
 
 		return nil
 
-	case *CreateBetRollADiceForbidden:
+	case *CreateBetSicBoForbidden:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(403)
 		span.SetStatus(codes.Error, http.StatusText(403))
@@ -318,7 +318,7 @@ func encodeCreateBetRollADiceResponse(response CreateBetRollADiceRes, w http.Res
 
 		return nil
 
-	case *CreateBetRollADiceNotFound:
+	case *CreateBetSicBoNotFound:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(404)
 		span.SetStatus(codes.Error, http.StatusText(404))
@@ -331,7 +331,7 @@ func encodeCreateBetRollADiceResponse(response CreateBetRollADiceRes, w http.Res
 
 		return nil
 
-	case *CreateBetRollADiceConflict:
+	case *CreateBetSicBoConflict:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(409)
 		span.SetStatus(codes.Error, http.StatusText(409))
@@ -344,7 +344,7 @@ func encodeCreateBetRollADiceResponse(response CreateBetRollADiceRes, w http.Res
 
 		return nil
 
-	case *CreateBetRollADiceInternalServerError:
+	case *CreateBetSicBoInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 		span.SetStatus(codes.Error, http.StatusText(500))

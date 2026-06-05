@@ -25,12 +25,12 @@ type CasinoHandler interface {
 	//
 	// POST /casino/balance/cashout/{id}
 	CashoutCasinoBalance(ctx context.Context, req *Balance, params CashoutCasinoBalanceParams) (CashoutCasinoBalanceRes, error)
-	// CreateBetRollADice implements createBetRollADice operation.
+	// CreateBetSicBo implements createBetSicBo operation.
 	//
-	// Create a new bet for rolling a dice.
+	// Create a new bet for sic bo.
 	//
-	// POST /casino/roll-a-dice/{id}
-	CreateBetRollADice(ctx context.Context, req *BetRollADice, params CreateBetRollADiceParams) (CreateBetRollADiceRes, error)
+	// POST /casino/sicbo/{id}
+	CreateBetSicBo(ctx context.Context, req *BetSicBo, params CreateBetSicBoParams) (CreateBetSicBoRes, error)
 	// DepositCasinoBalance implements depositCasinoBalance operation.
 	//
 	// Deposit money.

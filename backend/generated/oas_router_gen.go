@@ -231,9 +231,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						return
 					}
 
-				case 'r': // Prefix: "roll-a-dice/"
+				case 's': // Prefix: "sicbo/"
 
-					if l := len("roll-a-dice/"); len(elem) >= l && elem[0:l] == "roll-a-dice/" {
+					if l := len("sicbo/"); len(elem) >= l && elem[0:l] == "sicbo/" {
 						elem = elem[l:]
 					} else {
 						break
@@ -252,7 +252,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleCreateBetRollADiceRequest([1]string{
+							s.handleCreateBetSicBoRequest([1]string{
 								args[0],
 							}, elemIsEscaped, w, r)
 						default:
@@ -1108,9 +1108,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 					}
 
-				case 'r': // Prefix: "roll-a-dice/"
+				case 's': // Prefix: "sicbo/"
 
-					if l := len("roll-a-dice/"); len(elem) >= l && elem[0:l] == "roll-a-dice/" {
+					if l := len("sicbo/"); len(elem) >= l && elem[0:l] == "sicbo/" {
 						elem = elem[l:]
 					} else {
 						break
@@ -1129,11 +1129,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						// Leaf node.
 						switch method {
 						case "POST":
-							r.name = CreateBetRollADiceOperation
-							r.summary = "Create a new bet for rolling a dice"
-							r.operationID = "createBetRollADice"
+							r.name = CreateBetSicBoOperation
+							r.summary = "Create a new bet for sic bo"
+							r.operationID = "createBetSicBo"
 							r.operationGroup = "Casino"
-							r.pathPattern = "/casino/roll-a-dice/{id}"
+							r.pathPattern = "/casino/sicbo/{id}"
 							r.args = args
 							r.count = 1
 							return r, true

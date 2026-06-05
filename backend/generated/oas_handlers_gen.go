@@ -620,24 +620,24 @@ func (s *Server) handleClaimDailyBalanceRequest(args [1]string, argsEscaped bool
 	}
 }
 
-// handleCreateBetRollADiceRequest handles createBetRollADice operation.
+// handleCreateBetSicBoRequest handles createBetSicBo operation.
 //
-// Create a new bet for rolling a dice.
+// Create a new bet for sic bo.
 //
-// POST /casino/roll-a-dice/{id}
-func (s *Server) handleCreateBetRollADiceRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+// POST /casino/sicbo/{id}
+func (s *Server) handleCreateBetSicBoRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
 	otelAttrs := []attribute.KeyValue{
-		otelogen.OperationID("createBetRollADice"),
+		otelogen.OperationID("createBetSicBo"),
 		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.HTTPRouteKey.String("/casino/roll-a-dice/{id}"),
+		semconv.HTTPRouteKey.String("/casino/sicbo/{id}"),
 	}
 	// Add attributes from config.
 	otelAttrs = append(otelAttrs, s.cfg.Attributes...)
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), CreateBetRollADiceOperation,
+	ctx, span := s.cfg.Tracer.Start(r.Context(), CreateBetSicBoOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -692,11 +692,11 @@ func (s *Server) handleCreateBetRollADiceRequest(args [1]string, argsEscaped boo
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: CreateBetRollADiceOperation,
-			ID:   "createBetRollADice",
+			Name: CreateBetSicBoOperation,
+			ID:   "createBetSicBo",
 		}
 	)
-	params, err := decodeCreateBetRollADiceParams(args, argsEscaped, r)
+	params, err := decodeCreateBetSicBoParams(args, argsEscaped, r)
 	if err != nil {
 		err = &ogenerrors.DecodeParamsError{
 			OperationContext: opErrContext,
@@ -708,7 +708,7 @@ func (s *Server) handleCreateBetRollADiceRequest(args [1]string, argsEscaped boo
 	}
 
 	var rawBody []byte
-	request, rawBody, close, err := s.decodeCreateBetRollADiceRequest(r)
+	request, rawBody, close, err := s.decodeCreateBetSicBoRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -724,13 +724,13 @@ func (s *Server) handleCreateBetRollADiceRequest(args [1]string, argsEscaped boo
 		}
 	}()
 
-	var response CreateBetRollADiceRes
+	var response CreateBetSicBoRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    CreateBetRollADiceOperation,
-			OperationSummary: "Create a new bet for rolling a dice",
-			OperationID:      "createBetRollADice",
+			OperationName:    CreateBetSicBoOperation,
+			OperationSummary: "Create a new bet for sic bo",
+			OperationID:      "createBetSicBo",
 			Body:             request,
 			RawBody:          rawBody,
 			Params: middleware.Parameters{
@@ -743,9 +743,9 @@ func (s *Server) handleCreateBetRollADiceRequest(args [1]string, argsEscaped boo
 		}
 
 		type (
-			Request  = *BetRollADice
-			Params   = CreateBetRollADiceParams
-			Response = CreateBetRollADiceRes
+			Request  = *BetSicBo
+			Params   = CreateBetSicBoParams
+			Response = CreateBetSicBoRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -754,14 +754,14 @@ func (s *Server) handleCreateBetRollADiceRequest(args [1]string, argsEscaped boo
 		](
 			m,
 			mreq,
-			unpackCreateBetRollADiceParams,
+			unpackCreateBetSicBoParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.CreateBetRollADice(ctx, request, params)
+				response, err = s.h.CreateBetSicBo(ctx, request, params)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.CreateBetRollADice(ctx, request, params)
+		response, err = s.h.CreateBetSicBo(ctx, request, params)
 	}
 	if err != nil {
 		defer recordError("Internal", err)
@@ -769,7 +769,7 @@ func (s *Server) handleCreateBetRollADiceRequest(args [1]string, argsEscaped boo
 		return
 	}
 
-	if err := encodeCreateBetRollADiceResponse(response, w, span); err != nil {
+	if err := encodeCreateBetSicBoResponse(response, w, span); err != nil {
 		defer recordError("EncodeResponse", err)
 		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
