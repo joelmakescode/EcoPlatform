@@ -3,7 +3,7 @@
     <h2> Game </h2>
 
     <div class="casino-overview-balance">
-      <h2> Casino Balance: ${{ ((casinoBalance$ | async)! / 100).toFixed(2) }}</h2>
+      <h2> Casino Balance: {{ (casinoBalance$ | async)! | balance }}</h2>
 
       <div class="casino-transfer-buttons">
         <button class="casino-overview-deposit-button" (click)="depositModal()">Deposit</button>

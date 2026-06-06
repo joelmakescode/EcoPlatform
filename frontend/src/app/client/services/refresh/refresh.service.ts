@@ -15,16 +15,16 @@ export class RefreshService {
   init(): void {
     if (!this.authFacadeService.isLoggedIn()) {
       this.authFacadeService.logout();
+    } else {
+      this.userService.getUser().subscribe({
+        next: (response: User): void => {
+          this.userContextService.setUsername(response.username);
+        },
+        error: (error: Error): void => {
+          this.messageService.error({ message: "Your username couldn't be loaded. Please refresh the page or re-login again." });
+          // error log service
+        }
+      });
     }
-
-    this.userService.getUser().subscribe({
-      next: (response: User): void => {
-        this.userContextService.setUsername(response.username);
-      },
-      error: (error: Error): void => {
-        this.messageService.error({ message: "Your username couldn't be loaded. Please refresh the page or re-login again." });
-        // error log service
-      }
-    })
   }
 }

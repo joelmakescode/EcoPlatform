@@ -20,8 +20,8 @@
           <span class="username"> {{ (userHeaderInfo$ | async)?.username }} </span>
 
           <span class="balance">
-          ${{ (userHeaderInfo$ | async)?.balance }}
-        </span>
+            {{ (userHeaderInfo$ | async)!.balance | balance }}
+          </span>
         </div>
 
       </button>

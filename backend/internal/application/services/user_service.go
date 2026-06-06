@@ -41,7 +41,7 @@ func (s *UserService) ClaimDaily(userId uint) error {
 		return domain.ErrDailyAlreadyClaimed
 	}
 
-	_, err = s.UpdateUserBalanceById(userId, int64(50))
+	_, err = s.UpdateUserBalanceById(userId, int64(5000))
 	if err != nil {
 		return err
 	}

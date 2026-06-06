@@ -17,6 +17,7 @@ import {RollADiceState} from '../../../types/casino/casino.interface';
 import {RollADiceStateService} from '../../../client/services/casino/games/rolladice/rolladicestate.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RollADiceLiveService} from '../../../client/services/casino/games/rolladice/rolladicelive.service';
+import {BalancePipe} from '../../../pipes/balance.pipe';
 
 @Component({
   selector: 'app-casino-overview',
@@ -26,6 +27,7 @@ import {RollADiceLiveService} from '../../../client/services/casino/games/rollad
     AsyncPipe,
     ContentBoxComponent,
     CasinoGameTileComponent,
+    BalancePipe,
   ],
   templateUrl: './casino-overview.component.html',
   styleUrl: './casino-overview.component.css',

@@ -20,6 +20,7 @@ import {
   CasinoOverviewTransferMoneyType
 } from '../../../types/casino/casino.enum';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {BalancePipe} from '../../../pipes/balance.pipe';
 
 @Component({
   selector: 'app-sic-bo',
@@ -29,6 +30,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
     BackLinkComponent,
     AsyncPipe,
     CasinoTransferMoneyDetailComponent,
+    BalancePipe,
   ],
   templateUrl: './sicbo.component.html',
   styleUrl: './sicbo.component.css',

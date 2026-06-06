@@ -12,7 +12,7 @@ export class UserStatesService {
 
   loadHeaderInfo(): void {
     forkJoin({ user: this.userService.getUser(), balance: this.userService.getBalance() }).subscribe(({ user, balance }): void => {
-      this.userHeaderInfoSubject.next({ username: user.username, balance: balance.balance / 100 });
+      this.userHeaderInfoSubject.next({ username: user.username, balance: balance.balance });
     });
   }
 }

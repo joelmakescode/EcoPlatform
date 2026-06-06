@@ -4,6 +4,7 @@ import "errors"
 
 // Casino Errors
 var (
+	ErrBetEmpty               = errors.New("bet is empty")
 	ErrInvalidStake           = errors.New("invalid stake")
 	ErrInvalidAmount          = errors.New("invalid amount")
 	ErrStakeOptionDoesntExist = errors.New("stake option doesnt exist")
