@@ -11,7 +11,7 @@
       } @else if (state$ | async; as state) {
         <div class="casino-balance">
         <span class="balance-text">
-          Casino Balance: ${{ ((casinoBalance$ | async)! / 100).toFixed(2) }}
+          Casino Balance: {{ (casinoBalance$ | async)! | balance }}
         </span>
 
           <button class="deposit-btn" (click)="openDepositModal()">

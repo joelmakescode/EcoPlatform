@@ -7,12 +7,14 @@ import {Observable, Subscription} from 'rxjs';
 import {MessageService} from '../../client/services/message/message.service';
 import {UserStatesService} from '../../client/services/user/userstates.service';
 import {DailyClaimStatus, UserHeaderInfo} from '../../types/user/user.interface';
+import {BalancePipe} from '../../pipes/balance.pipe';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    AsyncPipe
+    AsyncPipe,
+    BalancePipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',

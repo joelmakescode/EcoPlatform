@@ -63,6 +63,9 @@ func (s *CasinoService) CreateBetSicBo(userId uint, bets api.BetSicBoBets) error
 	if s.Game == nil {
 		panic("game not initialized")
 	}
+	if bets == nil {
+		return domain.ErrBetEmpty
+	}
 
 	var totalBet int64 = 0
 
